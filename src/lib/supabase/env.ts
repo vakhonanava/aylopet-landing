@@ -3,7 +3,16 @@ export function getSupabaseUrl(): string | undefined {
 }
 
 export function getSupabaseAnonKey(): string | undefined {
-  return process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim() || undefined;
+  return (
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim() ||
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.trim() ||
+    undefined
+  );
+}
+
+/** Supabase publishable (anon) key for browser + SSR auth clients. */
+export function getSupabasePublishableKey(): string | undefined {
+  return getSupabaseAnonKey();
 }
 
 export function getSupabaseServiceRoleKey(): string | undefined {
@@ -15,5 +24,5 @@ export function isSupabaseConfigured(): boolean {
 }
 
 export function isSupabasePublicConfigured(): boolean {
-  return Boolean(getSupabaseUrl() && getSupabaseAnonKey());
+  return Boolean(getSupabaseUrl() && getSupabasePublishableKey());
 }

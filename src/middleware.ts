@@ -1,14 +1,15 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { updateSession } from "@/utils/supabase/middleware";
 
-export function middleware(request: NextRequest) {
+function protectAdmin(request: NextRequest, response: NextResponse) {
   if (!request.nextUrl.pathname.startsWith("/admin")) {
-    return NextResponse.next();
+    return response;
   }
 
   const adminSecret = process.env.ADMIN_SECRET;
   if (!adminSecret) {
-    return NextResponse.next();
+    return response;
   }
 
   const token =
@@ -16,7 +17,6 @@ export function middleware(request: NextRequest) {
     request.cookies.get("aylopet_admin")?.value;
 
   if (token === adminSecret) {
-    const response = NextResponse.next();
     if (request.nextUrl.searchParams.get("token")) {
       response.cookies.set("aylopet_admin", adminSecret, {
         httpOnly: true,
@@ -34,6 +34,13 @@ export function middleware(request: NextRequest) {
   });
 }
 
+export async function middleware(request: NextRequest) {
+  const sessionResponse = await updateSession(request);
+  return protectAdmin(request, sessionResponse);
+}
+
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
 };
