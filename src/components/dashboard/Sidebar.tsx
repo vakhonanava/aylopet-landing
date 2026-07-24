@@ -111,13 +111,13 @@ export function Sidebar() {
           </div>
         </div>
         <div className="mt-1 flex flex-col gap-1">
-          <button
-            type="button"
+          <Link
+            href="/dashboard/settings"
             className="flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-[var(--brand-primary)]"
           >
             <Settings className="h-[18px] w-[18px]" />
             პარამეტრები
-          </button>
+          </Link>
           <button
             type="button"
             onClick={() => {

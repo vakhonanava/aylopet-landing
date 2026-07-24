@@ -28,6 +28,12 @@ export function mapAuthError(message: string): string {
   if (lower.includes("email not confirmed")) {
     return "ელ. ფოსტა ჯერ არ არის დადასტურებული. შეგიძლია გააგრძელო, ან დაადასტურო dashboard-იდან.";
   }
+  if (lower.includes("same password")) {
+    return "ახალი პაროლი უნდა განსხვავდებოდეს არსებულისგან.";
+  }
+  if (lower.includes("password should be at least")) {
+    return "პაროლი უნდა იყოს მინიმუმ 6 სიმბოლო.";
+  }
   if (lower.includes("invalid login credentials")) {
     return "არასწორი ელ. ფოსტა ან პაროლი.";
   }

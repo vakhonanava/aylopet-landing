@@ -39,6 +39,13 @@ interface AuthContextValue {
   ) => Promise<AuthResult>;
   signInWithGoogle: (nextPath?: string) => Promise<AuthResult>;
   sendVerificationEmail: () => Promise<AuthResult>;
+  requestPasswordReset: (email: string) => Promise<AuthResult>;
+  updatePassword: (newPassword: string) => Promise<AuthResult>;
+  changePassword: (
+    currentPassword: string,
+    newPassword: string,
+  ) => Promise<AuthResult>;
+  hasPasswordLogin: boolean;
   signOut: () => Promise<void>;
   /** Legacy waitlist hook — no-op now that auth is server-backed. */
   register: (_profile: { name: string; email: string }) => void;
@@ -49,6 +56,13 @@ interface AuthContextValue {
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
+
+function userHasPasswordLogin(user: User | null): boolean {
+  if (!user) return false;
+  return (
+    user.identities?.some((identity) => identity.provider === "email") ?? false
+  );
+}
 
 function getBrowserClient() {
   try {
@@ -176,6 +190,79 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: null };
   }, []);
 
+  const requestPasswordReset = useCallback(
+    async (email: string): Promise<AuthResult> => {
+      const supabase = getBrowserClient();
+      if (!supabase) {
+        return { error: "Supabase არ არის კონფიგურირებული." };
+      }
+
+      const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent("/auth/reset-password")}`;
+      const { error } = await supabase.auth.resetPasswordForEmail(
+        email.trim().toLowerCase(),
+        { redirectTo },
+      );
+
+      if (error) return { error: mapAuthError(error.message) };
+      return { error: null };
+    },
+    [],
+  );
+
+  const updatePassword = useCallback(
+    async (newPassword: string): Promise<AuthResult> => {
+      const supabase = getBrowserClient();
+      if (!supabase) {
+        return { error: "Supabase არ არის კონფიგურირებული." };
+      }
+
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) return { error: mapAuthError(error.message) };
+      return { error: null };
+    },
+    [],
+  );
+
+  const changePassword = useCallback(
+    async (
+      currentPassword: string,
+      newPassword: string,
+    ): Promise<AuthResult> => {
+      const supabase = getBrowserClient();
+      if (!supabase) {
+        return { error: "Supabase არ არის კონფიგურირებული." };
+      }
+
+      const {
+        data: { user: currentUser },
+      } = await supabase.auth.getUser();
+
+      if (!currentUser?.email) {
+        return { error: "ანგარიში ვერ მოიძებნა." };
+      }
+
+      if (!userHasPasswordLogin(currentUser)) {
+        return {
+          error: "ეს ანგარიში Google-ით შედის. პაროლის შეცვლა აქ არ არის ხელმისაწვდომი.",
+        };
+      }
+
+      const { error: verifyError } = await supabase.auth.signInWithPassword({
+        email: currentUser.email,
+        password: currentPassword,
+      });
+
+      if (verifyError) {
+        return { error: "მიმდინარე პაროლი არასწორია." };
+      }
+
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) return { error: mapAuthError(error.message) };
+      return { error: null };
+    },
+    [],
+  );
+
   const signInWithGoogle = useCallback(
     async (nextPath = "/dashboard"): Promise<AuthResult> => {
       const supabase = getBrowserClient();
@@ -209,10 +296,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       displayName: getAuthDisplayName(user),
       email: getAuthEmail(user),
       emailVerified: isEmailVerified(user),
+      hasPasswordLogin: userHasPasswordLogin(user),
       signInWithPassword,
       signUpWithPassword,
       signInWithGoogle,
       sendVerificationEmail,
+      requestPasswordReset,
+      updatePassword,
+      changePassword,
       signOut,
       register: () => {},
       login: () => {},
@@ -220,7 +311,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         void signOut();
       },
     }),
-    [user, ready, signInWithPassword, signUpWithPassword, signInWithGoogle, sendVerificationEmail, signOut],
+    [user, ready, signInWithPassword, signUpWithPassword, signInWithGoogle, sendVerificationEmail, requestPasswordReset, updatePassword, changePassword, signOut],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -29,6 +29,8 @@ site_url = "http://localhost:3000"
 additional_redirect_urls = [
   "http://localhost:3000/auth/callback",
   "https://aylopet-landing.vercel.app/auth/callback",
+  "http://localhost:3000/auth/reset-password",
+  "https://aylopet-landing.vercel.app/auth/reset-password",
 ]
 
 [auth.email]

@@ -6,7 +6,7 @@ import {
 } from "@/lib/supabase/env";
 
 const PROTECTED_PREFIXES = ["/dashboard"];
-const AUTH_PAGES = ["/auth/login", "/auth/register"];
+const AUTH_PAGES_REDIRECT_IF_LOGGED_IN = ["/auth/login", "/auth/register"];
 
 function isProtectedPath(pathname: string): boolean {
   return PROTECTED_PREFIXES.some(
@@ -14,8 +14,8 @@ function isProtectedPath(pathname: string): boolean {
   );
 }
 
-function isAuthPage(pathname: string): boolean {
-  return AUTH_PAGES.includes(pathname);
+function isAuthPageRedirectIfLoggedIn(pathname: string): boolean {
+  return AUTH_PAGES_REDIRECT_IF_LOGGED_IN.includes(pathname);
 }
 
 export async function updateSession(request: NextRequest) {
@@ -69,7 +69,7 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  if (user && isAuthPage(pathname)) {
+  if (user && isAuthPageRedirectIfLoggedIn(pathname)) {
     const next = request.nextUrl.searchParams.get("next") ?? "/dashboard";
     const safeNext =
       next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
