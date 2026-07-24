@@ -120,7 +120,7 @@ export function AylopetAiPageContent() {
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </a>
                 <Link
-                  href="/early-access#waitlist"
+                  href="/onboarding/platform"
                   className="inline-flex min-h-[52px] items-center gap-2 rounded-full border border-[var(--brand-primary)]/15 bg-white/80 px-7 py-3.5 text-sm font-semibold text-[var(--forest-deep)] backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-[var(--brand-primary)]/30 sm:text-base"
                 >
                   {c.joinWaitlist}

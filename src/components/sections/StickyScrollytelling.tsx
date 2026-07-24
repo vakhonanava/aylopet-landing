@@ -45,7 +45,7 @@ const SECTIONS: ScrollSection[] = [
     tag: "პერსონალური კაბინეტი",
     headline: "შენი ძაღლის ციფრული პროფილი.",
     text: "აკონტროლე ვაქცინები, საკვების მიღება, ხასიათი და დანამატები ერთ ინტელექტუალურ სივრცეში. მიიღე AI რეკომენდაციები.",
-    cta: { label: "შექმენი პროფილი", href: "/early-access", variant: "primary" },
+    cta: { label: "შექმენი პროფილი", href: "/onboarding/platform", variant: "primary" },
     image: IMAGES.healthDog3D,
     imageAlt: "Aylopet · ძაღლის ციფრული ჯანმრთელობის პროფილი",
     overlay: "health",

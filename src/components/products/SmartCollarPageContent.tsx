@@ -56,7 +56,7 @@ export function SmartCollarPageContent() {
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
                 <Link
-                  href="/early-access#waitlist"
+                  href="/onboarding/platform"
                   className="group inline-flex items-center gap-2 rounded-full bg-[var(--brand-primary)] px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-[var(--brand-primary-hover)]"
                 >
                   {copy.ctaWaitlist}
@@ -185,7 +185,7 @@ export function SmartCollarPageContent() {
                 {copy.finalCtaBody}
               </p>
               <Link
-                href="/early-access#waitlist"
+                href="/onboarding/platform"
                 className="group mt-6 inline-flex items-center gap-2 rounded-full bg-[var(--brand-primary)] px-8 py-4 text-base font-medium text-white transition-all duration-300 hover:bg-[var(--brand-primary-hover)]"
               >
                 {copy.finalCta}

@@ -15,7 +15,7 @@ import { IMAGES } from "@/lib/images";
 import type { LucideIcon } from "lucide-react";
 
 const FEATURE_META = [
-  { href: "/early-access", icon: User, visual: "dog" as const },
+  { href: "/onboarding/platform", icon: User, visual: "dog" as const },
   { href: "/products/aylopet-ai#chat", icon: MessageCircle, visual: "dog" as const },
   { href: "/dna-journey", icon: Dna, visual: "helix" as const },
   { href: "/b2b", icon: Building2, visual: "food" as const },

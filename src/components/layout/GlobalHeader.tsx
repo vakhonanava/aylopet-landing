@@ -97,7 +97,7 @@ function MobileNavGroup({
 
 export function GlobalHeader() {
   const pathname = usePathname();
-  const { user, ready } = useAuth();
+  const { user, ready, displayName } = useAuth();
   const { dict } = useLocale();
   const [mobileOpen, setMobileOpen] = useState(false);
   const navHidden = useHideOnScroll();
@@ -164,7 +164,7 @@ export function GlobalHeader() {
                 <LayoutDashboard className="h-3.5 w-3.5 xl:h-4 xl:w-4" />
                 <span className="hidden 2xl:inline">{t.myPanel}</span>
                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/15 text-[10px] font-semibold xl:h-7 xl:w-7 xl:text-xs">
-                  {user!.name.charAt(0).toUpperCase()}
+                  {displayName.charAt(0).toUpperCase()}
                 </span>
               </Link>
             ) : (

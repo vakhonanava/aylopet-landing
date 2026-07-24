@@ -244,7 +244,7 @@ export function LabResultsUpload({ pet }: LabResultsUploadProps) {
       const response = await fetch("/api/lab-results/delete", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pathname: report.pathname }),
+        body: JSON.stringify({ pathname: report.pathname, fileId: report.id }),
       });
       if (!response.ok) throw new Error("Delete failed");
       removeLabReport(pet.id, report.id);

@@ -48,7 +48,7 @@ export function DnaPortalComingSoon() {
 
       <div className="flex flex-wrap gap-3">
         <Link
-          href="/early-access"
+          href="/onboarding/platform"
           className="rounded-full bg-[var(--brand-primary)] px-6 py-3 text-sm font-medium text-white"
         >
           {copy.ctaWaitlist}

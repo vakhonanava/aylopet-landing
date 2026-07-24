@@ -54,8 +54,24 @@ if (response.ok) {
 
 const body = await response.text();
 if (body.includes("PGRST205") || body.includes("does not exist")) {
+  // Also check new platform waitlist table
+  const waitlistUrl = `${url.replace(/\/$/, "")}/rest/v1/rpc/get_waitlist_count`;
+  const waitlistRes = await fetch(waitlistUrl, {
+    method: "POST",
+    headers: {
+      apikey: adminKey,
+      Authorization: `Bearer ${adminKey}`,
+      "Content-Type": "application/json",
+    },
+    body: "{}",
+  });
+  if (waitlistRes.ok) {
+    console.log("OK Supabase connected. Platform schema (002) is ready.");
+    process.exit(0);
+  }
+
   console.error("Supabase connected, but tables are missing.");
-  console.error("Run supabase/migrations/001_initial.sql in Supabase SQL Editor.");
+  console.error("Run supabase/migrations/001_initial.sql then 002_profiles_pets_platform.sql");
   process.exit(2);
 }
 

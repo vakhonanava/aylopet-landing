@@ -337,7 +337,7 @@ export function LandingChatbot() {
             className="mx-auto max-w-2xl overflow-hidden rounded-b-2xl border border-t-0 border-cyan-400/20 bg-[#0a1622] p-3 shadow-[0_24px_80px_rgba(0,0,0,0.55)]"
           >
             <Link
-              href={isSimulationComplete ? "/early-access" : "/products/aylopet-ai#chat"}
+              href={isSimulationComplete ? "/onboarding/platform" : "/products/aylopet-ai#chat"}
               className={`flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold transition-transform active:scale-[0.98] ${
                 isSimulationComplete
                   ? "bg-gradient-to-br from-[var(--terracotta)] to-[var(--terracotta-bright)] text-white"

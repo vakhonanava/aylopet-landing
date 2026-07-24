@@ -1,5 +1,9 @@
 import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { isPlatformPetId } from "@/lib/platform/dashboard-sync";
+import { uploadPetDocument } from "@/lib/platform/supabase";
+import { PET_DOCUMENTS_BUCKET } from "@/lib/platform/types";
 import { uploadLabReport } from "@/lib/lab-reports/repository";
+import { createClient } from "@/utils/supabase/server";
 
 export const runtime = "nodejs";
 
@@ -9,7 +13,7 @@ const ALLOWED_CONTENT_TYPES = [
   "image/jpeg",
   "image/png",
 ] as const;
-const PET_ID_PATTERN = /^[a-zA-Z0-9_-]{1,80}$/;
+const LEGACY_PET_ID_PATTERN = /^[a-zA-Z0-9_-]{1,80}$/;
 
 function isSameOrigin(request: Request): boolean {
   const origin = request.headers.get("origin");
@@ -38,10 +42,6 @@ export async function POST(request: Request) {
   const petId = String(formData.get("petId") ?? "");
   const file = formData.get("file");
 
-  if (!PET_ID_PATTERN.test(petId)) {
-    return Response.json({ error: "Invalid pet identifier." }, { status: 400 });
-  }
-
   if (!(file instanceof File)) {
     return Response.json({ error: "Missing file." }, { status: 400 });
   }
@@ -62,6 +62,62 @@ export async function POST(request: Request) {
   }
 
   try {
+    if (isPlatformPetId(petId)) {
+      const supabase = await createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        return Response.json({ error: "Sign in required." }, { status: 401 });
+      }
+
+      const { data: ownedPet } = await supabase
+        .from("pets")
+        .select("id")
+        .eq("id", petId)
+        .eq("owner_id", user.id)
+        .maybeSingle();
+
+      if (!ownedPet) {
+        return Response.json({ error: "Pet not found." }, { status: 403 });
+      }
+
+      const { metadata, error } = await uploadPetDocument(supabase, {
+        userId: user.id,
+        petId,
+        file,
+        category: "vet_medical",
+      });
+
+      if (error || !metadata) {
+        return Response.json({ error: error ?? "Upload failed." }, { status: 500 });
+      }
+
+      const { data: signed } = await supabase.storage
+        .from(PET_DOCUMENTS_BUCKET)
+        .createSignedUrl(metadata.filePath, 60 * 60);
+
+      return Response.json({
+        ok: true,
+        report: {
+          id: metadata.id,
+          petId: metadata.petId,
+          name: metadata.fileName,
+          size: metadata.fileSize,
+          mimeType: file.type,
+          storagePath: metadata.filePath,
+          url: signed?.signedUrl ?? "",
+          uploadedAt: metadata.createdAt,
+          status: "uploaded",
+        },
+      });
+    }
+
+    if (!LEGACY_PET_ID_PATTERN.test(petId)) {
+      return Response.json({ error: "Invalid pet identifier." }, { status: 400 });
+    }
+
     const report = await uploadLabReport({ petId, file });
     return Response.json({ ok: true, report });
   } catch (error) {

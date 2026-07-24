@@ -86,7 +86,7 @@ export function EarlyAdopterQuickForm({ leadCount = 0 }: { leadCount?: number })
       email,
     });
     window.setTimeout(() => {
-      router.push(`/early-access/success?${params.toString()}`);
+      router.push("/onboarding/platform");
     }, 900);
   };
 
@@ -224,7 +224,7 @@ export function EarlyAdopterQuickForm({ leadCount = 0 }: { leadCount?: number })
 
       <p className="mt-4 text-center">
         <Link
-          href="/early-access"
+          href="/onboarding/platform"
           className="text-sm font-medium text-[var(--brand-primary)] underline-offset-2 hover:underline"
         >
           {wf.fullProfileLink}

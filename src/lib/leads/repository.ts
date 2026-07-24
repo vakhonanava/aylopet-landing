@@ -77,6 +77,10 @@ export async function getAllLeads(): Promise<StoredLead[]> {
 }
 
 export async function getLeadCount(): Promise<number> {
+  if (isSupabaseConfigured()) {
+    const { getPlatformSignupCount } = await import("@/lib/platform/admin");
+    return getPlatformSignupCount();
+  }
   const leads = await readLeads();
   return leads.length;
 }

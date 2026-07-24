@@ -79,7 +79,7 @@ export const MAIN_NAV: NavItem[] = [
 ];
 
 export const PLATFORM_LINKS: NavChild[] = [
-  { label: "Early Adopter", href: "/early-access" },
+  { label: "Early Adopter", href: "/onboarding/platform" },
   { label: "AylopetAI", href: "/products/aylopet-ai", labelEn: "AylopetAI" },
   { label: "DNA Platform", href: "/dna-journey" },
   { label: "B2B Partnerships", href: "/b2b" },
@@ -102,5 +102,5 @@ export function scrollToWaitlist() {
     el.scrollIntoView({ behavior: "smooth", block: "start" });
     return;
   }
-  window.location.href = "/early-access#waitlist";
+  window.location.href = "/onboarding/platform";
 }

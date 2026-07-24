@@ -105,7 +105,7 @@ export function getMainNav(dict: Dictionary): NavItem[] {
 
 export function getPlatformLinks(dict: Dictionary) {
   return [
-    { label: dict.locale === "ka" ? "Early Adopter" : "Early Adopter", href: "/early-access" },
+    { label: dict.locale === "ka" ? "Early Adopter" : "Early Adopter", href: "/onboarding/platform" },
     { label: "AylopetAI", href: "/products/aylopet-ai" },
     {
       label: "DNA Platform",

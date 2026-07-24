@@ -9,6 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useAuth } from "@/components/auth/AuthProvider";
 import {
   createSeedPet,
   uid,
@@ -20,6 +21,8 @@ import {
   type SupplementEntry,
   type VaccineEntry,
 } from "@/lib/dashboard";
+import { fetchUserDashboardFromSupabase } from "@/lib/platform/dashboard-sync";
+import { createClient } from "@/utils/supabase/client";
 
 interface DashboardState {
   account: Account | null;
@@ -51,14 +54,22 @@ const STORAGE_KEY = "aylopet.dashboard.v1";
 const DashboardContext = createContext<DashboardContextValue | null>(null);
 
 export function DashboardProvider({ children }: { children: ReactNode }) {
+  const { user, ready: authReady } = useAuth();
   const [state, setState] = useState<DashboardState>({
-    account: { name: "ნინო", email: "nino@example.com" },
+    account: null,
     pets: [createSeedPet()],
   });
   const [ready, setReady] = useState(false);
 
-  // Hydrate from localStorage on mount.
+  // Hydrate demo data from localStorage when logged out.
   useEffect(() => {
+    if (!authReady) return;
+
+    if (user) {
+      queueMicrotask(() => setReady(true));
+      return;
+    }
+
     queueMicrotask(() => {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
@@ -71,23 +82,61 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
               labReports: pet.labReports ?? [],
             })),
           });
+        } else {
+          setState({
+            account: { name: "ნინო", email: "nino@example.com" },
+            pets: [createSeedPet()],
+          });
         }
       } catch {
         // ignore malformed storage
       }
       setReady(true);
     });
-  }, []);
+  }, [authReady, user]);
 
-  // Persist on change (after hydration).
+  // Load secure profile + pets from Supabase when authenticated.
   useEffect(() => {
-    if (!ready) return;
+    if (!authReady || !user) return;
+
+    let cancelled = false;
+    const supabase = (() => {
+      try {
+        return createClient();
+      } catch {
+        return null;
+      }
+    })();
+
+    if (!supabase) return;
+
+    void fetchUserDashboardFromSupabase(supabase, user.id).then((data) => {
+      if (cancelled || !data) return;
+      setState({
+        account: data.account.name
+          ? data.account
+          : {
+              name: user.user_metadata?.full_name ?? "მომხმარებელი",
+              email: user.email ?? "",
+            },
+        pets: data.pets.length > 0 ? data.pets : [],
+      });
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [authReady, user]);
+
+  // Persist demo state only for logged-out sessions.
+  useEffect(() => {
+    if (!ready || user) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
       // ignore quota errors
     }
-  }, [state, ready]);
+  }, [state, ready, user]);
 
   const updatePetState = useCallback(
     (id: string, updater: (pet: Pet) => Pet) => {
@@ -165,7 +214,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
           ),
         })),
     }),
-    [state, ready, updatePetState],
+    [state, ready, user, updatePetState],
   );
 
   return (

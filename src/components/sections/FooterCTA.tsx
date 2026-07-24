@@ -33,7 +33,7 @@ export function FooterCTA() {
                     {CONTENT.footer.subheadline}
                   </p>
                   <div className="mt-10 flex justify-center lg:justify-start">
-                    <Button href="/early-access">{CONTENT.footer.cta}</Button>
+                    <Button href="/onboarding/platform">{CONTENT.footer.cta}</Button>
                   </div>
                 </div>
               </div>

@@ -81,7 +81,7 @@ export function OnboardingPageContent() {
           <p className="mt-2 text-xs text-[var(--ob-text-tertiary)]">{gate.waitingNote}</p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Link
-              href="/early-access"
+              href="/onboarding/platform"
               className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[var(--ob-accent)] px-8 py-3.5 text-sm font-semibold text-white transition-colors duration-300 hover:bg-[var(--ob-accent)]/90"
             >
               {gate.ctaRegister}

@@ -16,7 +16,7 @@ import {
 export function UserReviewEditor({ onSaved }: { onSaved?: () => void }) {
   const { dict } = useLocale();
   const copy = dict.reviews;
-  const { user, ready } = useAuth();
+  const { user, ready, displayName, email } = useAuth();
   const [adopterOk, setAdopterOk] = useState(false);
   const [dogInfo, setDogInfo] = useState("");
   const [quote, setQuote] = useState("");
@@ -27,7 +27,7 @@ export function UserReviewEditor({ onSaved }: { onSaved?: () => void }) {
     queueMicrotask(() => {
       const session = getAdopterSession();
       setAdopterOk(session !== null || user !== null);
-      if (user) {
+      if (user?.email) {
         const existing = getReviewByEmail(user.email);
         if (existing) {
           setDogInfo(existing.dogInfo);
@@ -49,7 +49,7 @@ export function UserReviewEditor({ onSaved }: { onSaved?: () => void }) {
       <div className="rounded-2xl border border-[var(--border-light)] bg-white p-6 text-center shadow-soft">
         <p className="text-sm text-[var(--text-body)]">{copy.loginPrompt}</p>
         <Link
-          href="/early-access"
+          href="/onboarding/platform"
           className="mt-4 inline-flex rounded-full bg-[var(--brand-primary)] px-6 py-2.5 text-sm font-medium text-white"
         >
           {copy.loginCta}
@@ -59,8 +59,8 @@ export function UserReviewEditor({ onSaved }: { onSaved?: () => void }) {
   }
 
   const handleSave = () => {
-    if (!user || quote.trim().length < 10 || dogInfo.trim().length < 3) return;
-    upsertUserReview(user.email, user.name, { dogInfo, quote, rating });
+    if (!user?.email || quote.trim().length < 10 || dogInfo.trim().length < 3) return;
+    upsertUserReview(user.email, displayName, { dogInfo, quote, rating });
     setSaved(true);
     onSaved?.();
     setTimeout(() => setSaved(false), 2500);

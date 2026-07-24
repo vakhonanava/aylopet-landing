@@ -171,7 +171,7 @@ export function EarlyAdopterForm() {
     });
 
     window.setTimeout(() => {
-      router.push(`/early-access/success?${params.toString()}`);
+      router.push("/onboarding/platform");
     }, 1200);
   };
 
