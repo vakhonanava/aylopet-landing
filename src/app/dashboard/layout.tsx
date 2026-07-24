@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { EmailVerificationBanner } from "@/components/auth/EmailVerificationBanner";
 import { DashboardProvider } from "@/components/dashboard/DashboardStore";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { MobileTopBar } from "@/components/dashboard/MobileTopBar";
@@ -20,7 +21,10 @@ export default function DashboardLayout({
         <div className="flex min-w-0 flex-1 flex-col">
           <MobileTopBar />
           <main className="flex-1 px-5 py-8 sm:px-8 lg:px-10 lg:py-10">
-            <div className="mx-auto w-full max-w-5xl">{children}</div>
+            <div className="mx-auto w-full max-w-5xl">
+              <EmailVerificationBanner />
+              {children}
+            </div>
           </main>
         </div>
       </div>

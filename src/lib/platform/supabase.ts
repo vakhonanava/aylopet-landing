@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { establishSessionAfterSignUp } from "@/lib/auth/session";
 import {
   PET_DOCUMENTS_BUCKET,
   type OwnerProfile,
@@ -44,18 +45,27 @@ export async function registerWaitlistUser(
     } else {
       return { userId: null, error: signUpError.message };
     }
+  } else if (!signUpData.session) {
+    const sessionResult = await establishSessionAfterSignUp(
+      supabase,
+      email,
+      entry.password,
+    );
+    if (sessionResult.error || !sessionResult.userId) {
+      return {
+        userId: null,
+        error: sessionResult.error ?? "ანგარიში ვერ შეიქმნა.",
+      };
+    }
   }
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const userId = signUpData.user?.id ?? user?.id ?? null;
+  const userId = user?.id ?? signUpData?.user?.id ?? null;
   if (!userId) {
-    return {
-      userId: null,
-      error: "ანგარიში შეიქმნა. დაადასტურე ელ. ფოსტა და გააგრძელე.",
-    };
+    return { userId: null, error: "ანგარიში ვერ შეიქმნა." };
   }
 
   const { error: waitlistError } = await supabase.from("waitlist").insert({

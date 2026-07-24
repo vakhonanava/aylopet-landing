@@ -15,11 +15,14 @@ import {
   getAuthEmail,
   mapAuthError,
 } from "@/lib/auth/display";
+import {
+  establishSessionAfterSignUp,
+  isEmailVerified,
+} from "@/lib/auth/session";
 import { createClient } from "@/utils/supabase/client";
 
 interface AuthResult {
   error: string | null;
-  needsEmailConfirmation?: boolean;
 }
 
 interface AuthContextValue {
@@ -27,6 +30,7 @@ interface AuthContextValue {
   ready: boolean;
   displayName: string;
   email: string;
+  emailVerified: boolean;
   signInWithPassword: (email: string, password: string) => Promise<AuthResult>;
   signUpWithPassword: (
     name: string,
@@ -34,6 +38,7 @@ interface AuthContextValue {
     password: string,
   ) => Promise<AuthResult>;
   signInWithGoogle: (nextPath?: string) => Promise<AuthResult>;
+  sendVerificationEmail: () => Promise<AuthResult>;
   signOut: () => Promise<void>;
   /** Legacy waitlist hook — no-op now that auth is server-backed. */
   register: (_profile: { name: string; email: string }) => void;
@@ -117,13 +122,59 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         },
       });
 
-      if (error) return { error: mapAuthError(error.message) };
+      if (error) {
+        if (error.message.toLowerCase().includes("already registered")) {
+          const signInResult = await signInWithPassword(email, password);
+          return signInResult;
+        }
+        return { error: mapAuthError(error.message) };
+      }
 
-      const needsEmailConfirmation = !data.session;
-      return { error: null, needsEmailConfirmation };
+      if (!data.session) {
+        const sessionResult = await establishSessionAfterSignUp(
+          supabase,
+          email,
+          password,
+        );
+        if (sessionResult.error) {
+          return { error: sessionResult.error };
+        }
+      }
+
+      return { error: null };
     },
-    [],
+    [signInWithPassword],
   );
+
+  const sendVerificationEmail = useCallback(async (): Promise<AuthResult> => {
+    const supabase = getBrowserClient();
+    if (!supabase) {
+      return { error: "Supabase არ არის კონფიგურირებული." };
+    }
+
+    const {
+      data: { user: currentUser },
+    } = await supabase.auth.getUser();
+
+    if (!currentUser?.email) {
+      return { error: "ელ. ფოსტა ვერ მოიძებნა." };
+    }
+
+    if (isEmailVerified(currentUser)) {
+      return { error: null };
+    }
+
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email: currentUser.email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+      },
+    });
+
+    if (error) return { error: mapAuthError(error.message) };
+    return { error: null };
+  }, []);
 
   const signInWithGoogle = useCallback(
     async (nextPath = "/dashboard"): Promise<AuthResult> => {
@@ -157,9 +208,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       ready,
       displayName: getAuthDisplayName(user),
       email: getAuthEmail(user),
+      emailVerified: isEmailVerified(user),
       signInWithPassword,
       signUpWithPassword,
       signInWithGoogle,
+      sendVerificationEmail,
       signOut,
       register: () => {},
       login: () => {},
@@ -167,7 +220,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         void signOut();
       },
     }),
-    [user, ready, signInWithPassword, signUpWithPassword, signInWithGoogle, signOut],
+    [user, ready, signInWithPassword, signUpWithPassword, signInWithGoogle, sendVerificationEmail, signOut],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

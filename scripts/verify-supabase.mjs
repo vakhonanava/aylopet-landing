@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Verifies Supabase connectivity and whether the migration has been applied.
- * Run: node scripts/verify-supabase.mjs
+ * Verifies Supabase connectivity and platform schema readiness.
+ * Run: npm run verify:supabase
  */
 import { readFileSync } from "fs";
 import { resolve } from "path";
@@ -27,53 +27,86 @@ function loadEnvLocal() {
 loadEnvLocal();
 
 const url =
-  process.env.SUPABASE_URL ||
-  process.env.NEXT_PUBLIC_SUPABASE_URL;
+  process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 const adminKey =
-  process.env.SUPABASE_SECRET_KEY ||
-  process.env.SUPABASE_SERVICE_ROLE_KEY;
+  process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+const publishableKey =
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+  process.env.SUPABASE_PUBLISHABLE_KEY;
 
 if (!url || !adminKey) {
   console.error("Set SUPABASE_URL and SUPABASE_SECRET_KEY in .env.local");
   process.exit(1);
 }
 
-const restUrl = `${url.replace(/\/$/, "")}/rest/v1/early_adopter_leads?select=id&limit=1`;
-
-const response = await fetch(restUrl, {
-  headers: {
-    apikey: adminKey,
-    Authorization: `Bearer ${adminKey}`,
-  },
-});
-
-if (response.ok) {
-  console.log("OK Supabase connected. Table early_adopter_leads exists.");
-  process.exit(0);
+if (!publishableKey) {
+  console.error("Set NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY in .env.local");
+  process.exit(1);
 }
 
-const body = await response.text();
-if (body.includes("PGRST205") || body.includes("does not exist")) {
-  // Also check new platform waitlist table
-  const waitlistUrl = `${url.replace(/\/$/, "")}/rest/v1/rpc/get_waitlist_count`;
-  const waitlistRes = await fetch(waitlistUrl, {
+const base = url.replace(/\/$/, "");
+const headers = {
+  apikey: adminKey,
+  Authorization: `Bearer ${adminKey}`,
+};
+
+async function tableExists(table) {
+  const response = await fetch(`${base}/rest/v1/${table}?select=id&limit=1`, {
+    headers,
+  });
+  return response.ok;
+}
+
+async function rpcExists(name) {
+  const response = await fetch(`${base}/rest/v1/rpc/${name}`, {
     method: "POST",
-    headers: {
-      apikey: adminKey,
-      Authorization: `Bearer ${adminKey}`,
-      "Content-Type": "application/json",
-    },
+    headers: { ...headers, "Content-Type": "application/json", Prefer: "return=minimal" },
     body: "{}",
   });
-  if (waitlistRes.ok) {
-    console.log("OK Supabase connected. Platform schema (002) is ready.");
+  return response.ok;
+}
+
+async function main() {
+  const platformTables = ["waitlist", "profiles", "pets", "pet_files"];
+  const legacyTables = ["early_adopter_leads", "lab_reports"];
+
+  const platformReady = (
+    await Promise.all(platformTables.map(tableExists))
+  ).every(Boolean);
+
+  const waitlistCountOk = await rpcExists("get_waitlist_count");
+  const adminViewOk = await tableExists("admin_signups_overview");
+
+  if (platformReady && waitlistCountOk && adminViewOk) {
+    console.log("OK Supabase platform is fully ready (002 + 003).");
+    console.log("  Tables:", platformTables.join(", "));
+    console.log("  RPC: get_waitlist_count");
+    console.log("  View: admin_signups_overview");
     process.exit(0);
   }
 
-  console.error("Supabase connected, but tables are missing.");
-  console.error("Run supabase/migrations/001_initial.sql then 002_profiles_pets_platform.sql");
+  const legacyReady = (
+    await Promise.all(legacyTables.map(tableExists))
+  ).some(Boolean);
+
+  if (legacyReady && !platformReady) {
+    console.error("Supabase connected, but platform schema is missing.");
+    console.error("Run: npm run apply:supabase");
+    console.error("  (needs SUPABASE_ACCESS_TOKEN or SUPABASE_DB_URL in .env.local)");
+    process.exit(2);
+  }
+
+  if (!legacyReady && !platformReady) {
+    console.error("Supabase connected, but no Aylopet tables found.");
+    console.error("Run migrations in supabase/migrations/ starting with 001_initial.sql");
+    process.exit(2);
+  }
+
+  console.error("Supabase partially configured. Re-run: npm run apply:supabase");
   process.exit(2);
 }
 
-console.error(`Supabase check failed (${response.status}): ${body}`);
-process.exit(1);
+main().catch((error) => {
+  console.error(error instanceof Error ? error.message : error);
+  process.exit(1);
+});

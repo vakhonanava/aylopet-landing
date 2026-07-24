@@ -25,6 +25,9 @@ export function mapAuthError(message: string): string {
   if (lower.includes("provider is not enabled") || lower.includes("unsupported provider")) {
     return "Google შესვლა ჯერ არ არის ჩართული Supabase-ში. სცადე ელ. ფოსტით ან ჩართე Google provider.";
   }
+  if (lower.includes("email not confirmed")) {
+    return "ელ. ფოსტა ჯერ არ არის დადასტურებული. შეგიძლია გააგრძელო, ან დაადასტურო dashboard-იდან.";
+  }
   if (lower.includes("invalid login credentials")) {
     return "არასწორი ელ. ფოსტა ან პაროლი.";
   }
