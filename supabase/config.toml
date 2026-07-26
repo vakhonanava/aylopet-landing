@@ -25,12 +25,16 @@ file_size_limit = "10MiB"
 
 [auth]
 enabled = true
-site_url = "http://localhost:3000"
+site_url = "https://aylopet.com"
 additional_redirect_urls = [
   "http://localhost:3000/auth/callback",
   "https://aylopet-landing.vercel.app/auth/callback",
+  "https://aylopet.com/auth/callback",
+  "https://www.aylopet.com/auth/callback",
   "http://localhost:3000/auth/reset-password",
   "https://aylopet-landing.vercel.app/auth/reset-password",
+  "https://aylopet.com/auth/reset-password",
+  "https://www.aylopet.com/auth/reset-password",
 ]
 
 [auth.email]
