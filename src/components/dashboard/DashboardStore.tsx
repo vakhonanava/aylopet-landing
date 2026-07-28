@@ -37,6 +37,7 @@ interface DashboardContextValue extends DashboardState {
       Pet,
       "id" | "vaccines" | "supplements" | "food" | "moods" | "labReports"
     >,
+    options?: { id?: string },
   ) => string;
   updatePet: (id: string, patch: Partial<Pet>) => void;
   getPet: (id: string) => Pet | undefined;
@@ -165,8 +166,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       ...state,
       ready,
       setAccount: (account) => setState((p) => ({ ...p, account })),
-      addPet: (pet) => {
-        const id = uid("pet");
+      addPet: (pet, options) => {
+        const id = options?.id ?? uid("pet");
         setState((prev) => ({
           ...prev,
           pets: [
