@@ -1,3 +1,7 @@
+import { IMAGES } from "@/lib/images";
+
+export type ReviewImageKey = keyof typeof IMAGES;
+
 export interface UserReview {
   id: string;
   email: string;
@@ -6,39 +10,24 @@ export interface UserReview {
   quote: string;
   rating: number;
   updatedAt: string;
+  /** Built-in image for seed / demo entries */
+  imageKey?: ReviewImageKey;
+  /** User-uploaded photo (data URL, stored locally) */
+  photoDataUrl?: string;
 }
 
-const STORAGE_KEY = "aylopet-reviews.v1";
+const STORAGE_KEY = "aylopet-reviews.v2";
 
 export const SEED_REVIEWS: UserReview[] = [
   {
-    id: "seed-1",
-    email: "seed@aylopet.ge",
-    authorName: "ნინო კ.",
-    dogInfo: "ბელი · Golden Retriever",
+    id: "seed-aylopet",
+    email: "hello@aylopet.com",
+    authorName: "Aylopet",
+    dogInfo: "პლატფორმა · AI ზრუნვა",
     quote:
-      "რექსის ენერგია და ბეწვის ხარისხი ნამდვილად შეიცვალა. პორციები ზუსტად მისი წონის მიხედვითაა.",
+      "ჩვენთვის Aylopet არის მეტი სიყვარული ყოველდღიურ ზრუნვაში — AI რჩევები, პერსონალური კვება და ცოცხალი საკვები ერთ სივრცეში.",
     rating: 5,
-    updatedAt: "2026-01-01T00:00:00.000Z",
-  },
-  {
-    id: "seed-2",
-    email: "seed2@aylopet.ge",
-    authorName: "გიორგი მ.",
-    dogInfo: "ლუკა · French Bulldog",
-    quote:
-      "ყველაზე მომწონს, რომ ყველაფერი ერთ აპშია · კვება, ვაქცინები და AI რჩევები.",
-    rating: 5,
-    updatedAt: "2026-01-01T00:00:00.000Z",
-  },
-  {
-    id: "seed-3",
-    email: "seed3@aylopet.ge",
-    authorName: "მარიამ თ.",
-    dogInfo: "ჩიპი · Mixed breed",
-    quote:
-      "Early Adopter პროგრამამ საშუაღამოს კონსულტაცია მოგვცა. პირველი კვილი უკვე შედეგიანია.",
-    rating: 5,
+    imageKey: "healthDog3D",
     updatedAt: "2026-01-01T00:00:00.000Z",
   },
 ];
@@ -59,7 +48,7 @@ function writeAll(reviews: UserReview[]): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(reviews));
   } catch {
-    // ignore
+    // ignore quota errors
   }
 }
 
@@ -75,7 +64,7 @@ export function getReviewByEmail(email: string): UserReview | null {
 export function upsertUserReview(
   email: string,
   authorName: string,
-  input: Pick<UserReview, "dogInfo" | "quote" | "rating">,
+  input: Pick<UserReview, "dogInfo" | "quote" | "rating" | "photoDataUrl">,
 ): UserReview {
   const normalized = email.trim().toLowerCase();
   const all = readAll();
@@ -87,6 +76,7 @@ export function upsertUserReview(
     dogInfo: input.dogInfo.trim(),
     quote: input.quote.trim(),
     rating: Math.min(5, Math.max(1, input.rating)),
+    photoDataUrl: input.photoDataUrl,
     updatedAt: new Date().toISOString(),
   };
 
@@ -96,4 +86,34 @@ export function upsertUserReview(
 
   writeAll(merged);
   return next;
+}
+
+export function addPublicReview(input: {
+  authorName: string;
+  dogInfo: string;
+  quote: string;
+  rating: number;
+  photoDataUrl?: string;
+}): UserReview {
+  const next: UserReview = {
+    id: `pub-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    email: `guest-${Date.now()}@local`,
+    authorName: input.authorName.trim(),
+    dogInfo: input.dogInfo.trim(),
+    quote: input.quote.trim(),
+    rating: Math.min(5, Math.max(1, input.rating)),
+    photoDataUrl: input.photoDataUrl,
+    updatedAt: new Date().toISOString(),
+  };
+
+  writeAll([next, ...readAll()]);
+  return next;
+}
+
+export function reviewPhotoSrc(review: UserReview): string | null {
+  if (review.photoDataUrl) return review.photoDataUrl;
+  if (review.imageKey && review.imageKey in IMAGES) {
+    return IMAGES[review.imageKey];
+  }
+  return null;
 }

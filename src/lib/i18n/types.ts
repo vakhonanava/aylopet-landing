@@ -56,6 +56,10 @@ export interface ReviewsCopy {
   description: string;
   editTitle: string;
   editSubtitle: string;
+  formTitle: string;
+  formSubtitle: string;
+  nameLabel: string;
+  namePlaceholder: string;
   dogInfo: string;
   dogInfoPlaceholder: string;
   quote: string;
@@ -63,6 +67,12 @@ export interface ReviewsCopy {
   rating: string;
   save: string;
   saved: string;
+  submitReview: string;
+  photoLabel: string;
+  photoHint: string;
+  addPhoto: string;
+  removePhoto: string;
+  photoTooLarge: string;
   loginPrompt: string;
   loginCta: string;
   noReviews: string;

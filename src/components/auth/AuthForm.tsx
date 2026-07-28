@@ -5,6 +5,7 @@ import { ArrowRight, LoaderCircle } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
+import { PasswordField } from "@/components/auth/PasswordField";
 
 const input =
   "w-full rounded-2xl border border-[var(--border-light)] bg-white px-4 py-3 text-sm text-[var(--brand-primary)] outline-none transition-all duration-200 placeholder:text-[var(--text-tertiary)] focus:border-[var(--brand-primary)]/40 focus:ring-4 focus:ring-[var(--brand-primary)]/5";
@@ -99,30 +100,24 @@ export function LoginForm({ nextPath = "/dashboard" }: LoginFormProps) {
             required
           />
         </div>
-        <div className="flex flex-col gap-1.5">
-          <div className="flex items-center justify-between gap-3">
-            <label className={label} htmlFor="login-password">
-              პაროლი
-            </label>
+        <PasswordField
+          id="login-password"
+          label="პაროლი"
+          labelExtra={
             <Link
               href="/auth/forgot-password"
               className="text-xs font-medium text-[var(--brand-primary)] hover:underline"
             >
               დაგავიწყდა პაროლი?
             </Link>
-          </div>
-          <input
-            id="login-password"
-            type="password"
-            className={input}
-            placeholder="შენი პაროლი"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            autoComplete="current-password"
-            minLength={6}
-            required
-          />
-        </div>
+          }
+          placeholder="შენი პაროლი"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          autoComplete="current-password"
+          minLength={6}
+          required
+        />
 
         {error && (
           <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -218,22 +213,16 @@ export function RegisterForm({ nextPath = "/dashboard" }: RegisterFormProps) {
             required
           />
         </div>
-        <div className="flex flex-col gap-1.5">
-          <label className={label} htmlFor="password">
-            პაროლი
-          </label>
-          <input
-            id="password"
-            type="password"
-            className={input}
-            placeholder="მინიმუმ 6 სიმბოლო"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            autoComplete="new-password"
-            minLength={6}
-            required
-          />
-        </div>
+        <PasswordField
+          id="password"
+          label="პაროლი"
+          placeholder="მინიმუმ 6 სიმბოლო"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          autoComplete="new-password"
+          minLength={6}
+          required
+        />
 
         {error && (
           <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -378,38 +367,26 @@ export function ResetPasswordForm() {
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-5">
-      <div className="flex flex-col gap-1.5">
-        <label className={label} htmlFor="password">
-          ახალი პაროლი
-        </label>
-        <input
-          id="password"
-          type="password"
-          className={input}
-          placeholder="მინიმუმ 6 სიმბოლო"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          autoComplete="new-password"
-          minLength={6}
-          required
-        />
-      </div>
-      <div className="flex flex-col gap-1.5">
-        <label className={label} htmlFor="confirmPassword">
-          გაიმეორე ახალი პაროლი
-        </label>
-        <input
-          id="confirmPassword"
-          type="password"
-          className={input}
-          placeholder="გაიმეორე პაროლი"
-          value={confirmPassword}
-          onChange={(event) => setConfirmPassword(event.target.value)}
-          autoComplete="new-password"
-          minLength={6}
-          required
-        />
-      </div>
+      <PasswordField
+        id="password"
+        label="ახალი პაროლი"
+        placeholder="მინიმუმ 6 სიმბოლო"
+        value={password}
+        onChange={(event) => setPassword(event.target.value)}
+        autoComplete="new-password"
+        minLength={6}
+        required
+      />
+      <PasswordField
+        id="confirmPassword"
+        label="გაიმეორე ახალი პაროლი"
+        placeholder="გაიმეორე პაროლი"
+        value={confirmPassword}
+        onChange={(event) => setConfirmPassword(event.target.value)}
+        autoComplete="new-password"
+        minLength={6}
+        required
+      />
 
       {error && (
         <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -488,51 +465,33 @@ export function ChangePasswordForm() {
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-5">
-      <div className="flex flex-col gap-1.5">
-        <label className={label} htmlFor="currentPassword">
-          მიმდინარე პაროლი
-        </label>
-        <input
-          id="currentPassword"
-          type="password"
-          className={input}
-          value={currentPassword}
-          onChange={(event) => setCurrentPassword(event.target.value)}
-          autoComplete="current-password"
-          minLength={6}
-          required
-        />
-      </div>
-      <div className="flex flex-col gap-1.5">
-        <label className={label} htmlFor="newPassword">
-          ახალი პაროლი
-        </label>
-        <input
-          id="newPassword"
-          type="password"
-          className={input}
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          autoComplete="new-password"
-          minLength={6}
-          required
-        />
-      </div>
-      <div className="flex flex-col gap-1.5">
-        <label className={label} htmlFor="confirmNewPassword">
-          გაიმეორე ახალი პაროლი
-        </label>
-        <input
-          id="confirmNewPassword"
-          type="password"
-          className={input}
-          value={confirmPassword}
-          onChange={(event) => setConfirmPassword(event.target.value)}
-          autoComplete="new-password"
-          minLength={6}
-          required
-        />
-      </div>
+      <PasswordField
+        id="currentPassword"
+        label="მიმდინარე პაროლი"
+        value={currentPassword}
+        onChange={(event) => setCurrentPassword(event.target.value)}
+        autoComplete="current-password"
+        minLength={6}
+        required
+      />
+      <PasswordField
+        id="newPassword"
+        label="ახალი პაროლი"
+        value={password}
+        onChange={(event) => setPassword(event.target.value)}
+        autoComplete="new-password"
+        minLength={6}
+        required
+      />
+      <PasswordField
+        id="confirmNewPassword"
+        label="გაიმეორე ახალი პაროლი"
+        value={confirmPassword}
+        onChange={(event) => setConfirmPassword(event.target.value)}
+        autoComplete="new-password"
+        minLength={6}
+        required
+      />
 
       {error && (
         <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -9,6 +10,7 @@ import { getAdopterSession } from "@/lib/adopter-session";
 import {
   getReviewByEmail,
   listReviews,
+  reviewPhotoSrc,
   upsertUserReview,
   type UserReview,
 } from "@/lib/reviews/store";
@@ -60,7 +62,7 @@ export function UserReviewEditor({ onSaved }: { onSaved?: () => void }) {
 
   const handleSave = () => {
     if (!user?.email || quote.trim().length < 10 || dogInfo.trim().length < 3) return;
-    upsertUserReview(user.email, displayName, { dogInfo, quote, rating });
+    upsertUserReview(user.email, displayName, { dogInfo, quote, rating, photoDataUrl: undefined });
     setSaved(true);
     onSaved?.();
     setTimeout(() => setSaved(false), 2500);
@@ -138,11 +140,26 @@ export function ReviewsList() {
 
   return (
     <div className="grid gap-6 md:grid-cols-2">
-      {reviews.map((item) => (
+      {reviews.map((item) => {
+        const photo = reviewPhotoSrc(item);
+        return (
         <blockquote
           key={item.id}
-          className="flex h-full flex-col rounded-2xl border border-[var(--border-light)] bg-white p-6 shadow-soft"
+          className="flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--border-light)] bg-white shadow-soft"
         >
+          {photo ? (
+            <div className="relative aspect-[16/10] w-full overflow-hidden">
+              <Image
+                src={photo}
+                alt=""
+                fill
+                className="object-cover"
+                sizes="400px"
+                unoptimized={photo.startsWith("data:")}
+              />
+            </div>
+          ) : null}
+          <div className="flex flex-1 flex-col p-6">
           <div className="flex gap-0.5" aria-label={`${item.rating} stars`}>
             {Array.from({ length: item.rating }).map((_, i) => (
               <Star key={i} className="h-4 w-4 fill-[var(--trust-gold)] text-[var(--trust-gold)]" aria-hidden />
@@ -157,8 +174,9 @@ export function ReviewsList() {
               <p className="text-xs text-[var(--text-secondary)]">{item.dogInfo}</p>
             </cite>
           </footer>
+          </div>
         </blockquote>
-      ))}
+      )})}
     </div>
   );
 }

@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Building2, Dna, MessageCircle, User } from "lucide-react";
 import { useLocale } from "@/components/i18n/LocaleProvider";
-import { LanguageToggle } from "@/components/i18n/LanguageToggle";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { DnaHelix3D } from "@/components/visual/DnaHelix3D";
 import { FoodLayersVisual } from "@/components/visual/FoodLayersVisual";
@@ -59,16 +58,13 @@ export function PlatformHub({ variant = "full" }: { variant?: "full" | "home" })
           viewport={{ once: true, margin: "-40px" }}
         >
           <motion.div variants={fadeUp} className="mx-auto">
-            <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-end sm:justify-between">
-              <SectionHeader
-                eyebrow={copy.eyebrow}
-                title={isHome ? copy.homeTitle : copy.title}
-                description={isHome ? copy.homeDescription : copy.description}
-                align="center"
-                className="sm:text-left"
-              />
-              <LanguageToggle className="shrink-0" />
-            </div>
+            <SectionHeader
+              eyebrow={copy.eyebrow}
+              title={isHome ? copy.homeTitle : copy.title}
+              description={isHome ? copy.homeDescription : copy.description}
+              align="center"
+              className="sm:text-left"
+            />
           </motion.div>
 
           <motion.div
@@ -139,7 +135,7 @@ export function PlatformHub({ variant = "full" }: { variant?: "full" | "home" })
                     <h3 className="mt-1.5 font-display text-lg font-semibold text-[var(--forest-deep)]">
                       {feature.title}
                     </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)] line-clamp-2">
+                    <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">
                       {feature.description}
                     </p>
                     <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-[var(--brand-primary)] transition-[gap] duration-200 group-hover:gap-2">

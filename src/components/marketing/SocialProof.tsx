@@ -2,18 +2,13 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Quote, Star } from "lucide-react";
+import { Quote } from "lucide-react";
 import { useLocale } from "@/components/i18n/LocaleProvider";
+import { LandingReviewSection } from "@/components/reviews/LandingReviewForm";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { PawDecor } from "@/components/decor/PawDecor";
 import { IMAGES } from "@/lib/images";
 import { fadeUp, staggerContainer } from "@/lib/motion";
-
-const TESTIMONIAL_IMAGES = {
-  storyPekingese: IMAGES.storyPekingese,
-  storyCaneCorso: IMAGES.storyCaneCorso,
-  healthDog3D: IMAGES.healthDog3D,
-} as const;
 
 export function SocialProof() {
   const { dict } = useLocale();
@@ -88,44 +83,8 @@ export function SocialProof() {
             </footer>
           </motion.blockquote>
 
-          <motion.div
-            variants={fadeUp}
-            className="mt-12 grid gap-6 md:grid-cols-3"
-          >
-            {sp.testimonials.map((item) => (
-              <blockquote
-                key={item.name}
-                className="flex h-full flex-col rounded-[var(--radius-organic-xl)] border border-[var(--border-light)] bg-white p-6 shadow-soft transition-shadow duration-200 hover:shadow-organic"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border-2 border-white shadow-sm">
-                    <Image
-                      src={TESTIMONIAL_IMAGES[item.imageKey]}
-                      alt=""
-                      fill
-                      className="object-cover"
-                      sizes="48px"
-                    />
-                  </div>
-                  <div>
-                    <p className="font-medium text-[var(--text-primary)]">{item.name}</p>
-                    <p className="text-xs text-[var(--text-secondary)]">{item.dog}</p>
-                  </div>
-                </div>
-                <div className="mt-4 flex gap-0.5" aria-label="5 stars">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                      key={i}
-                      className="h-4 w-4 fill-[var(--trust-gold)] text-[var(--trust-gold)]"
-                      aria-hidden
-                    />
-                  ))}
-                </div>
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-[var(--text-body)]">
-                  &ldquo;{item.quote}&rdquo;
-                </p>
-              </blockquote>
-            ))}
+          <motion.div variants={fadeUp}>
+            <LandingReviewSection />
           </motion.div>
         </motion.div>
       </div>
