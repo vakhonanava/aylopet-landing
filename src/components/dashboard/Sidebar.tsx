@@ -22,7 +22,7 @@ const navItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { pets, account } = useDashboard();
+  const { pets, account, ready } = useDashboard();
   const { signOut, displayName, email } = useAuth();
 
   return (
@@ -65,7 +65,8 @@ export function Sidebar() {
           </Link>
         </div>
         <div className="mt-2 flex flex-col gap-1">
-          {pets.map((pet) => {
+          {ready &&
+            pets.map((pet) => {
             const active = pathname === `/dashboard/pets/${pet.id}`;
             return (
               <Link

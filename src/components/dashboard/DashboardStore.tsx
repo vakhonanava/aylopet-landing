@@ -57,49 +57,46 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const { user, ready: authReady } = useAuth();
   const [state, setState] = useState<DashboardState>({
     account: null,
-    pets: [createSeedPet()],
+    pets: [],
   });
   const [ready, setReady] = useState(false);
 
-  // Hydrate demo data from localStorage when logged out.
   useEffect(() => {
     if (!authReady) return;
 
-    if (user) {
-      queueMicrotask(() => setReady(true));
-      return;
-    }
-
-    queueMicrotask(() => {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) {
-          const stored = JSON.parse(raw) as DashboardState;
-          setState({
-            ...stored,
-            pets: stored.pets.map((pet) => ({
-              ...pet,
-              labReports: pet.labReports ?? [],
-            })),
-          });
-        } else {
+    if (!user) {
+      queueMicrotask(() => {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const stored = JSON.parse(raw) as DashboardState;
+            setState({
+              ...stored,
+              pets: stored.pets.map((pet) => ({
+                ...pet,
+                labReports: pet.labReports ?? [],
+              })),
+            });
+          } else {
+            setState({
+              account: { name: "ნინო", email: "nino@example.com" },
+              pets: [createSeedPet()],
+            });
+          }
+        } catch {
           setState({
             account: { name: "ნინო", email: "nino@example.com" },
             pets: [createSeedPet()],
           });
         }
-      } catch {
-        // ignore malformed storage
-      }
-      setReady(true);
-    });
-  }, [authReady, user]);
-
-  // Load secure profile + pets from Supabase when authenticated.
-  useEffect(() => {
-    if (!authReady || !user) return;
+        setReady(true);
+      });
+      return;
+    }
 
     let cancelled = false;
+    setReady(false);
+
     const supabase = (() => {
       try {
         return createClient();
@@ -108,19 +105,34 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       }
     })();
 
-    if (!supabase) return;
+    if (!supabase) {
+      setState({
+        account: {
+          name:
+            (user.user_metadata?.full_name as string | undefined) ??
+            "მომხმარებელი",
+          email: user.email ?? "",
+        },
+        pets: [],
+      });
+      setReady(true);
+      return;
+    }
 
     void fetchUserDashboardFromSupabase(supabase, user.id).then((data) => {
-      if (cancelled || !data) return;
+      if (cancelled) return;
       setState({
-        account: data.account.name
+        account: data?.account.name
           ? data.account
           : {
-              name: user.user_metadata?.full_name ?? "მომხმარებელი",
+              name:
+                (user.user_metadata?.full_name as string | undefined) ??
+                "მომხმარებელი",
               email: user.email ?? "",
             },
-        pets: data.pets.length > 0 ? data.pets : [],
+        pets: data?.pets ?? [],
       });
+      setReady(true);
     });
 
     return () => {

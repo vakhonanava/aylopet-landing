@@ -6,7 +6,7 @@ import { AylopetLogo } from "@/components/brand/AylopetLogo";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
 
 export function MobileTopBar() {
-  const { pets } = useDashboard();
+  const { pets, ready } = useDashboard();
 
   return (
     <div className="sticky top-0 z-30 border-b border-[var(--border-light)] bg-white/80 backdrop-blur-md lg:hidden">
@@ -21,7 +21,8 @@ export function MobileTopBar() {
         </Link>
       </div>
       <div className="flex gap-2 overflow-x-auto px-5 pb-3">
-        {pets.map((pet) => (
+        {ready &&
+          pets.map((pet) => (
           <Link
             key={pet.id}
             href={`/dashboard/pets/${pet.id}`}
