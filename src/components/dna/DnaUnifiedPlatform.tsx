@@ -37,6 +37,14 @@ export function DnaUnifiedPlatform() {
             <p className="mt-4 text-base leading-relaxed text-[var(--text-body)] sm:text-lg">
               {t.intro}
             </p>
+            {t.details?.map((paragraph) => (
+              <p
+                key={paragraph.slice(0, 48)}
+                className="mt-4 text-base leading-relaxed text-[var(--text-body)] sm:text-lg"
+              >
+                {paragraph}
+              </p>
+            ))}
           </div>
         </RevealOnScroll>
 

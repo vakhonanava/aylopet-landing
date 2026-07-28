@@ -24,6 +24,9 @@ export function Phase2Teaser() {
           <h2 className="mx-auto max-w-3xl text-3xl font-bold leading-[1.15] tracking-tight text-[var(--brand-primary)] sm:text-4xl lg:text-5xl">
             შენი ძაღლის გენეტიკა. ხელოვნური ინტელექტი. სრულყოფილი კვება.
           </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-[var(--text-body)]">
+            შეისწავლე შენი ძაღლის დნმ და მართე მისი მომავალი
+          </p>
         </RevealOnScroll>
 
         <RevealOnScroll delay={0.15}>
@@ -91,9 +94,7 @@ export function Phase2Teaser() {
               </div>
 
               <p className="text-lg leading-relaxed text-slate-600">
-                Aylopet-ის შემდეგი ეტაპი აერთიანებს DNA ტესტირებას, AI ანალიზსა
-                და პერსონალიზებულ რაციონს · შექმნილს ზუსტად შენი მეგობრის
-                გენეტიკური პროფილისთვის. ეს მომავალი მალე იწყება.
+                შეისწავლე შენი ოთხფეხა მეგობრის გენეტიკური პროფილი, აარიდე თავი ფარულ რისკებს და შექმენი მასზე იდეალურად მორგებული რაციონი.
               </p>
 
               <Link

@@ -72,9 +72,11 @@ export function ValueComparisonSection() {
                 <p className="text-sm leading-relaxed text-[var(--text-tertiary)]">
                   {v.coffee.detail}
                 </p>
-                <span className="mt-4 inline-flex w-fit rounded-full bg-[var(--background-secondary)] px-3 py-1 text-xs font-medium text-[var(--text-tertiary)]">
-                  {v.coffee.duration}
-                </span>
+                {v.coffee.duration ? (
+                  <span className="mt-4 inline-flex w-fit rounded-full bg-[var(--background-secondary)] px-3 py-1 text-xs font-medium text-[var(--text-tertiary)]">
+                    {v.coffee.duration}
+                  </span>
+                ) : null}
               </div>
             </article>
 
@@ -161,7 +163,16 @@ export function ValueComparisonSection() {
 
           <motion.div variants={fadeUp} className="mt-10 text-center">
             <p className="text-sm font-medium text-[var(--text-secondary)]">{v.vetAnchor}</p>
-            <p className="mt-2 text-sm font-medium text-[var(--text-secondary)]">{v.priceNote}</p>
+            {v.priceNote ? (
+              <p className="mt-2 text-sm font-medium text-[var(--text-secondary)]">
+                {v.priceNote}
+              </p>
+            ) : null}
+            {v.vetAnchorSecondary ? (
+              <p className="mt-2 text-sm font-medium text-[var(--text-secondary)]">
+                {v.vetAnchorSecondary}
+              </p>
+            ) : null}
             <p className="mt-4 font-display text-xl font-semibold text-[var(--forest-deep)] sm:text-2xl">
               {v.punchline}
             </p>

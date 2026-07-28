@@ -31,7 +31,7 @@ export function getMainNav(dict: Dictionary): NavItem[] {
               : "Smart collar · GPS · activity · AI calories",
         },
         {
-          label: "DNA Platform",
+          label: dict.locale === "ka" ? "Aylopet DNA Lab" : "Aylopet DNA Lab",
           href: "/dna-journey",
           description:
             dict.locale === "ka"
@@ -108,7 +108,7 @@ export function getPlatformLinks(dict: Dictionary) {
     { label: dict.locale === "ka" ? "Early Adopter" : "Early Adopter", href: "/onboarding/platform" },
     { label: "AylopetAI", href: "/products/aylopet-ai" },
     {
-      label: "DNA Platform",
+      label: dict.locale === "ka" ? "Aylopet DNA Lab" : "Aylopet DNA Lab",
       href: "/dna-journey",
     },
     {

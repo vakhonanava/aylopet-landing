@@ -9,12 +9,6 @@ import { Button } from "@/components/ui/Button";
 export function WaitlistSectionContent({ count }: { count: number }) {
   const { dict } = useLocale();
   const w = dict.landing.waitlist;
-  const displayCount = count > 0 ? count : 10;
-  const counterText =
-    count > 0
-      ? dict.common.joinPetParents.replace("{count}", String(displayCount))
-      : dict.projectStatus.beAmongFirst;
-
   return (
     <section
       id="waitlist"
@@ -31,9 +25,6 @@ export function WaitlistSectionContent({ count }: { count: number }) {
           </h2>
           <p className="mt-3 text-base text-[var(--text-body)] sm:text-lg">
             {w.description}
-          </p>
-          <p className="mt-2 text-sm font-semibold text-[var(--brand-primary)]">
-            {counterText}
           </p>
         </div>
 

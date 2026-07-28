@@ -186,6 +186,7 @@ export interface DnaUnifiedCopy {
   badge: string;
   title: string;
   intro: string;
+  details?: string[];
   stepLabel: string;
   backendNote: string;
   readyTitle: string;
@@ -269,12 +270,13 @@ export interface ValueComparisonCopy {
     label: string;
     detail: string;
     badge: string;
-    bullets: [string, string];
+    bullets: string[];
     imageAlt: string;
   };
   lossTitle: string;
-  lossItems: [string, string, string];
+  lossItems: string[];
   vetAnchor: string;
+  vetAnchorSecondary?: string;
   punchline: string;
   cta: string;
   priceNote: string;

@@ -75,17 +75,8 @@ export function LandingChatbot() {
 
   useEffect(() => {
     const el = scrollRef.current;
-    if (!el) return;
-    const finalRecommendation = el.querySelector<HTMLElement>(
-      "[data-final-recommendation]",
-    );
-    el.scrollTo({
-      top:
-        isSimulationComplete && finalRecommendation
-          ? finalRecommendation.offsetTop - el.offsetTop - 8
-          : el.scrollHeight,
-      behavior: "smooth",
-    });
+    if (!el || isSimulationComplete) return;
+    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
   }, [
     messages,
     streamingText,

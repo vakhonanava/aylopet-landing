@@ -126,15 +126,17 @@ export function Hero3D({ media = "ecosystem" }: { media?: "current" | "ecosystem
               {h.techPlatform}
             </Link>
           </motion.div>
-          <motion.p
-            variants={fadeUp}
-            className="mt-4 flex items-center justify-center gap-2 text-center text-xs text-[var(--text-secondary)] lg:justify-start lg:text-left"
-          >
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--brand-accent-soft)] text-[var(--brand-primary)]">
-              <Check className="h-3 w-3" aria-hidden />
-            </span>
-            {h.ctaNote}
-          </motion.p>
+          {h.ctaNote ? (
+            <motion.p
+              variants={fadeUp}
+              className="mt-4 flex items-center justify-center gap-2 text-center text-xs text-[var(--text-secondary)] lg:justify-start lg:text-left"
+            >
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--brand-accent-soft)] text-[var(--brand-primary)]">
+                <Check className="h-3 w-3" aria-hidden />
+              </span>
+              {h.ctaNote}
+            </motion.p>
+          ) : null}
         </motion.div>
 
         <motion.div
