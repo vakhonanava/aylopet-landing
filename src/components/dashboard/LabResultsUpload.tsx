@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   AlertCircle,
   CheckCircle2,
+  ExternalLink,
   FileImage,
   FileText,
   LoaderCircle,
@@ -278,10 +279,20 @@ export function LabResultsUpload({ pet }: LabResultsUploadProps) {
               დაამუშავებს.
             </p>
           </div>
-          <span className="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/[0.08] px-3 py-1.5 text-xs font-medium text-emerald-200">
-            <ShieldCheck className="h-3.5 w-3.5" />
-            Private upload
-          </span>
+          <div className="flex flex-col items-start gap-2 sm:items-end">
+            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/[0.08] px-3 py-1.5 text-xs font-medium text-emerald-200">
+              <ShieldCheck className="h-3.5 w-3.5" />
+              Private upload
+            </span>
+            <button
+              type="button"
+              onClick={() => inputRef.current?.click()}
+              className="inline-flex w-fit items-center gap-2 rounded-full bg-emerald-300 px-4 py-2 text-sm font-semibold text-[#071b18] transition hover:bg-emerald-200"
+            >
+              <UploadCloud className="h-4 w-4" />
+              ანალიზის ატვირთვა
+            </button>
+          </div>
         </div>
 
         <label
@@ -391,7 +402,7 @@ export function LabResultsUpload({ pet }: LabResultsUploadProps) {
         {reports.length > 0 && (
           <div className="relative mt-5 space-y-2">
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-white/40">
-              ატვირთული დოკუმენტები · {reports.length}
+              ატვირთული ანალიზები · {reports.length}
             </p>
             <AnimatePresence initial={false}>
               {reports.map((report) => {
@@ -425,6 +436,17 @@ export function LabResultsUpload({ pet }: LabResultsUploadProps) {
                         </span>
                       </div>
                     </div>
+                    {report.url && (
+                      <a
+                        href={report.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white/50 transition-colors hover:bg-white/10 hover:text-emerald-200"
+                        aria-label={`${report.name} ნახვა`}
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    )}
                     <button
                       type="button"
                       onClick={() => void deleteReport(report)}

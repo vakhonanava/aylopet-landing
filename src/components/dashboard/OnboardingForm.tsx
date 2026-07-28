@@ -16,7 +16,7 @@ import {
   textInput,
 } from "@/components/dashboard/FormControls";
 import type { ActivityLevel, Temperament } from "@/lib/dashboard";
-import { createPetProfile } from "@/lib/platform/supabase";
+import { createPetProfileInSupabase } from "@/lib/platform/pet-persistence";
 import { createClient } from "@/utils/supabase/client";
 
 const petSchema = z.object({
@@ -115,17 +115,12 @@ export function OnboardingForm() {
     if (isAuthenticated && user) {
       try {
         const supabase = createClient();
-        const petResult = await createPetProfile(supabase, user.id, {
-          petName: petData.petName,
+        const petResult = await createPetProfileInSupabase(supabase, user.id, {
+          name: petData.petName,
           breed: petData.breed,
-          ageDob: "",
-          gender: "male",
-          isNeutered: false,
-          weight: petData.weightKg,
-          weightUnit: "kg",
-          healthHistory: [],
-          medicalNotes: "",
-          primaryGoal: "",
+          weightKg: petData.weightKg,
+          activity: petData.activity,
+          temperament: petData.temperament as Temperament[],
         });
 
         if (petResult.error || !petResult.petId) {

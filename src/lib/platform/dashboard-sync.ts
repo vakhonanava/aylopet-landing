@@ -1,5 +1,13 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Account, LabReportEntry, Pet } from "@/lib/dashboard";
+import type {
+  Account,
+  ActivityLevel,
+  LabReportEntry,
+  Pet,
+  PetProfileSnapshot,
+  Temperament,
+  VaccineEntry,
+} from "@/lib/dashboard";
 import { PET_DOCUMENTS_BUCKET } from "@/lib/platform/types";
 
 const UUID_RE =
@@ -11,8 +19,41 @@ const LAB_MIME_TYPES = new Set<LabReportEntry["mimeType"]>([
   "image/png",
 ]);
 
+const ACTIVITY_LEVELS = new Set<ActivityLevel>(["low", "moderate", "high"]);
+
 export function isPlatformPetId(id: string): boolean {
   return UUID_RE.test(id);
+}
+
+function parseActivity(value: unknown): ActivityLevel {
+  if (typeof value === "string" && ACTIVITY_LEVELS.has(value as ActivityLevel)) {
+    return value as ActivityLevel;
+  }
+  return "moderate";
+}
+
+function parseTemperament(value: unknown): Temperament[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter((item): item is Temperament => typeof item === "string");
+}
+
+function parseSnapshot(row: {
+  id: string;
+  created_at: string;
+  snapshot: unknown;
+}): PetProfileSnapshot | null {
+  if (!row.snapshot || typeof row.snapshot !== "object") return null;
+  const snap = row.snapshot as Record<string, unknown>;
+  return {
+    id: row.id,
+    savedAt: (snap.savedAt as string | undefined) ?? row.created_at,
+    name: String(snap.name ?? ""),
+    breed: String(snap.breed ?? ""),
+    weightKg: Number(snap.weightKg ?? 0),
+    activity: parseActivity(snap.activity),
+    temperament: parseTemperament(snap.temperament),
+    avatarUrl: typeof snap.avatarUrl === "string" ? snap.avatarUrl : undefined,
+  };
 }
 
 export async function fetchUserDashboardFromSupabase(
@@ -38,11 +79,26 @@ export async function fetchUserDashboardFromSupabase(
   const pets: Pet[] = [];
 
   for (const row of petsData ?? []) {
-    const { data: files } = await supabase
-      .from("pet_files")
-      .select("*")
-      .eq("pet_id", row.id)
-      .order("created_at", { ascending: false });
+    const petId = row.id as string;
+
+    const [{ data: files }, { data: vaccinesData }, { data: snapshotsData }] =
+      await Promise.all([
+        supabase
+          .from("pet_files")
+          .select("*")
+          .eq("pet_id", petId)
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("pet_vaccines")
+          .select("*")
+          .eq("pet_id", petId)
+          .order("administered", { ascending: false }),
+        supabase
+          .from("pet_profile_snapshots")
+          .select("id, created_at, snapshot")
+          .eq("pet_id", petId)
+          .order("created_at", { ascending: false }),
+      ]);
 
     const labReports: LabReportEntry[] = [];
 
@@ -68,6 +124,17 @@ export async function fetchUserDashboardFromSupabase(
       });
     }
 
+    const vaccines: VaccineEntry[] = (vaccinesData ?? []).map((v) => ({
+      id: v.id as string,
+      name: v.name as string,
+      administered: v.administered as string,
+      nextDue: (v.next_due as string | null) ?? "",
+    }));
+
+    const profileHistory: PetProfileSnapshot[] = (snapshotsData ?? [])
+      .map(parseSnapshot)
+      .filter((item): item is PetProfileSnapshot => item !== null);
+
     const rawWeight = Number(row.weight ?? 0);
     const weightKg =
       row.weight_unit === "lbs"
@@ -75,17 +142,19 @@ export async function fetchUserDashboardFromSupabase(
         : rawWeight;
 
     pets.push({
-      id: row.id as string,
+      id: petId,
       name: row.pet_name as string,
       breed: row.breed as string,
       weightKg,
-      activity: "moderate",
-      temperament: [],
-      vaccines: [],
+      activity: parseActivity(row.activity),
+      temperament: parseTemperament(row.temperament),
+      avatarUrl: (row.avatar_url as string | null) ?? undefined,
+      vaccines,
       supplements: [],
       food: [],
       moods: [],
       labReports,
+      profileHistory,
     });
   }
 

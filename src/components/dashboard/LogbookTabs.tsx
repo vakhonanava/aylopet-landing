@@ -72,29 +72,77 @@ export function LogbookTabs({ pet }: { pet: Pet }) {
 /* ------------------------------ Tab A: Vaccines --------------------------- */
 
 function VaccinesTab({ pet }: { pet: Pet }) {
-  const { addVaccine } = useDashboard();
+  const { addVaccine, updateVaccine, removeVaccine } = useDashboard();
   const [open, setOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [administered, setAdministered] = useState("");
   const [nextDue, setNextDue] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
 
-  const submit = () => {
-    if (!name || !administered) return;
-    addVaccine(pet.id, { name, administered, nextDue });
+  const resetForm = () => {
     setName("");
     setAdministered("");
     setNextDue("");
+    setEditingId(null);
     setOpen(false);
+    setError(null);
+  };
+
+  const startEdit = (v: (typeof pet.vaccines)[number]) => {
+    setEditingId(v.id);
+    setName(v.name);
+    setAdministered(v.administered);
+    setNextDue(v.nextDue);
+    setOpen(true);
+    setError(null);
+  };
+
+  const submit = async () => {
+    if (!name || !administered) return;
+    setBusy(true);
+    setError(null);
+
+    const result = editingId
+      ? await updateVaccine(pet.id, {
+          id: editingId,
+          name,
+          administered,
+          nextDue,
+        })
+      : await addVaccine(pet.id, { name, administered, nextDue });
+
+    setBusy(false);
+    if (!result.ok) {
+      setError(result.error ?? "ვაქცინა ვერ შეინახა.");
+      return;
+    }
+    resetForm();
+  };
+
+  const handleDelete = async (vaccineId: string) => {
+    setBusy(true);
+    setError(null);
+    const result = await removeVaccine(pet.id, vaccineId);
+    setBusy(false);
+    if (!result.ok) setError(result.error ?? "წაშლა ვერ მოხერხდა.");
   };
 
   return (
     <div>
       <div className="mb-5 flex items-center justify-between">
         <p className="text-sm text-slate-500">ვაქცინაციის ისტორია და გრაფიკი</p>
-        <button className={addButton} onClick={() => setOpen((o) => !o)}>
+        <button className={addButton} onClick={() => { setEditingId(null); setOpen((o) => !o); }}>
           <Plus className="h-4 w-4" /> დამატება
         </button>
       </div>
+
+      {error && (
+        <p className="mb-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          {error}
+        </p>
+      )}
 
       {open && (
         <div className="mb-6 grid gap-3 rounded-2xl border border-[#e5e7eb] bg-[#FAFAF8] p-4 sm:grid-cols-3">
@@ -125,9 +173,17 @@ function VaccinesTab({ pet }: { pet: Pet }) {
               onChange={(e) => setNextDue(e.target.value)}
             />
           </div>
-          <div className="flex items-end">
-            <button className={addButton} onClick={submit}>
-              <Check className="h-4 w-4" /> შენახვა
+          <div className="flex items-end gap-2">
+            <button className={addButton} disabled={busy} onClick={() => void submit()}>
+              <Check className="h-4 w-4" /> {editingId ? "განახლება" : "შენახვა"}
+            </button>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={resetForm}
+              className="rounded-full border border-[#e5e7eb] bg-white px-4 py-2.5 text-sm font-medium text-slate-600"
+            >
+              გაუქმება
             </button>
           </div>
         </div>
@@ -170,22 +226,40 @@ function VaccinesTab({ pet }: { pet: Pet }) {
                       ჩატარდა: {formatDate(v.administered)}
                     </p>
                   </div>
-                  {v.nextDue && (
-                    <span
-                      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium ${badge}`}
+                  <div className="flex flex-wrap items-center gap-2">
+                    {v.nextDue && (
+                      <span
+                        className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium ${badge}`}
+                      >
+                        {overdue ? (
+                          <AlertTriangle className="h-3.5 w-3.5" />
+                        ) : (
+                          <CalendarClock className="h-3.5 w-3.5" />
+                        )}
+                        {overdue
+                          ? `ვადაგადაცილებული · ${formatDate(v.nextDue)}`
+                          : soon
+                            ? `მალე (${due} დღე) · ${formatDate(v.nextDue)}`
+                            : `შემდეგი: ${formatDate(v.nextDue)}`}
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => startEdit(v)}
+                      className="rounded-full border border-[#e5e7eb] px-3 py-1 text-xs font-medium text-[var(--brand-primary)]"
                     >
-                      {overdue ? (
-                        <AlertTriangle className="h-3.5 w-3.5" />
-                      ) : (
-                        <CalendarClock className="h-3.5 w-3.5" />
-                      )}
-                      {overdue
-                        ? `ვადაგადაცილებული · ${formatDate(v.nextDue)}`
-                        : soon
-                          ? `მალე (${due} დღე) · ${formatDate(v.nextDue)}`
-                          : `შემდეგი: ${formatDate(v.nextDue)}`}
-                    </span>
-                  )}
+                      რედაქტირება
+                    </button>
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => void handleDelete(v.id)}
+                      className="rounded-full border border-red-200 px-3 py-1 text-xs font-medium text-red-600"
+                    >
+                      წაშლა
+                    </button>
+                  </div>
                 </div>
               </div>
             </li>

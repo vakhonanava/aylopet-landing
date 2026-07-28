@@ -93,6 +93,18 @@ export interface LabReportEntry {
   status: LabReportStatus;
 }
 
+/** Saved profile state archived on each explicit save. */
+export interface PetProfileSnapshot {
+  id: string;
+  savedAt: string;
+  name: string;
+  breed: string;
+  weightKg: number;
+  activity: ActivityLevel;
+  temperament: Temperament[];
+  avatarUrl?: string;
+}
+
 export interface Pet {
   id: string;
   name: string;
@@ -106,6 +118,7 @@ export interface Pet {
   food: FoodEntry[];
   moods: MoodEntry[];
   labReports: LabReportEntry[];
+  profileHistory: PetProfileSnapshot[];
 }
 
 export interface Account {
@@ -215,6 +228,7 @@ export function createSeedPet(): Pet {
       },
     ],
     labReports: [],
+    profileHistory: [],
   };
 }
 
