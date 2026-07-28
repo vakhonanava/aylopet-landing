@@ -68,7 +68,7 @@ function WaitlistCounterBadge({ count }: { count: number }) {
         <strong className="font-semibold tabular-nums text-white">
           {count.toLocaleString("ka-GE")}
         </strong>{" "}
-        Pet Parent უკვ waitlist-ზე
+        Pet Parent უკვე მოლოდინის სიაშია
       </span>
     </motion.div>
   );
@@ -443,7 +443,7 @@ export function AyliopetOnboarding() {
                 </button>
 
                 <p className="text-center text-xs text-white/40">
-                  უკვe გაქვს ანგარიში?{" "}
+                  უკვე გაქვს ანგარიში?{" "}
                   <Link href="/auth/login?next=/onboarding/platform" className="text-cyan-200 underline">
                     შესვლა
                   </Link>
