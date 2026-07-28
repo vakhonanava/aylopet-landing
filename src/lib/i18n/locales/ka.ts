@@ -12,9 +12,8 @@ export const ka: Dictionary = {
   common: {
     promoText: "მიიღე 40% ფასდაკლება! შემოუერთდი მოლოდინის სიას.",
     joinWaitlist: "მოლოდინის სია",
-    joinWaitlistPromo: "Waitlist · 40% ფასდაკლება",
-    charityMessage:
-      "შემოსავლის 5% ხმარდება ქველმოქმედებას, შემოგვიერთდი.",
+    joinWaitlistPromo: "Waitlist · დაჯავშნე ადგილი",
+    charityMessage: "მოგების ნაწილი ხმარდება ქველმოქმედებას, შემოგვიერთდი!",
     login: "შესვლა",
     myPanel: "ჩემი პანელი",
     menuOpen: "მენიუ",
@@ -102,12 +101,12 @@ export const ka: Dictionary = {
       titleHighlight: "მეტი სიყვარული.",
       titleLine2: "",
       emotionalLine:
-        "დაეხმარე შენს ძაღლს იცხოვროს უფრო დიდხანს და ჯანმრთელად Aylopet-თან ერთად.",
+        "დაეხმარე შენს ძაღლს, იცხოვროს უფრო დიდხანს და ჯანმრთელად, AylopetAI-ის პერსონალურ ასისტენტთან ერთად ",
       identityTag: "ძაღლის მფრობლებისთვის, ვინც მეტს ითხოვს",
       subtitle:
         "Aylopet აერთიანებს AI ნუტრიციას, გენომურ ინსაითებს და ცოცხალ საკვებს, მონაცემებზე დაფუძნებული ზრუნვა, არა მხოლოდ რაციონი.",
       techPlatform: "ტექ პლატფორმა",
-      ctaNote: "40% ფასდაკლება დაკეპილი რეგისტრაციისას · გადახდა ახლა არ არის საჭირო",
+      ctaNote: "დაჯავშნე ადგილი · გადახდა ახლა არ არის საჭირო",
       metrics: [
         { value: "200K+", label: "გენეტიკური მარკერი" },
         { value: "AI", label: "პერსონალური ინსაითები" },
@@ -116,7 +115,7 @@ export const ka: Dictionary = {
       ],
     },
     waitlist: {
-      badge: "მოლოდინის სია · 40% ფასდაკლება",
+      badge: "Waitlist · დაჯავშნე ადგილი",
       title: "შემოუერთდი Early Adopter სიას",
       description:
         "დაგვეხმარე პროდუქტის განვითარებაში, მიიღე ექსკლუზიური ფასდაკლება და პირველობით წვდომა ტექ პლატფორმაზე.",
@@ -147,8 +146,7 @@ export const ka: Dictionary = {
           "წონის მიზნებისთვის MER-ს მიმდინარე წონიდან და აქტივობიდან გამოვთვლიდი, შემდეგ პორციებს 55/45 დილა/საღამოს გავყოფდი. შევქმნა ნიმუშის კვირა?",
         allergy:
           "შევამოწმებ ქათამი, ხორბალი და საქონლის ხორცის ტრიგერებს და შემოგთავაზებ ქინძის და იხვის პროტეინებს.",
-        dna:
-          "DNA ინსაითები დამატებითი ფენაა, MDR1 სტატუსი და ჯიშის მეტაბოლიზმი პორციებს 8-დან 15%-მდე ცვლის. ჩანაწერებს თანდათანობით ვაგროვებთ.",
+        dna: "DNA ინსაითები დამატებითი ფენაა, MDR1 სტატუსი და ჯიშის მეტაბოლიზმი პორციებს 8-დან 15%-მდე ცვლის. ჩანაწერებს თანდათანობით ვაგროვებთ.",
       },
     },
     b2b: {
@@ -218,8 +216,7 @@ export const ka: Dictionary = {
     phone: "ტელეფონი *",
     partnershipType: "პარტნიორობის ტიპი *",
     partnershipGoals: "პარტნიორობის მიზნები *",
-    goalsPlaceholder:
-      "აღწერე აუდიტორია, მოცულობა და რას ელით Aylopet-ისგან...",
+    goalsPlaceholder: "აღწერე აუდიტორია, მოცულობა და რას ელით Aylopet-ისგან...",
     submit: "მოთხოვნის გაგზავნა",
     successTitle: "მადლობა, მოთხოვნა მივიღეთ",
     successEmailed: "პარტნიორობის გუნდი 2 სამუშაო დღეში დაგიკავშირდება.",
@@ -262,14 +259,16 @@ export const ka: Dictionary = {
   },
   waitlistForm: {
     quickTitle: "შემოუერთდი 30 წამში",
-    quickSubtitle: "სახელი, ელ. ფოსტა და ტელეფონი, 40% ფასდაკლება დაგიფიქსირდება.",
+    quickSubtitle:
+      "სახელი, ელ. ფოსტა და ტელეფონი, 40% ფასდაკლება დაგიფიქსირდება.",
     name: "სახელი *",
     namePlaceholder: "შენი სახელი",
     dogName: "ძაღლის სახელი (არასავალდებულო)",
     dogNamePlaceholder: "მაგ. კოკო",
     city: "ქალაქი",
     consent: "ვეთანხმები Aylopet-ის წესებსა და პირადი მონაცემების დამუშავებას",
-    privacy: "არ გამოგიგზავნით სპამს. მონაცემები მხოლოდ waitlist-ისთვის გამოიყენება.",
+    privacy:
+      "არ გამოგიგზავნით სპამს. მონაცემები მხოლოდ waitlist-ისთვის გამოიყენება.",
     submit: "შემოუერთდი სიას · 40% OFF",
     fullProfileLink: "სრული პროფილი (ძაღლის დეტალები)",
     familiesJoined: "{count} ოჯახი უკვე მოლოდინის სიაშია",
@@ -316,7 +315,8 @@ export const ka: Dictionary = {
       "პირველი AI კონსულტაცია",
       "შეზღუდული Early Adopter ადგილი",
     ],
-    vetAnchor: "ერთი ვეტერინარის ვიზიტი ~80-დან 150-მდე ₾ · AylopetAI ~10 ₾/თვე",
+    vetAnchor:
+      "ერთი ვეტერინარის ვიზიტი ~80-დან 150-მდე ₾ · AylopetAI ~10 ₾/თვე",
   },
   scarcity: {
     filled: "{count}/{cap} Early Adopter ადგილი დაკავებულია",
@@ -382,7 +382,8 @@ export const ka: Dictionary = {
   earlyAccessSuccess: {
     title: "მადლობა, {name}!",
     registered: "{dog} წარმატებით დარეგისტრირდა early adopter პროგრამაში.",
-    queuePosition: "შენ ხარ #{position} მოლოდინის რიგში. მალე დაგიკავშირდებით ელ. ფოსტაზე.",
+    queuePosition:
+      "შენ ხარ #{position} მოლოდინის რიგში. მალე დაგიკავშირდებით ელ. ფოსტაზე.",
     nextTitle: "რა მოხდება შემდეგ?",
     nextItems: [
       "განვიხილავთ შენს ძაღლის პროფილს",
@@ -410,7 +411,8 @@ export const ka: Dictionary = {
       },
       {
         title: "დაიწყე პერსონალური ზრუნვა",
-        description: "AI ნუტრიცია, პორციები და ჯანმრთელობის ტრეკინგი ერთ დაფაზე.",
+        description:
+          "AI ნუტრიცია, პორციები და ჯანმრთელობის ტრეკინგი ერთ დაფაზე.",
       },
     ],
     cta: "დაიწყე ახლა · უფასო რეგისტრაცია",
@@ -422,7 +424,7 @@ export const ka: Dictionary = {
     items: [],
   },
   stickyCta: {
-    label: "Waitlist · 40% OFF",
+    label: "Waitlist · დაჯავშნე ადგილი",
     sublabel: "შემოუერთდი პირველებს",
   },
   projectStatus: {
@@ -437,7 +439,8 @@ export const ka: Dictionary = {
       {
         label: "ეტაპი 1",
         title: "Gently Cooked ცოცხალი საკვები",
-        description: "Human grade რაციონი · უკვე წარმოებაში და early adopter მიწოდებაში.",
+        description:
+          "Human grade რაციონი · უკვე წარმოებაში და early adopter მიწოდებაში.",
         reaction: "სიხარული",
         reactionNote: "„საბოლოდ, ბოლოს ნამდვილი საკვები!“",
         status: "live",
@@ -453,15 +456,17 @@ export const ka: Dictionary = {
       {
         label: "ეტაპი 3",
         title: "DNA პლატფორმა",
-        description: "გენომური ინსაითები და ჯანმრთელობის პროფილი · საბოლოო პროდუქტი.",
+        description:
+          "გენომური ინსაითები და ჯანმრთელობის პროფილი · საბოლოო პროდუქტი.",
         reaction: "ღრმა მოლოდინი",
         reactionNote: "„ეს რეალურად შეცვლის ყველაფერს.“",
         status: "soon",
       },
       {
         label: "ეტაპი 4",
-        title: "Aylopet Pro",
-        description: "GPS, აქტივობა და ჯანმრთელობის სიგნალები · Aylopet-თან ინტეგრირებული.",
+        title: "Aylopet Smart Collar",
+        description:
+          "GPS, აქტივობა და ჯანმრთელობის სიგნალები · Aylopet-თან ინტეგრირებული.",
         reaction: "გულღვიძი სიამოვნება",
         reactionNote: "„ყოველდღე ვიცოდე, სად და როგორაა ძაღლი.“",
         status: "soon",
@@ -475,7 +480,7 @@ export const ka: Dictionary = {
     freshFood: "ცოცხალი საკვები",
     aylopetAi: "AylopetAI",
     dna: "DNA პლატფორმა",
-    smartCollar: "Aylopet Pro",
+    smartCollar: "Aylopet Smart Collar",
     vetConsult: "ვეტ კონსულტაცია",
     other: "სხვა",
     noteLabel: "რას ელოდები?",

@@ -30,10 +30,10 @@ export const MAIN_NAV: NavItem[] = [
         description: "პერსონალური ნუტრიციოლოგი · ჩატი და გეგმა",
       },
       {
-        label: "Aylopet Pro",
+        label: "Aylopet Smart Collar",
         href: "/products/smart-collar",
         description: "ჭკვიანი ყელსაბამი · GPS · აქტივობა · AI კალორიები",
-        labelEn: "Aylopet Pro",
+        labelEn: "Aylopet Smart Collar",
       },
       {
         label: "DNA Platform",

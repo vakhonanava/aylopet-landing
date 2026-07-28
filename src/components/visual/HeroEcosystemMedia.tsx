@@ -122,7 +122,7 @@ export function HeroEcosystemMedia() {
             <MapPin className="h-4 w-4" />
           </span>
           <div>
-            <p className="text-xs font-bold text-[var(--forest-deep)]">Aylopet Pro</p>
+            <p className="text-xs font-bold text-[var(--forest-deep)]">Aylopet Smart Collar</p>
             <p className="text-[9px] text-[var(--text-secondary)]">
               GPS · {ka ? "აქტივობა" : "activity"}
             </p>

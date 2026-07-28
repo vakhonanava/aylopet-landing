@@ -41,16 +41,16 @@ export interface SmartCollarCopy {
 }
 
 export const SMART_COLLAR_KA: SmartCollarCopy = {
-  eyebrow: "Aylopet Pro · მალე",
-  title: "Aylopet Pro · ჭკვიანი ყელსაბამი",
+  eyebrow: "Aylopet Smart Collar · მალე",
+  title: "Aylopet Smart Collar · ჭკვიანი ყელსაბამი",
   subtitle:
     "GPS მდებარეობა, აქტივობის მონიტორინგი და AI-ის მიერ გამოთვლილი, რეალურ დროში განახლებადი კალორიული საჭიროება, ერთ მოწყობილობაში.",
   comingSoonBadge: "მალე · Coming soon",
   ctaWaitlist: "შემოუერთდი waitlist-ს",
-  ctaFaq: "Aylopet Pro-ს ხშირი კითხვები",
+  ctaFaq: "Aylopet Smart Collar-ს ხშირი კითხვები",
   intro:
-    "Aylopet Pro არის ჭკვიანი ყელსაბამი, რომელიც გამოიყენება თქვენი ძაღლის რეალურ დროში მონიტორინგისთვის, რაც უზრუნველყოფს მის უსაფრთხოებასა და აქტივობის კონტროლს. მოწყობილობა ზუსტად ზომავს ლოკაციასა და გავლილ მანძილს, რაც გვეხმარება ენერგიის რეალური დანახარჯის გამოთვლაში. Aylopet Pro-დან მიღებულ მონაცემებზე დაყრდნობით, AylopetAI განსაზღვრავს კალორიების საჭირო რაოდენობას, რათა თქვენმა მეგობარმა მიიღოს ზუსტად ის, რაც მას ნამდვილად სჭირდება.",
-  featuresEyebrow: "რატომ Aylopet Pro",
+    "Aylopet Smart Collar არის ჭკვიანი ყელსაბამი, რომელიც გამოიყენება თქვენი ძაღლის რეალურ დროში მონიტორინგისთვის, რაც უზრუნველყოფს მის უსაფრთხოებასა და აქტივობის კონტროლს. მოწყობილობა ზუსტად ზომავს ლოკაციასა და გავლილ მანძილს, რაც გვეხმარება ენერგიის რეალური დანახარჯის გამოთვლაში. Aylopet Smart Collar-დან მიღებულ მონაცემებზე დაყრდნობით, AylopetAI განსაზღვრავს კალორიების საჭირო რაოდენობას, რათა თქვენმა მეგობარმა მიიღოს ზუსტად ის, რაც მას ნამდვილად სჭირდება.",
+  featuresEyebrow: "რატომ Aylopet Smart Collar",
   featuresTitle: "GPS, აქტივობა და AI, ერთ ყელსაბამში",
   features: [
     {
@@ -63,7 +63,7 @@ export const SMART_COLLAR_KA: SmartCollarCopy = {
       icon: "activity",
       title: "ჯანმრთელობისა და აქტივობის მონიტორინგი",
       description:
-        "ჩვეულებრივი GPS თრექერისგან განსხვავებით, Aylopet Pro აკონტროლებს ძილის ფაზებს, გულისცემას, დახარჯულ კალორიებსა და შფოთვის დონეს.",
+        "ჩვეულებრივი GPS თრექერისგან განსხვავებით, Aylopet Smart Collar აკონტროლებს ძილის ფაზებს, გულისცემას, დახარჯულ კალორიებსა და შფოთვის დონეს.",
     },
     {
       icon: "ai",
@@ -101,7 +101,7 @@ export const SMART_COLLAR_KA: SmartCollarCopy = {
     {
       title: "ავტომატური მონიტორინგი",
       description:
-        "Aylopet Pro უწყვეტად აკვირდება ლოკაციას, მოძრაობასა და აქტივობას და მონაცემებს უგზავნის AylopetAI-ს.",
+        "Aylopet Smart Collar უწყვეტად აკვირდება ლოკაციას, მოძრაობასა და აქტივობას და მონაცემებს უგზავნის AylopetAI-ს.",
     },
     {
       title: "„ცოცხალი“ კვების გეგმა",
@@ -119,27 +119,27 @@ export const SMART_COLLAR_KA: SmartCollarCopy = {
     { label: "AI ინტეგრაცია", value: "AylopetAI რეალურ დროში კალორიების გამოთვლა" },
   ],
   faqEyebrow: "კითხვები?",
-  faqTitle: "ყველა პასუხი Aylopet Pro-ს შესახებ",
+  faqTitle: "ყველა პასუხი Aylopet Smart Collar-ს შესახებ",
   faqSubtitle:
-    "დამუხტვიდან წყალგამძლეობამდე, შეამოწმეთ სრული FAQ Aylopet Pro-ს კატეგორია.",
+    "დამუხტვიდან წყალგამძლეობამდე, შეამოწმეთ სრული FAQ Aylopet Smart Collar-ს კატეგორია.",
   faqCta: "ნახე ხშირი კითხვები",
-  finalCtaTitle: "იყავი პირველი, ვინც მიიღებს Aylopet Pro-ს",
+  finalCtaTitle: "იყავი პირველი, ვინც მიიღებს Aylopet Smart Collar-ს",
   finalCtaBody:
     "შემოუერთდი waitlist-ს და გაიცანი, როდის ხდება ჭკვიანი ყელსაბამის გამოშვება.",
   finalCta: "შემოუერთდი waitlist-ს",
 };
 
 export const SMART_COLLAR_EN: SmartCollarCopy = {
-  eyebrow: "Aylopet Pro · Coming soon",
-  title: "Aylopet Pro · Smart Collar",
+  eyebrow: "Aylopet Smart Collar · Coming soon",
+  title: "Aylopet Smart Collar · Smart Collar",
   subtitle:
     "GPS location, activity monitoring, and AI calculated, live updating calorie needs, in one device.",
   comingSoonBadge: "Coming soon",
   ctaWaitlist: "Join the waitlist",
-  ctaFaq: "Aylopet Pro FAQ",
+  ctaFaq: "Aylopet Smart Collar FAQ",
   intro:
-    "Aylopet Pro is a smart collar used to monitor your dog in real time, keeping them safe and their activity in check. The device precisely measures location and distance traveled, which helps us calculate real energy expenditure. Based on data from Aylopet Pro, AylopetAI determines exactly how many calories your companion needs, so they get exactly what they need, nothing more, nothing less.",
-  featuresEyebrow: "Why Aylopet Pro",
+    "Aylopet Smart Collar is a smart collar used to monitor your dog in real time, keeping them safe and their activity in check. The device precisely measures location and distance traveled, which helps us calculate real energy expenditure. Based on data from Aylopet Smart Collar, AylopetAI determines exactly how many calories your companion needs, so they get exactly what they need, nothing more, nothing less.",
+  featuresEyebrow: "Why Aylopet Smart Collar",
   featuresTitle: "GPS, activity, and AI, in one collar",
   features: [
     {
@@ -152,7 +152,7 @@ export const SMART_COLLAR_EN: SmartCollarCopy = {
       icon: "activity",
       title: "Health & activity monitoring",
       description:
-        "Unlike a regular GPS tracker, Aylopet Pro tracks sleep phases, heart rate, calories burned, and stress levels.",
+        "Unlike a regular GPS tracker, Aylopet Smart Collar tracks sleep phases, heart rate, calories burned, and stress levels.",
     },
     {
       icon: "ai",
@@ -190,7 +190,7 @@ export const SMART_COLLAR_EN: SmartCollarCopy = {
     {
       title: "Automatic monitoring",
       description:
-        "Aylopet Pro continuously tracks location, movement, and activity, and streams the data to AylopetAI.",
+        "Aylopet Smart Collar continuously tracks location, movement, and activity, and streams the data to AylopetAI.",
     },
     {
       title: "A living nutrition plan",
@@ -208,11 +208,11 @@ export const SMART_COLLAR_EN: SmartCollarCopy = {
     { label: "AI integration", value: "AylopetAI real time calorie engine" },
   ],
   faqEyebrow: "Questions?",
-  faqTitle: "Every answer about Aylopet Pro",
+  faqTitle: "Every answer about Aylopet Smart Collar",
   faqSubtitle:
-    "From charging to water resistance, check the full Aylopet Pro FAQ category.",
+    "From charging to water resistance, check the full Aylopet Smart Collar FAQ category.",
   faqCta: "View FAQ",
-  finalCtaTitle: "Be first to get Aylopet Pro",
+  finalCtaTitle: "Be first to get Aylopet Smart Collar",
   finalCtaBody:
     "Join the waitlist to find out when the smart collar launches.",
   finalCta: "Join the waitlist",

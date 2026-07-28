@@ -43,7 +43,7 @@ export function formatQuestionCount(copy: FaqCopy, count: number): string {
 
 const CATEGORIES_KA: FaqCategoryMeta[] = [
   { key: "ai", label: "Aylopet AI და ზოგადი" },
-  { key: "collar", label: "Aylopet Pro" },
+  { key: "collar", label: "Aylopet Smart Collar" },
   { key: "food", label: "საკვები" },
   { key: "recipes", label: "ჩვენი რეცეპტები" },
   { key: "subscription", label: "გამოწერა და ანგარიში" },
@@ -54,7 +54,7 @@ const CATEGORIES_KA: FaqCategoryMeta[] = [
 
 const CATEGORIES_EN: FaqCategoryMeta[] = [
   { key: "ai", label: "Aylopet AI & General" },
-  { key: "collar", label: "Aylopet Pro" },
+  { key: "collar", label: "Aylopet Smart Collar" },
   { key: "food", label: "Fresh Food" },
   { key: "recipes", label: "Our Recipes" },
   { key: "subscription", label: "Subscription & Account" },
@@ -156,14 +156,14 @@ const ITEMS_KA: FaqItem[] = [
       "თქვენი ძაღლის საჭიროებები იცვლება · წონის, აქტივობის, სეზონისა და მიზნების მიხედვით. AylopetAI შესაბამისად ადაპტირდება და მუდმივად ანახლებს გეგმას.",
   },
 
-  // --- Aylopet Pro ---
+  // --- Aylopet Smart Collar ---
   {
     id: "4",
     category: "collar",
     question:
-      "რა უპირატესობებს მაძლევს Aylopet Pro ჩვეულებრივი GPS თრექერისგან?",
+      "რა უპირატესობებს მაძლევს Aylopet Smart Collar ჩვეულებრივი GPS თრექერისგან?",
     answer:
-      "ჩვეულებრივი GPS თრექერისგან განსხვავებით, რომელიც მხოლოდ ლოკაციას აჩვენებს, Aylopet Pro არის კომპლექსური ჯანმრთელობისა და აქტივობის მონიტორი. ის აკონტროლებს ძილის ფაზებს, გულისცემას, დახარჯულ კალორიებს, შფოთვის დონეს და AI-ის მეშვეობით წინასწარ გაფრთხილებთ პოტენციური ჯანმრთელობის პრობლემების შესახებ.",
+      "ჩვეულებრივი GPS თრექერისგან განსხვავებით, რომელიც მხოლოდ ლოკაციას აჩვენებს, Aylopet Smart Collar არის კომპლექსური ჯანმრთელობისა და აქტივობის მონიტორი. ის აკონტროლებს ძილის ფაზებს, გულისცემას, დახარჯულ კალორიებს, შფოთვის დონეს და AI-ის მეშვეობით წინასწარ გაფრთხილებთ პოტენციური ჯანმრთელობის პრობლემების შესახებ.",
   },
   {
     id: "5",
@@ -175,14 +175,14 @@ const ITEMS_KA: FaqItem[] = [
   {
     id: "52",
     category: "collar",
-    question: "რა არის Aylopet Pro?",
+    question: "რა არის Aylopet Smart Collar?",
     answer:
-      "Aylopet Pro არის ჭკვიანი ყელსაბამი GPS მონიტორინგით, რომელიც საშუალებას გაძლევთ ნებისმიერ დროს იცოდეთ თქვენი ძაღლის ზუსტი მდებარეობა და თვალყური ადევნოთ მის დღიურ აქტივობას. AylopetAI-სთან ინტეგრაციით მოწყობილობა ითვლის თქვენი მეგობრის ინდივიდუალურ ენერგოდანახარჯს და გირჩევს რაციონს, რომელიც ზუსტად შეესაბამება თქვენს მიზნებს.",
+      "Aylopet Smart Collar არის ჭკვიანი ყელსაბამი GPS მონიტორინგით, რომელიც საშუალებას გაძლევთ ნებისმიერ დროს იცოდეთ თქვენი ძაღლის ზუსტი მდებარეობა და თვალყური ადევნოთ მის დღიურ აქტივობას. AylopetAI-სთან ინტეგრაციით მოწყობილობა ითვლის თქვენი მეგობრის ინდივიდუალურ ენერგოდანახარჯს და გირჩევს რაციონს, რომელიც ზუსტად შეესაბამება თქვენს მიზნებს.",
   },
   {
     id: "53",
     category: "collar",
-    question: "როგორ მუშაობს Aylopet Pro?",
+    question: "როგორ მუშაობს Aylopet Smart Collar?",
     answer:
       "ყელსაბამი მუდმივად აკვირდება თქვენი ძაღლის აქტივობას, ხოლო მონაცემები ავტომატურად სინქრონიზდება AylopetAI-სთან. ნუტრიციოლოგების მიერ შემუშავებული ფორმულების საფუძველზე AI ითვლის საჭირო კალორიების რაოდენობას და გეტყვით, რა კორექტირება შესაძლოა დასჭირდეს თქვენს რაციონს.",
   },
@@ -197,7 +197,7 @@ const ITEMS_KA: FaqItem[] = [
     id: "55",
     category: "collar",
     question:
-      "არის თუ არა Aylopet Pro-ს ყელსაბამი წყალგამძლე და რამდენად გამძლეა ის აქტიური ცხოველებისთვის?",
+      "არის თუ არა Aylopet Smart Collar-ს ყელსაბამი წყალგამძლე და რამდენად გამძლეა ის აქტიური ცხოველებისთვის?",
     answer:
       "დიახ, ყელსაბამი არის IP67 სტანდარტის წყალგამძლე და სპეციალურად დაპროექტებულია აქტიური ცხოველებისთვის.",
   },
@@ -453,7 +453,7 @@ const ITEMS_KA: FaqItem[] = [
     id: "39",
     category: "returns",
     question:
-      "როგორია „ჭკვიანი ყელსაბამის\" (Aylopet Pro) დაბრუნების ან შეცვლის პირობები?",
+      "როგორია „ჭკვიანი ყელსაბამის\" (Aylopet Smart Collar) დაბრუნების ან შეცვლის პირობები?",
     answer:
       "ყელსაბამის დაბრუნება ან შეცვლა შესაძლებელია შეძენიდან 14 დღის განმავლობაში, თუ მას არ აღენიშნება ფიზიკური დაზიანება, შენარჩუნებული აქვს სასაქონლო იერსახე და მოყვება სრული კომპლექტაცია.",
   },
@@ -574,14 +574,14 @@ const ITEMS_EN: FaqItem[] = [
       "Your dog's needs change · with weight, activity, season, goals, and similar nuances. AylopetAI adapts and updates the plan accordingly.",
   },
 
-  // --- Aylopet Pro ---
+  // --- Aylopet Smart Collar ---
   {
     id: "4",
     category: "collar",
     question:
-      "What advantages does Aylopet Pro give me over a regular GPS tracker?",
+      "What advantages does Aylopet Smart Collar give me over a regular GPS tracker?",
     answer:
-      "Unlike a regular GPS tracker, which only shows location, Aylopet Pro is a comprehensive health and activity monitor. It tracks sleep phases, heart rate, calories burned, and stress levels, and uses AI to warn you in advance about potential health issues.",
+      "Unlike a regular GPS tracker, which only shows location, Aylopet Smart Collar is a comprehensive health and activity monitor. It tracks sleep phases, heart rate, calories burned, and stress levels, and uses AI to warn you in advance about potential health issues.",
   },
   {
     id: "5",
@@ -593,14 +593,14 @@ const ITEMS_EN: FaqItem[] = [
   {
     id: "52",
     category: "collar",
-    question: "What is Aylopet Pro?",
+    question: "What is Aylopet Smart Collar?",
     answer:
-      "Aylopet Pro is a smart collar equipped with GPS monitoring. It helps you always know your dog's exact location and track daily activity. Combined with AylopetAI, the device lets us estimate your companion's individual energy expenditure and recommend a ration that aligns perfectly with your goals.",
+      "Aylopet Smart Collar is a smart collar equipped with GPS monitoring. It helps you always know your dog's exact location and track daily activity. Combined with AylopetAI, the device lets us estimate your companion's individual energy expenditure and recommend a ration that aligns perfectly with your goals.",
   },
   {
     id: "53",
     category: "collar",
-    question: "How does Aylopet Pro work?",
+    question: "How does Aylopet Smart Collar work?",
     answer:
       "The collar continuously monitors your dog's activity, and data syncs automatically with AylopetAI. Based on formulas developed by nutritionists, the AI calculates required calories and tells you what adjustments your ration may need.",
   },
@@ -615,7 +615,7 @@ const ITEMS_EN: FaqItem[] = [
     id: "55",
     category: "collar",
     question:
-      "Is the Aylopet Pro collar waterproof, and how durable is it for active dogs?",
+      "Is the Aylopet Smart Collar collar waterproof, and how durable is it for active dogs?",
     answer:
       "Yes, the collar is IP67 water-resistant and purpose-built for active dogs.",
   },
@@ -868,7 +868,7 @@ const ITEMS_EN: FaqItem[] = [
     id: "39",
     category: "returns",
     question:
-      "What are the return or exchange terms for the Aylopet Pro collar?",
+      "What are the return or exchange terms for the Aylopet Smart Collar collar?",
     answer:
       "The collar can be returned or exchanged within 14 days of purchase, provided it shows no physical damage, retains its original condition, and is returned with the complete set of accessories.",
   },

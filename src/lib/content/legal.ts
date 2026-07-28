@@ -47,7 +47,7 @@ const LEGAL_KA: LegalContent = {
         ],
         list: [
           "კვება: პასტერიზებული უმი ძაღლის საკვების საცალო გაყიდვები და განმეორებადი გამოწერები.",
-          "აპარატურა და ტექნოლოგია: Aylopet Pro · ჭკვიანი GPS საყელო, მდებარეობისა და ფიზიკური აქტივობის მონიტორინგით.",
+          "აპარატურა და ტექნოლოგია: Aylopet Smart Collar · ჭკვიანი GPS საყელო, მდებარეობისა და ფიზიკური აქტივობის მონიტორინგით.",
           "AI სერვისები: ინტერაქტიული AI კვების არქიტექტორი და ჯანმრთელობის შეხსენებები.",
           "საცალო ვაჭრობა და პარტნიორები: ფასდაკლებები მესამე მხარის პარტნიორებთან.",
           "მონაცემთა ინტეგრაცია: ფიზიკური აქტივობის მონაცემების სინქრონიზაცია პორციებისა და ინსაითების მოსარგებად.",
@@ -260,7 +260,7 @@ const LEGAL_KA: LegalContent = {
         list: [
           "კვების გამოწერები (Food Subscriptions) · განმეორებადი შეკვეთები და ავტომატური ბილინგი.",
           "AI კვების ექსპერტზე წვდომა · AI ჩეთის გამოწერა.",
-          "Smart GPS სერვისები · აქტიური თვალთვალის/მონაცემთა გეგმები Aylopet Pro-ზე.",
+          "Smart GPS სერვისები · აქტიური თვალთვალის/მონაცემთა გეგმები Aylopet Smart Collar-ზე.",
           "Aylopet არ არის პასუხისმგებელი უწყვეტ გადასახადებზე, თუ მომხმარებელი ინდივიდუალურ სერვისებს პროფილის წაშლამდე არ გააუქმებს.",
         ],
       },
@@ -414,7 +414,7 @@ const LEGAL_EN: LegalContent = {
         ],
         list: [
           "Food: pasteurized raw dog food retail sales and recurring subscriptions.",
-          "Hardware & technology: Aylopet Pro · a smart GPS collar with location and physical activity monitoring.",
+          "Hardware & technology: Aylopet Smart Collar · a smart GPS collar with location and physical activity monitoring.",
           "AI services: an interactive AI nutrition architect and health reminders.",
           "Retail & partners: discounts with third-party partners.",
           "Data integration: syncing physical activity data to tailor portions and insights.",
@@ -625,7 +625,7 @@ const LEGAL_EN: LegalContent = {
         list: [
           "Food Subscriptions · recurring orders and automatic billing.",
           "AI nutrition expert access · the AI chat subscription.",
-          "Smart GPS services · active tracking/data plans for Aylopet Pro.",
+          "Smart GPS services · active tracking/data plans for Aylopet Smart Collar.",
           "Aylopet is not responsible for ongoing charges if a user does not cancel individual services before deleting their profile.",
         ],
       },

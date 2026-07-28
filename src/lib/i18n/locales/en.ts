@@ -12,7 +12,7 @@ export const en: Dictionary = {
   common: {
     promoText: "Get 40% OFF! Join our waitlist now.",
     joinWaitlist: "Join Waitlist",
-    joinWaitlistPromo: "Join Waitlist · 40% OFF",
+    joinWaitlistPromo: "Waitlist · Reserve your spot",
     charityMessage: "5% of revenue supports charity, join us.",
     login: "Log in",
     myPanel: "My dashboard",
@@ -106,7 +106,7 @@ export const en: Dictionary = {
       subtitle:
         "Aylopet unites AI nutrition, genomic insights, and fresh food, data driven care, not just a ration.",
       techPlatform: "Tech platform",
-      ctaNote: "40% discount locked at signup · no payment required now",
+      ctaNote: "Reserve your spot · no payment required now",
       metrics: [
         { value: "200K+", label: "genetic markers" },
         { value: "AI", label: "personal insights" },
@@ -115,7 +115,7 @@ export const en: Dictionary = {
       ],
     },
     waitlist: {
-      badge: "Waitlist · 40% OFF",
+      badge: "Waitlist · Reserve your spot",
       title: "Join the Early Adopter waitlist",
       description:
         "Help shape the product, get an exclusive discount and first access to the tech platform.",
@@ -421,7 +421,7 @@ export const en: Dictionary = {
     items: [],
   },
   stickyCta: {
-    label: "Waitlist · 40% OFF",
+    label: "Waitlist · Reserve your spot",
     sublabel: "Join the first wave",
   },
   projectStatus: {
@@ -459,7 +459,7 @@ export const en: Dictionary = {
       },
       {
         label: "Phase 4",
-        title: "Aylopet Pro",
+        title: "Aylopet Smart Collar",
         description: "GPS, activity, and health signals · integrated with Aylopet.",
         reaction: "Heartwarming delight",
         reactionNote: "\"I'd know where and how my dog is, every day.\"",
@@ -474,7 +474,7 @@ export const en: Dictionary = {
     freshFood: "Fresh food",
     aylopetAi: "AylopetAI",
     dna: "DNA platform",
-    smartCollar: "Aylopet Pro",
+    smartCollar: "Aylopet Smart Collar",
     vetConsult: "Vet consultation",
     other: "Other",
     noteLabel: "What are you hoping for?",

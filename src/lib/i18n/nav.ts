@@ -23,7 +23,7 @@ export function getMainNav(dict: Dictionary): NavItem[] {
               : "Personal nutritionist · chat and plan",
         },
         {
-          label: "Aylopet Pro",
+          label: "Aylopet Smart Collar",
           href: "/products/smart-collar",
           description:
             dict.locale === "ka"
