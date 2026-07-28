@@ -1,5 +1,5 @@
 import type { SupabaseClient, User } from "@supabase/supabase-js";
-import { mapAuthError } from "@/lib/auth/display";
+import { formatAuthError } from "@/lib/auth/display";
 
 export function isEmailVerified(user: User | null | undefined): boolean {
   return Boolean(user?.email_confirmed_at);
@@ -27,7 +27,7 @@ export async function establishSessionAfterSignUp(
   });
 
   if (signInError) {
-    return { userId: null, error: mapAuthError(signInError.message) };
+    return { userId: null, error: formatAuthError(signInError) };
   }
 
   const {

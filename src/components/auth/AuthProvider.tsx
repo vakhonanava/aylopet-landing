@@ -11,9 +11,9 @@ import {
   type ReactNode,
 } from "react";
 import {
+  formatAuthError,
   getAuthDisplayName,
   getAuthEmail,
-  mapAuthError,
 } from "@/lib/auth/display";
 import {
   establishSessionAfterSignUp,
@@ -21,8 +21,9 @@ import {
 } from "@/lib/auth/session";
 import { createClient } from "@/utils/supabase/client";
 
-interface AuthResult {
+export interface AuthResult {
   error: string | null;
+  needsEmailConfirmation?: boolean;
 }
 
 interface AuthContextValue {
@@ -110,7 +111,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         password,
       });
 
-      if (error) return { error: mapAuthError(error.message) };
+      if (error) return { error: formatAuthError(error) };
       return { error: null };
     },
     [],
@@ -137,22 +138,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (error) {
-        if (error.message.toLowerCase().includes("already registered")) {
+        if (error.message?.toLowerCase().includes("already registered")) {
           const signInResult = await signInWithPassword(email, password);
           return signInResult;
         }
-        return { error: mapAuthError(error.message) };
+        return { error: formatAuthError(error) };
       }
 
-      if (!data.session) {
-        const sessionResult = await establishSessionAfterSignUp(
-          supabase,
-          email,
-          password,
-        );
-        if (sessionResult.error) {
-          return { error: sessionResult.error };
+      if (data.session) {
+        return { error: null };
+      }
+
+      if (data.user && !data.user.email_confirmed_at) {
+        return { error: null, needsEmailConfirmation: true };
+      }
+
+      const sessionResult = await establishSessionAfterSignUp(
+        supabase,
+        email,
+        password,
+      );
+      if (sessionResult.error) {
+        if (sessionResult.error.includes("დადასტურებული")) {
+          return { error: null, needsEmailConfirmation: true };
         }
+        return { error: sessionResult.error };
       }
 
       return { error: null };
@@ -186,7 +196,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
     });
 
-    if (error) return { error: mapAuthError(error.message) };
+    if (error) return { error: formatAuthError(error) };
     return { error: null };
   }, []);
 
@@ -203,7 +213,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         { redirectTo },
       );
 
-      if (error) return { error: mapAuthError(error.message) };
+      if (error) return { error: formatAuthError(error) };
       return { error: null };
     },
     [],
@@ -217,7 +227,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       const { error } = await supabase.auth.updateUser({ password: newPassword });
-      if (error) return { error: mapAuthError(error.message) };
+      if (error) return { error: formatAuthError(error) };
       return { error: null };
     },
     [],
@@ -257,7 +267,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       const { error } = await supabase.auth.updateUser({ password: newPassword });
-      if (error) return { error: mapAuthError(error.message) };
+      if (error) return { error: formatAuthError(error) };
       return { error: null };
     },
     [],
@@ -276,7 +286,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         options: { redirectTo },
       });
 
-      if (error) return { error: mapAuthError(error.message) };
+      if (error) return { error: formatAuthError(error) };
       return { error: null };
     },
     [],

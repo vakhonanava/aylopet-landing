@@ -154,16 +154,26 @@ export function RegisterForm({ nextPath = "/dashboard" }: RegisterFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoading(true);
     setError(null);
+    setInfo(null);
 
     const result = await signUpWithPassword(name, email, password);
     if (result.error) {
       setError(result.error);
+      setLoading(false);
+      return;
+    }
+
+    if (result.needsEmailConfirmation) {
+      setInfo(
+        "ანგარიში შეიქმნა. შეამოწმე ელ. ფოსტა (inbox და spam) დადასტურების ბმულისთვის, შემდეგ შედი.",
+      );
       setLoading(false);
       return;
     }
@@ -227,6 +237,11 @@ export function RegisterForm({ nextPath = "/dashboard" }: RegisterFormProps) {
         {error && (
           <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
             {error}
+          </p>
+        )}
+        {info && (
+          <p className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+            {info}
           </p>
         )}
 

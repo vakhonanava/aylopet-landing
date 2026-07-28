@@ -20,13 +20,36 @@ export function getAuthEmail(user: User | null | undefined): string {
   return user?.email ?? "";
 }
 
+const EMAIL_DELIVERY_ERROR =
+  "ელ. ფოსტის გაგზავნა ვერ მოხერხდა. შეამოწმე inbox/spam, ან სცადე ცოტა ხანში.";
+
+function isUselessAuthMessage(message: string): boolean {
+  const trimmed = message.trim();
+  return !trimmed || trimmed === "{}" || trimmed === "[object Object]";
+}
+
 export function mapAuthError(message: string): string {
+  if (isUselessAuthMessage(message)) {
+    return EMAIL_DELIVERY_ERROR;
+  }
+
   const lower = message.toLowerCase();
   if (lower.includes("provider is not enabled") || lower.includes("unsupported provider")) {
     return "Google შესვლა ჯერ არ არის ჩართული Supabase-ში. სცადე ელ. ფოსტით ან ჩართე Google provider.";
   }
   if (lower.includes("email not confirmed")) {
-    return "ელ. ფოსტა ჯერ არ არის დადასტურებული. შეგიძლია გააგრძელო, ან დაადასტურო dashboard-იდან.";
+    return "ელ. ფოსტა ჯერ არ არის დადასტურებული. გახსენი inbox-ში დადასტურების ბმული, ან dashboard-იდან გაგზავნე ხელახლა.";
+  }
+  if (
+    lower.includes("error sending") ||
+    lower.includes("smtp") ||
+    lower.includes("mailer") ||
+    lower.includes("confirmation email")
+  ) {
+    return EMAIL_DELIVERY_ERROR;
+  }
+  if (lower.includes("rate limit") || lower.includes("too many")) {
+    return "ძალიან ბევრი მცდელობა. დაელოდე ერთ წუთს და სცადე თავიდან.";
   }
   if (lower.includes("same password")) {
     return "ახალი პაროლი უნდა განსხვავდებოდეს არსებულისგან.";
@@ -47,4 +70,43 @@ export function mapAuthError(message: string): string {
     return "შეამოწმე ელ. ფოსტის ფორმატი.";
   }
   return message;
+}
+
+type AuthErrorLike = {
+  message?: string;
+  msg?: string;
+  code?: string;
+  error_description?: string;
+};
+
+export function formatAuthError(error: unknown): string {
+  if (!error) return EMAIL_DELIVERY_ERROR;
+
+  if (typeof error === "string") {
+    return mapAuthError(error);
+  }
+
+  const authError = error as AuthErrorLike;
+  const code = authError.code?.toLowerCase() ?? "";
+
+  if (code === "over_email_send_rate_limit") {
+    return "ძალიან ბევრი მცდელობა. დაელოდე ერთ წუთს და სცადე თავიდან.";
+  }
+  if (code === "email_address_invalid") {
+    return "ელ. ფოსტის მისამართი არასწორია.";
+  }
+  if (code === "email_not_confirmed") {
+    return mapAuthError("email not confirmed");
+  }
+  if (code === "unexpected_failure") {
+    return EMAIL_DELIVERY_ERROR;
+  }
+
+  const message =
+    authError.message ??
+    authError.msg ??
+    authError.error_description ??
+    "";
+
+  return mapAuthError(message);
 }
