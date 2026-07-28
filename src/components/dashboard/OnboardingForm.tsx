@@ -185,6 +185,7 @@ export function OnboardingForm() {
             <BreedCombobox
               value={field.value}
               onChange={field.onChange}
+              onBlur={field.onBlur}
               error={errors.breed?.message}
             />
           )}

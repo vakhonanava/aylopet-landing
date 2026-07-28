@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { BreedCombobox } from "@/components/dashboard/FormControls";
 import {
   createPetProfile,
   deletePetDocument,
@@ -471,11 +472,10 @@ export function AyliopetOnboarding() {
                   </label>
                   <label>
                     <span className="mb-1.5 block text-xs text-white/45">ჯიში</span>
-                    <input
-                      className={input}
+                    <BreedCombobox
+                      variant="dark"
                       value={pet.breed}
-                      onChange={(e) => setPet((c) => ({ ...c, breed: e.target.value }))}
-                      required
+                      onChange={(breed) => setPet((c) => ({ ...c, breed }))}
                     />
                   </label>
                   <label>

@@ -13,13 +13,13 @@ import {
 import Link from "next/link";
 import { useEffect, useMemo, useState, type ComponentType, type ReactNode } from "react";
 import { useLocale } from "@/components/i18n/LocaleProvider";
+import { BreedCombobox } from "@/components/dashboard/FormControls";
 import { useOnboardingQuiz } from "@/hooks/useOnboardingQuiz";
 import { motionEase } from "@/lib/motion";
 import {
   ACTIVITY_OPTIONS,
   APPETITE_OPTIONS,
   BODY_CONDITION_OPTIONS,
-  BREED_SUGGESTIONS,
   CITY_SUGGESTIONS,
   CURRENT_DIET_OPTIONS,
   GENDER_ICONS,
@@ -263,12 +263,10 @@ function StepBody({
       );
     case 9:
       return (
-        <AutocompleteInput
+        <BreedCombobox
           value={state.breed}
           onChange={(v) => patch({ breed: v })}
-          placeholder={copy.fields.breedPlaceholder}
-          suggestions={BREED_SUGGESTIONS}
-          error={showError}
+          error={showError ? (locale === "ka" ? "აირჩიე ჯიში" : "Choose a breed") : undefined}
         />
       );
     case 10:

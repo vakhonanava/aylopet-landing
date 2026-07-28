@@ -19,55 +19,85 @@ export const textInput =
 export function BreedCombobox({
   value,
   onChange,
+  onBlur,
   error,
+  variant = "light",
 }: {
   value: string;
   onChange: (value: string) => void;
+  onBlur?: () => void;
   error?: string;
+  variant?: "light" | "dark";
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => searchDogBreeds(query), [query]);
 
+  const isDark = variant === "dark";
+
+  const triggerClass = isDark
+    ? `border-white/10 bg-[#111827]/80 focus:border-cyan-300/40 focus:ring-cyan-300/15 ${
+        error ? "border-red-400/50" : ""
+      } ${value ? "text-white" : "text-white/40"}`
+    : `bg-white focus:ring-[var(--brand-primary)]/5 ${
+        error ? "border-red-300" : "border-[#e5e7eb] focus:border-[var(--brand-primary)]/40"
+      } ${value ? "text-[var(--brand-primary)]" : "text-slate-400"}`;
+
+  const panelClass = isDark
+    ? "border-white/10 bg-[#111827] shadow-[0_8px_30px_rgba(0,0,0,0.35)]"
+    : "border-[#e5e7eb] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.08)]";
+
+  const searchBorderClass = isDark ? "border-white/10" : "border-[#e5e7eb]";
+  const searchIconClass = isDark ? "text-white/40" : "text-slate-400";
+  const searchInputClass = isDark
+    ? "text-white placeholder:text-white/35"
+    : "text-[var(--brand-primary)] placeholder:text-slate-400";
+  const itemClass = isDark
+    ? "text-white hover:bg-cyan-300/10"
+    : "text-[var(--brand-primary)] hover:bg-[var(--brand-primary)]/[0.05]";
+  const subtitleClass = isDark ? "text-white/40" : "text-slate-400";
+  const emptyClass = isDark ? "text-white/40" : "text-slate-400";
+  const chevronClass = isDark ? "text-white/40" : "text-slate-400";
+
+  const close = () => {
+    setOpen(false);
+    onBlur?.();
+  };
+
   return (
     <div className="relative">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className={`flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-3 text-left text-sm outline-none transition-all duration-200 focus:ring-4 focus:ring-[var(--brand-primary)]/5 ${
-          error ? "border-red-300" : "border-[#e5e7eb] focus:border-[var(--brand-primary)]/40"
-        } ${value ? "text-[var(--brand-primary)]" : "text-slate-400"}`}
+        onBlur={() => {
+          if (!open) onBlur?.();
+        }}
+        className={`flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-left text-sm outline-none transition-all duration-200 focus:ring-4 ${triggerClass}`}
       >
         {value || "აირჩიე ჯიში"}
         <ChevronDown
-          className={`h-4 w-4 text-slate-400 transition-transform ${open ? "rotate-180" : ""}`}
+          className={`h-4 w-4 ${chevronClass} transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
 
       {open && (
         <>
-          <div
-            className="fixed inset-0 z-10"
-            onClick={() => setOpen(false)}
-            aria-hidden
-          />
-          <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
-            <div className="flex items-center gap-2 border-b border-[#e5e7eb] px-3 py-2">
-              <Search className="h-4 w-4 text-slate-400" />
+          <div className="fixed inset-0 z-40" onClick={close} aria-hidden />
+          <div className={`absolute z-50 mt-2 w-full overflow-hidden rounded-2xl border ${panelClass}`}>
+            <div className={`flex items-center gap-2 border-b px-3 py-2 ${searchBorderClass}`}>
+              <Search className={`h-4 w-4 ${searchIconClass}`} />
               <input
                 autoFocus
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="ძებნა..."
-                className="w-full bg-transparent text-sm text-[var(--brand-primary)] outline-none placeholder:text-slate-400"
+                className={`w-full bg-transparent text-sm outline-none ${searchInputClass}`}
               />
             </div>
             <ul className="max-h-56 overflow-y-auto py-1">
               {filtered.length === 0 && (
-                <li className="px-4 py-3 text-sm text-slate-400">
-                  ვერ მოიძებნა
-                </li>
+                <li className={`px-4 py-3 text-sm ${emptyClass}`}>ვერ მოიძებნა</li>
               )}
               {filtered.map((breed) => (
                 <li key={breed.en}>
@@ -77,15 +107,18 @@ export function BreedCombobox({
                       onChange(breed.ka);
                       setOpen(false);
                       setQuery("");
+                      onBlur?.();
                     }}
-                    className="flex w-full items-center justify-between px-4 py-2.5 text-left text-sm text-[var(--brand-primary)] transition-colors hover:bg-[var(--brand-primary)]/[0.05]"
+                    className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-sm transition-colors ${itemClass}`}
                   >
                     <span>
                       <span className="block">{breed.ka}</span>
-                      <span className="block text-xs text-slate-400">{breed.en}</span>
+                      <span className={`block text-xs ${subtitleClass}`}>{breed.en}</span>
                     </span>
                     {value === breed.ka && (
-                      <Check className="h-4 w-4 shrink-0 text-[var(--brand-accent)]" />
+                      <Check
+                        className={`h-4 w-4 shrink-0 ${isDark ? "text-cyan-300" : "text-[var(--brand-accent)]"}`}
+                      />
                     )}
                   </button>
                 </li>
