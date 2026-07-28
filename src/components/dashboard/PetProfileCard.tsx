@@ -258,23 +258,25 @@ export function PetProfileCard({ pet }: { pet: Pet }) {
 
           <div className="flex flex-col items-end gap-2">
             {isDirty && (
-              <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700">
-                შეუნახავი ცვლილებები
-              </span>
+              <>
+                <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700">
+                  შეუნახავი ცვლილებები
+                </span>
+                <button
+                  type="button"
+                  onClick={() => void handleSave()}
+                  disabled={saving}
+                  className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-primary)] px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-[var(--brand-primary-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {saving ? (
+                    <LoaderCircle className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Save className="h-4 w-4" />
+                  )}
+                  შენახვა
+                </button>
+              </>
             )}
-            <button
-              type="button"
-              onClick={() => void handleSave()}
-              disabled={!isDirty || saving}
-              className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-primary)] px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-[var(--brand-primary-hover)] disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {saving ? (
-                <LoaderCircle className="h-4 w-4 animate-spin" />
-              ) : (
-                <Save className="h-4 w-4" />
-              )}
-              შენახვა
-            </button>
           </div>
         </div>
 

@@ -682,10 +682,16 @@ export function AyliopetOnboarding() {
 
                 <button
                   type="button"
-                  onClick={() => router.push("/dashboard")}
+                  onClick={() =>
+                    router.push(
+                      petId ? `/dashboard/pets/${petId}` : "/dashboard",
+                    )
+                  }
                   className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-cyan-300 px-6 py-3.5 text-sm font-semibold text-[#0B0F17]"
                 >
-                  დასრულება · პანელში გადასვლა
+                  {petId
+                    ? "დასრულება · პროფილის რედაქტირება"
+                    : "დასრულება · პანელში გადასვლა"}
                 </button>
               </div>
             )}

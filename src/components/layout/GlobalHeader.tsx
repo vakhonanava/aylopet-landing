@@ -27,7 +27,7 @@ import {
   type NavItem,
 } from "@/lib/navigation";
 
-const DASHBOARD_HREF = "/dashboard/pets/rex";
+const DASHBOARD_HREF = "/dashboard";
 
 const linkBase =
   "cursor-pointer transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-primary)]";
