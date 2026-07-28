@@ -103,13 +103,7 @@ export const CITY_SUGGESTIONS: Record<Locale, string[]> = {
   ],
 };
 
-export const BREED_SUGGESTIONS: readonly string[] = [
-  "Cane Corso", "Pekingese", "Labrador Retriever", "German Shepherd",
-  "Golden Retriever", "French Bulldog", "Poodle", "Border Collie",
-  "Chihuahua", "Husky", "Rottweiler", "Beagle", "Yorkshire Terrier",
-  "Dachshund", "Shih Tzu", "Mixed breed",
-  "კავკასიური ნაგაზი", "ლაბრადორი", "გერმანული ნაგაზი", "ალაბაი",
-];
+export { POPULAR_BREED_SUGGESTIONS as BREED_SUGGESTIONS } from "@/lib/content/dog-breeds";
 
 interface OptionConfig<T extends string> {
   value: T;

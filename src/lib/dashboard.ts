@@ -37,23 +37,13 @@ export const TEMPERAMENT_OPTIONS = [
 
 export type Temperament = (typeof TEMPERAMENT_OPTIONS)[number];
 
-export const BREEDS = [
-  "ლაბრადორი",
-  "გერმანული ნაგაზი",
-  "ვაიმარანერი",
-  "გოლден რეტრივერი",
-  "ბულდოგი",
-  "პუდელი",
-  "ბორდერ კოლი",
-  "ჩიხუახუა",
-  "ჰასკი",
-  "როტვეილერი",
-  "ბიგლი",
-  "კავკასიური ნაგაზი",
-  "შპიცი",
-  "იორკშირული ტერიერი",
-  "მეტისი / შერეული",
-] as const;
+export {
+  BREED_LABELS as BREEDS,
+  DOG_BREEDS,
+  MIXED_BREED_KA,
+  searchDogBreeds,
+  type DogBreed,
+} from "@/lib/content/dog-breeds";
 
 export interface VaccineEntry {
   id: string;

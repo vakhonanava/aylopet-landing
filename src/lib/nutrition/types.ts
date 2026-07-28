@@ -185,21 +185,4 @@ export const TREATS_OPTIONS: readonly {
 
 export const MEALS_PER_DAY_OPTIONS: readonly MealsPerDay[] = [1, 2, 3] as const;
 
-export const BREED_SUGGESTIONS: readonly string[] = [
-  "Cane Corso",
-  "Pekingese",
-  "Labrador Retriever",
-  "German Shepherd",
-  "Golden Retriever",
-  "French Bulldog",
-  "Poodle",
-  "Border Collie",
-  "Chihuahua",
-  "Husky",
-  "Rottweiler",
-  "Beagle",
-  "Mixed breed",
-  "კავკასიური ნაგაზი",
-  "ლაბრადორი",
-  "გერმანული ნაგაზი",
-] as const;
+export { POPULAR_BREED_SUGGESTIONS as BREED_SUGGESTIONS } from "@/lib/content/dog-breeds";

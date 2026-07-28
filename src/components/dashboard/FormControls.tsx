@@ -4,8 +4,8 @@ import { useMemo, useState } from "react";
 import { Check, ChevronDown, Search } from "lucide-react";
 import {
   ACTIVITY_OPTIONS,
-  BREEDS,
   TEMPERAMENT_OPTIONS,
+  searchDogBreeds,
   type ActivityLevel,
   type Temperament,
 } from "@/lib/dashboard";
@@ -28,11 +28,7 @@ export function BreedCombobox({
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return BREEDS;
-    return BREEDS.filter((b) => b.toLowerCase().includes(q));
-  }, [query]);
+  const filtered = useMemo(() => searchDogBreeds(query), [query]);
 
   return (
     <div className="relative">
@@ -74,19 +70,22 @@ export function BreedCombobox({
                 </li>
               )}
               {filtered.map((breed) => (
-                <li key={breed}>
+                <li key={breed.en}>
                   <button
                     type="button"
                     onClick={() => {
-                      onChange(breed);
+                      onChange(breed.ka);
                       setOpen(false);
                       setQuery("");
                     }}
                     className="flex w-full items-center justify-between px-4 py-2.5 text-left text-sm text-[var(--brand-primary)] transition-colors hover:bg-[var(--brand-primary)]/[0.05]"
                   >
-                    {breed}
-                    {value === breed && (
-                      <Check className="h-4 w-4 text-[var(--brand-accent)]" />
+                    <span>
+                      <span className="block">{breed.ka}</span>
+                      <span className="block text-xs text-slate-400">{breed.en}</span>
+                    </span>
+                    {value === breed.ka && (
+                      <Check className="h-4 w-4 shrink-0 text-[var(--brand-accent)]" />
                     )}
                   </button>
                 </li>
