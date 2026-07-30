@@ -2,13 +2,21 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type {
   Account,
   ActivityLevel,
+  CareType,
   LabReportEntry,
   Pet,
   PetProfileSnapshot,
   Temperament,
   VaccineEntry,
 } from "@/lib/dashboard";
-import { PET_DOCUMENTS_BUCKET } from "@/lib/platform/types";
+import type {
+  MedicalRecord,
+  Medication,
+  SeverityLevel,
+  SymptomAttachment,
+  SymptomLog,
+} from "@/lib/medical";
+import { PET_DOCUMENTS_BUCKET, PET_MEDICAL_DOCS_BUCKET } from "@/lib/platform/types";
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -20,6 +28,8 @@ const LAB_MIME_TYPES = new Set<LabReportEntry["mimeType"]>([
 ]);
 
 const ACTIVITY_LEVELS = new Set<ActivityLevel>(["low", "moderate", "high"]);
+const CARE_TYPES = new Set<CareType>(["vaccine", "deworming", "flea_tick"]);
+const SEVERITY_LEVELS = new Set<SeverityLevel>(["low", "medium", "high", "critical"]);
 
 export function isPlatformPetId(id: string): boolean {
   return UUID_RE.test(id);
@@ -30,6 +40,20 @@ function parseActivity(value: unknown): ActivityLevel {
     return value as ActivityLevel;
   }
   return "moderate";
+}
+
+function parseCareType(value: unknown): CareType {
+  if (typeof value === "string" && CARE_TYPES.has(value as CareType)) {
+    return value as CareType;
+  }
+  return "vaccine";
+}
+
+function parseSeverity(value: unknown): SeverityLevel {
+  if (typeof value === "string" && SEVERITY_LEVELS.has(value as SeverityLevel)) {
+    return value as SeverityLevel;
+  }
+  return "low";
 }
 
 function parseTemperament(value: unknown): Temperament[] {
@@ -81,24 +105,42 @@ export async function fetchUserDashboardFromSupabase(
   for (const row of petsData ?? []) {
     const petId = row.id as string;
 
-    const [{ data: files }, { data: vaccinesData }, { data: snapshotsData }] =
-      await Promise.all([
-        supabase
-          .from("pet_files")
-          .select("*")
-          .eq("pet_id", petId)
-          .order("created_at", { ascending: false }),
-        supabase
-          .from("pet_vaccines")
-          .select("*")
-          .eq("pet_id", petId)
-          .order("administered", { ascending: false }),
-        supabase
-          .from("pet_profile_snapshots")
-          .select("id, created_at, snapshot")
-          .eq("pet_id", petId)
-          .order("created_at", { ascending: false }),
-      ]);
+    const [
+      { data: files },
+      { data: vaccinesData },
+      { data: snapshotsData },
+      { data: medicalRecordData },
+      { data: symptomLogsData },
+      { data: medicationsData },
+    ] = await Promise.all([
+      supabase
+        .from("pet_files")
+        .select("*")
+        .eq("pet_id", petId)
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("pet_vaccines")
+        .select("*")
+        .eq("pet_id", petId)
+        .order("administered", { ascending: false }),
+      supabase
+        .from("pet_profile_snapshots")
+        .select("id, created_at, snapshot")
+        .eq("pet_id", petId)
+        .order("created_at", { ascending: false }),
+      supabase.from("medical_records").select("*").eq("pet_id", petId).maybeSingle(),
+      supabase
+        .from("symptom_logs")
+        .select("*")
+        .eq("pet_id", petId)
+        .order("logged_at", { ascending: false })
+        .limit(60),
+      supabase
+        .from("medications")
+        .select("*")
+        .eq("pet_id", petId)
+        .order("created_at", { ascending: false }),
+    ]);
 
     const labReports: LabReportEntry[] = [];
 
@@ -127,6 +169,7 @@ export async function fetchUserDashboardFromSupabase(
     const vaccines: VaccineEntry[] = (vaccinesData ?? []).map((v) => ({
       id: v.id as string,
       name: v.name as string,
+      careType: parseCareType(v.care_type),
       administered: v.administered as string,
       nextDue: (v.next_due as string | null) ?? "",
     }));
@@ -134,6 +177,47 @@ export async function fetchUserDashboardFromSupabase(
     const profileHistory: PetProfileSnapshot[] = (snapshotsData ?? [])
       .map(parseSnapshot)
       .filter((item): item is PetProfileSnapshot => item !== null);
+
+    const medicalRecord: MedicalRecord | null = medicalRecordData
+      ? {
+          chronicConditions: (medicalRecordData.chronic_conditions as string[] | null) ?? [],
+          surgeriesAndTraumas: (medicalRecordData.surgeries_and_traumas as string | null) ?? "",
+          allergies: (medicalRecordData.allergies as string[] | null) ?? [],
+          geneticRisks: (medicalRecordData.genetic_risks as string[] | null) ?? [],
+          updatedAt: (medicalRecordData.updated_at as string | null) ?? null,
+        }
+      : null;
+
+    const medications: Medication[] = (medicationsData ?? []).map((m) => ({
+      id: m.id as string,
+      petId,
+      name: m.name as string,
+      dosage: (m.dosage as string | null) ?? "",
+      frequency: (m.frequency as string | null) ?? "",
+      isActive: Boolean(m.is_active),
+    }));
+
+    const symptomLogs: SymptomLog[] = [];
+    for (const log of symptomLogsData ?? []) {
+      const paths = (log.attachments as string[] | null) ?? [];
+      const attachments: SymptomAttachment[] = [];
+      for (const path of paths) {
+        const { data: signed } = await supabase.storage
+          .from(PET_MEDICAL_DOCS_BUCKET)
+          .createSignedUrl(path, 3600);
+        if (!signed?.signedUrl) continue;
+        attachments.push({ path, url: signed.signedUrl });
+      }
+      symptomLogs.push({
+        id: log.id as string,
+        petId,
+        loggedAt: log.logged_at as string,
+        symptomType: log.symptom_type as string,
+        severity: parseSeverity(log.severity),
+        notes: (log.notes as string | null) ?? "",
+        attachments,
+      });
+    }
 
     const rawWeight = Number(row.weight ?? 0);
     const weightKg =
@@ -149,12 +233,18 @@ export async function fetchUserDashboardFromSupabase(
       activity: parseActivity(row.activity),
       temperament: parseTemperament(row.temperament),
       avatarUrl: (row.avatar_url as string | null) ?? undefined,
+      birthDate: (row.birth_date as string | null) ?? undefined,
+      bcsScore: (row.bcs_score as number | null) ?? undefined,
+      microchipId: (row.microchip_id as string | null) ?? undefined,
       vaccines,
       supplements: [],
       food: [],
       moods: [],
       labReports,
       profileHistory,
+      medicalRecord,
+      medications,
+      symptomLogs,
     });
   }
 

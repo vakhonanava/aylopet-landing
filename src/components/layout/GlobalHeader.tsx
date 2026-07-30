@@ -103,7 +103,11 @@ export function GlobalHeader() {
   const navHidden = useHideOnScroll();
   const mainNav = getMainNav(dict);
 
-  if (pathname.startsWith("/dashboard") || pathname.startsWith("/portal"))
+  if (
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/portal") ||
+    pathname.startsWith("/vet-report")
+  )
     return null;
 
   const loggedIn = ready && !!user;

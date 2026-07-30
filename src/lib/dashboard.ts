@@ -1,3 +1,5 @@
+import type { MedicalRecord, Medication, SymptomLog } from "@/lib/medical";
+
 export type ActivityLevel = "low" | "moderate" | "high";
 
 export interface ActivityOption {
@@ -45,9 +47,29 @@ export {
   type DogBreed,
 } from "@/lib/content/dog-breeds";
 
+export type CareType = "vaccine" | "deworming" | "flea_tick";
+
+export interface CareTypeOption {
+  value: CareType;
+  label: string;
+}
+
+export const CARE_TYPE_OPTIONS: CareTypeOption[] = [
+  { value: "vaccine", label: "ვაქცინა" },
+  { value: "deworming", label: "მატლების საწინააღმდეგო" },
+  { value: "flea_tick", label: "რწყილი-ტკიპის საწინააღმდეგო" },
+];
+
+export const CARE_TYPE_LABELS: Record<CareType, string> = {
+  vaccine: "ვაქცინა",
+  deworming: "მატლების საწინააღმდეგო",
+  flea_tick: "რწყილი-ტკიპის საწინააღმდეგო",
+};
+
 export interface VaccineEntry {
   id: string;
   name: string;
+  careType: CareType;
   administered: string; // ISO date
   nextDue: string; // ISO date
 }
@@ -113,12 +135,18 @@ export interface Pet {
   activity: ActivityLevel;
   temperament: Temperament[];
   avatarUrl?: string;
+  birthDate?: string;
+  bcsScore?: number;
+  microchipId?: string;
   vaccines: VaccineEntry[];
   supplements: SupplementEntry[];
   food: FoodEntry[];
   moods: MoodEntry[];
   labReports: LabReportEntry[];
   profileHistory: PetProfileSnapshot[];
+  medicalRecord: MedicalRecord | null;
+  medications: Medication[];
+  symptomLogs: SymptomLog[];
 }
 
 export interface Account {
@@ -152,18 +180,21 @@ export function createSeedPet(): Pet {
       {
         id: "v1",
         name: "ცოფის ვაქცინა",
+        careType: "vaccine",
         administered: daysFromNow(-340),
         nextDue: daysFromNow(20), // due soon → amber
       },
       {
         id: "v2",
         name: "კომბინირებული (DHPP)",
+        careType: "vaccine",
         administered: daysFromNow(-400),
         nextDue: daysFromNow(-15), // overdue → red
       },
       {
         id: "v3",
         name: "ლეპტოსპიროზი",
+        careType: "vaccine",
         administered: daysFromNow(-120),
         nextDue: daysFromNow(245),
       },
@@ -229,6 +260,9 @@ export function createSeedPet(): Pet {
     ],
     labReports: [],
     profileHistory: [],
+    medicalRecord: null,
+    medications: [],
+    symptomLogs: [],
   };
 }
 

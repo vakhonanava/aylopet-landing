@@ -4,23 +4,39 @@ import { useState } from "react";
 import { Thermometer } from "lucide-react";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 
-const STEPS = [
-  { label: "ვარჩევთ პროდუქტებს", short: "1" },
-  { label: "ვასუფთავებთ", short: "2" },
-  { label: "ვაქცევთ ფარშად", short: "3" },
-  { label: "ვფუთავთ", short: "4" },
-  { label: "პასტერიზაცია", short: "5", tooltip: true },
-  { label: "გაყინვა", short: "6" },
-] as const;
+const STEPS: Record<"ka" | "en", { label: string; short: string; tooltip?: boolean }[]> = {
+  ka: [
+    { label: "ვარჩევთ პროდუქტებს", short: "1" },
+    { label: "ვასუფთავებთ", short: "2" },
+    { label: "ვაქცევთ ფარშად", short: "3" },
+    { label: "ვფუთავთ", short: "4" },
+    { label: "პასტერიზაცია", short: "5", tooltip: true },
+    { label: "გაყინვა", short: "6" },
+  ],
+  en: [
+    { label: "Select products", short: "1" },
+    { label: "Clean", short: "2" },
+    { label: "Mince", short: "3" },
+    { label: "Package", short: "4" },
+    { label: "Pasteurization", short: "5", tooltip: true },
+    { label: "Freeze", short: "6" },
+  ],
+};
 
-export function ProcessTimeline() {
+const PASTEURIZATION_TOOLTIP: Record<"ka" | "en", string> = {
+  ka: "60 to 80°C · 1 to 6 სთ · სალმონელა, ლისტერია, ე. კოლი",
+  en: "60 to 80°C · 1 to 6 hrs · Salmonella, Listeria, E. coli",
+};
+
+export function ProcessTimeline({ locale = "ka" }: { locale?: "ka" | "en" }) {
   const [activeTip, setActiveTip] = useState<number | null>(null);
+  const steps = STEPS[locale];
 
   return (
     <RevealOnScroll className="mx-auto max-w-6xl overflow-x-auto px-6 pb-12 lg:px-8">
       <div className="relative flex min-w-[640px] items-start justify-between gap-2">
         <div className="absolute left-8 right-8 top-5 h-px bg-[var(--border-light)]" />
-        {STEPS.map((step, i) => (
+        {steps.map((step, i) => (
           <div key={step.label} className="relative flex flex-1 flex-col items-center text-center">
             <button
               type="button"
@@ -41,7 +57,7 @@ export function ProcessTimeline() {
             </p>
             {activeTip === i && (
               <div className="absolute top-14 z-20 w-48 rounded-xl border border-[var(--border-light)] bg-white p-3 text-left text-xs leading-relaxed text-[var(--text-body)] shadow-[var(--shadow-card-hover)]">
-                60 to 80°C · 1 to 6 სთ · სალმონელა, ლისტერია, ე. კოლი
+                {PASTEURIZATION_TOOLTIP[locale]}
               </div>
             )}
           </div>
@@ -51,7 +67,18 @@ export function ProcessTimeline() {
   );
 }
 
-export function PasteurizationCard({ text }: { text: string }) {
+const PASTEURIZATION_TITLE: Record<"ka" | "en", string> = {
+  ka: "პასტერიზაცია",
+  en: "Pasteurization",
+};
+
+export function PasteurizationCard({
+  text,
+  locale = "ka",
+}: {
+  text: string;
+  locale?: "ka" | "en";
+}) {
   return (
     <RevealOnScroll className="mx-auto max-w-3xl px-6 pb-16 lg:px-8">
       <article className="rounded-[var(--radius-bento)] border border-[var(--brand-primary)]/15 bg-[var(--brand-accent-soft)] p-8">
@@ -61,7 +88,9 @@ export function PasteurizationCard({ text }: { text: string }) {
             <span className="mt-0.5 text-[10px] font-bold">60 to 80°C</span>
           </span>
           <div>
-            <h3 className="text-lg font-bold text-[var(--text-primary)]">პასტერიზაცია</h3>
+            <h3 className="text-lg font-bold text-[var(--text-primary)]">
+              {PASTEURIZATION_TITLE[locale]}
+            </h3>
             <p className="mt-2 text-sm leading-relaxed text-[var(--text-body)]">{text}</p>
           </div>
         </div>

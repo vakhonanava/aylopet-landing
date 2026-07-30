@@ -94,3 +94,16 @@ export const ACCEPTED_PET_FILE_TYPES = [
 ] as const;
 
 export const MAX_PET_FILE_BYTES = 10 * 1024 * 1024;
+
+export const PET_MEDICAL_DOCS_BUCKET = "pet-medical-docs";
+
+export const ACCEPTED_MEDICAL_FILE_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "video/mp4",
+  "video/quicktime",
+  "application/pdf",
+] as const;
+
+export const MAX_MEDICAL_FILE_BYTES = 10 * 1024 * 1024;

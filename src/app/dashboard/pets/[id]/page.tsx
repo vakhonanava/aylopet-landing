@@ -7,6 +7,7 @@ import { useDashboard } from "@/components/dashboard/DashboardStore";
 import { LabResultsUpload } from "@/components/dashboard/LabResultsUpload";
 import { PetProfileCard } from "@/components/dashboard/PetProfileCard";
 import { LogbookTabs } from "@/components/dashboard/LogbookTabs";
+import { MedicalModule } from "@/components/dashboard/medical/MedicalModule";
 
 export default function PetProfilePage() {
   const params = useParams<{ id: string }>();
@@ -49,6 +50,7 @@ export default function PetProfilePage() {
       <PetProfileCard pet={pet} />
       <LabResultsUpload pet={pet} />
       <LogbookTabs pet={pet} />
+      <MedicalModule pet={pet} />
     </div>
   );
 }

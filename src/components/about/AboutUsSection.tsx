@@ -4,29 +4,50 @@ import { motion } from "framer-motion";
 import { Scene3D } from "@/components/visual/Scene3D";
 import { FoodLayersVisual } from "@/components/visual/FoodLayersVisual";
 import { IMAGES } from "@/lib/images";
-import { Heart, Microscope, Sparkles } from "lucide-react";
+import { ValueLineIcon } from "@/components/japandi/LineArtIcons";
 import { PasteurizationModule } from "@/components/about/PasteurizationModule";
 import { fadeUp, staggerContainer } from "@/lib/motion";
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import { getAbout } from "@/lib/content/about";
 
-const BRAND_VALUES = [
-  {
-    icon: Sparkles,
-    title: "Personalization",
-    body: "Every recipe adapts to breed, genetics, allergies, and lifestyle · not one-size-fits-all kibble.",
+type Locale = "ka" | "en";
+
+const COPY = {
+  ka: {
+    eyebrow: "ჩვენი ისტორია",
+    headline: "დაფუძნებული რეალურ ისტორიებზე, აგებული მეცნიერებაზე",
+    kokoBreed: "პეკინესი",
+    kokoStory:
+      "კოკოს, ჩვენი პეკინესის, ბრძოლამ მშრალი საკვების მონელებასთან, მუდმივ დისკომფორტთან და ალერგიებთან გვაჩვენა, რომ პატარა ჯიშის ძაღლებისთვის ინდივიდუალური მიდგომა თითქმის არსად მოიძებნება. სწორედ ეს გახდა Aylopet-ის იდეის პირველი ბიძგი.",
+    danteBreed: "კანე კორსო",
+    danteStory:
+      "დანტემ, ჩვენმა კანე კორსომ, მუდმივად მოითხოვა ნამდვილი ხორცი და უარი თქვა დამუშავებულ საკვებზე. მისმა აგრესიული სიმსივნის დიაგნოზმა საბოლოოდ დაგვანახა, რომ კვება, გენეტიკა და ადრეული პრევენცია ერთმანეთისგან განუყოფელია — და გახდა Aylopet-ის ეკოსისტემის შექმნის მთავარი მიზეზი.",
+    partnerLabel: "პარტნიორი საწარმო",
+    partnerTitle: "Natural Selection · ისრაელი",
+    partnerBody:
+      "ჩვენი სპეციალიზირებული საწარმოო პარტნიორი ისრაელში მუშაობს კლინიკური დონის სამზარეულოებში, დადასტურებული დაბალტემპერატურული პასტერიზაციის პროტოკოლებით. ყოველი პარტია სრულად თვალსაჩინოა წყაროდან თეფშამდე — შეესაბამება ევროკავშირისა და ისრაელის სურსათის უსაფრთხოების სტანდარტებს.",
   },
-  {
-    icon: Microscope,
-    title: "Scientific Transparency",
-    body: "We publish our processing temperatures, sourcing standards, and nutritional methodology openly.",
+  en: {
+    eyebrow: "Our story",
+    headline: "Built on real stories, grounded in science",
+    kokoBreed: "Pekingese",
+    kokoStory:
+      "Koko, our Pekingese, struggled with digesting dry food, constant discomfort, and allergies. Watching her showed us how hard it is to find truly individual care for small-breed dogs — and planted the first seed of the Aylopet idea.",
+    danteBreed: "Cane Corso",
+    danteStory:
+      "Dante, our Cane Corso, constantly demanded real meat and refused processed food. His diagnosis with an aggressive tumor ultimately showed us that nutrition, genetics, and early prevention can't be separated — and became the reason the Aylopet ecosystem exists.",
+    partnerLabel: "Partner facility",
+    partnerTitle: "Natural Selection · Israel",
+    partnerBody:
+      "Our specialized production partner in Israel operates clinical-grade kitchens with validated low-temperature pasteurization protocols. Every batch is traceable from source to bowl · meeting EU and Israeli food safety standards.",
   },
-  {
-    icon: Heart,
-    title: "Unconditional Commitment",
-    body: "From Koko's first gentle transition to Dante's structured plan · we stay with you at every stage.",
-  },
-] as const;
+} as const satisfies Record<Locale, Record<string, string>>;
 
 export function AboutUsSection() {
+  const { locale } = useLocale();
+  const c = COPY[locale];
+  const { values } = getAbout(locale);
+
   return (
     <div className="bg-[var(--bone-alabaster)]">
       <section className="mx-auto max-w-6xl px-6 py-16 sm:py-24">
@@ -40,13 +61,13 @@ export function AboutUsSection() {
             variants={fadeUp}
             className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--terracotta)]"
           >
-            Our story
+            {c.eyebrow}
           </motion.p>
           <motion.h2
             variants={fadeUp}
             className="mt-3 max-w-3xl font-display text-3xl font-semibold leading-tight text-[var(--forest-deep)] sm:text-4xl lg:text-5xl"
           >
-            Born from real dogs, built on real science
+            {c.headline}
           </motion.h2>
         </motion.div>
 
@@ -58,16 +79,16 @@ export function AboutUsSection() {
           className="mt-14 grid gap-8 lg:grid-cols-2"
         >
           <StoryCard
-            name="Koko"
-            breed="Pekingese"
+            name={locale === "ka" ? "კოკო" : "Koko"}
+            breed={c.kokoBreed}
             image={IMAGES.storyPekingese}
-            story="Koko struggled with standard kibble processing · persistent digestive allergies, itchy skin, and food refusal cycles that left her family exhausted. Aylopet's gently-cooked, single-protein turkey formula was designed around her sensitivities and MDR1-aware ingredient filters."
+            story={c.kokoStory}
           />
           <StoryCard
-            name="Dante"
-            breed="Cane Corso"
+            name={locale === "ka" ? "დანტე" : "Dante"}
+            breed={c.danteBreed}
             image={IMAGES.storyCaneCorso}
-            story="Dante's Cane Corso metabolism demanded structured, professional guidance through every nutritional transition. His working-dog energy required precise MER calculations and phased recipe updates · the blueprint our platform was built to deliver."
+            story={c.danteStory}
           />
         </motion.div>
 
@@ -78,13 +99,13 @@ export function AboutUsSection() {
           viewport={{ once: true }}
           className="mt-16 grid gap-6 sm:grid-cols-3"
         >
-          {BRAND_VALUES.map((value) => (
+          {values.map((value) => (
             <motion.div
               key={value.title}
               variants={fadeUp}
               className="rounded-2xl border border-[var(--oat-soft)] bg-white p-6"
             >
-              <value.icon className="h-6 w-6 text-[var(--terracotta)]" />
+              <ValueLineIcon type={value.icon} />
               <h3 className="mt-4 font-display text-lg font-semibold text-[var(--forest-deep)]">
                 {value.title}
               </h3>
@@ -105,17 +126,12 @@ export function AboutUsSection() {
           <div className="grid lg:grid-cols-2">
             <div className="p-8 sm:p-10">
               <p className="text-xs font-medium uppercase tracking-widest text-[var(--terracotta)]">
-                Partner facility
+                {c.partnerLabel}
               </p>
               <h3 className="mt-3 font-display text-2xl font-semibold sm:text-3xl">
-                Natural Selection · Israel
+                {c.partnerTitle}
               </h3>
-              <p className="mt-4 text-sm leading-relaxed text-white/75">
-                Our specialized production partner in Israel operates
-                clinical-grade kitchens with validated low-temperature
-                pasteurization protocols. Every batch is traceable from source
-                to bowl · meeting EU and Israeli food safety standards.
-              </p>
+              <p className="mt-4 text-sm leading-relaxed text-white/75">{c.partnerBody}</p>
             </div>
             <div className="relative min-h-[280px] lg:min-h-0">
               <FoodLayersVisual
@@ -129,7 +145,7 @@ export function AboutUsSection() {
         </motion.div>
 
         <div className="mt-16">
-          <PasteurizationModule />
+          <PasteurizationModule locale={locale} />
         </div>
       </section>
     </div>

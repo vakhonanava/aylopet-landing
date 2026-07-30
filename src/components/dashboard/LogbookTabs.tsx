@@ -14,11 +14,14 @@ import {
   UtensilsCrossed,
 } from "lucide-react";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
-import { fieldLabel, textInput } from "@/components/dashboard/FormControls";
+import { addButton, fieldLabel, textInput } from "@/components/dashboard/FormControls";
 import {
+  CARE_TYPE_LABELS,
+  CARE_TYPE_OPTIONS,
   MOOD_SCALE,
   daysUntil,
   formatDate,
+  type CareType,
   type MealType,
   type Pet,
 } from "@/lib/dashboard";
@@ -26,12 +29,12 @@ import {
 const tabTrigger =
   "flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-slate-500 transition-colors data-[state=active]:bg-[var(--brand-primary)] data-[state=active]:text-white";
 
-const addButton =
-  "inline-flex items-center justify-center gap-2 rounded-full bg-[var(--brand-primary)] px-5 py-2.5 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[var(--brand-primary-hover)]";
-
 export function LogbookTabs({ pet }: { pet: Pet }) {
   return (
-    <section className="rounded-[2rem] border border-[#e5e7eb] bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] sm:p-7">
+    <section
+      id="logbook-vaccines"
+      className="rounded-[2rem] border border-[#e5e7eb] bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] sm:p-7"
+    >
       <h2 className="mb-5 text-lg font-bold tracking-tight text-[var(--brand-primary)]">
         ჯანმრთელობა & კეთილდღეობა
       </h2>
@@ -39,7 +42,7 @@ export function LogbookTabs({ pet }: { pet: Pet }) {
       <Tabs.Root defaultValue="vaccines">
         <Tabs.List className="mb-6 flex flex-wrap gap-1.5 rounded-full border border-[#e5e7eb] bg-[#FAFAF8] p-1.5">
           <Tabs.Trigger value="vaccines" className={tabTrigger}>
-            <Syringe className="h-4 w-4" /> ვაქცინები
+            <Syringe className="h-4 w-4" /> ვაქცინები & პრევენცია
           </Tabs.Trigger>
           <Tabs.Trigger value="supplements" className={tabTrigger}>
             <Pill className="h-4 w-4" /> დანამატები
@@ -76,6 +79,7 @@ function VaccinesTab({ pet }: { pet: Pet }) {
   const [open, setOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState("");
+  const [careType, setCareType] = useState<CareType>("vaccine");
   const [administered, setAdministered] = useState("");
   const [nextDue, setNextDue] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -83,6 +87,7 @@ function VaccinesTab({ pet }: { pet: Pet }) {
 
   const resetForm = () => {
     setName("");
+    setCareType("vaccine");
     setAdministered("");
     setNextDue("");
     setEditingId(null);
@@ -93,6 +98,7 @@ function VaccinesTab({ pet }: { pet: Pet }) {
   const startEdit = (v: (typeof pet.vaccines)[number]) => {
     setEditingId(v.id);
     setName(v.name);
+    setCareType(v.careType);
     setAdministered(v.administered);
     setNextDue(v.nextDue);
     setOpen(true);
@@ -108,10 +114,11 @@ function VaccinesTab({ pet }: { pet: Pet }) {
       ? await updateVaccine(pet.id, {
           id: editingId,
           name,
+          careType,
           administered,
           nextDue,
         })
-      : await addVaccine(pet.id, { name, administered, nextDue });
+      : await addVaccine(pet.id, { name, careType, administered, nextDue });
 
     setBusy(false);
     if (!result.ok) {
@@ -132,7 +139,7 @@ function VaccinesTab({ pet }: { pet: Pet }) {
   return (
     <div>
       <div className="mb-5 flex items-center justify-between">
-        <p className="text-sm text-slate-500">ვაქცინაციის ისტორია და გრაფიკი</p>
+        <p className="text-sm text-slate-500">ვაქცინაციისა და პარაზიტების საწინააღმდეგო დამუშავების ისტორია</p>
         <button className={addButton} onClick={() => { setEditingId(null); setOpen((o) => !o); }}>
           <Plus className="h-4 w-4" /> დამატება
         </button>
@@ -147,7 +154,26 @@ function VaccinesTab({ pet }: { pet: Pet }) {
       {open && (
         <div className="mb-6 grid gap-3 rounded-2xl border border-[#e5e7eb] bg-[#FAFAF8] p-4 sm:grid-cols-3">
           <div className="flex flex-col gap-1.5 sm:col-span-3">
-            <label className={fieldLabel}>ვაქცინის სახელი</label>
+            <label className={fieldLabel}>ტიპი</label>
+            <div className="flex flex-wrap gap-2">
+              {CARE_TYPE_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setCareType(opt.value)}
+                  className={`rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors ${
+                    careType === opt.value
+                      ? "border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white"
+                      : "border-[#e5e7eb] bg-white text-slate-600"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col gap-1.5 sm:col-span-3">
+            <label className={fieldLabel}>სახელი</label>
             <input
               className={textInput}
               value={name}
@@ -221,7 +247,12 @@ function VaccinesTab({ pet }: { pet: Pet }) {
               <div className="rounded-2xl border border-[#e5e7eb] bg-white p-4 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div>
-                    <h4 className="font-semibold text-[var(--brand-primary)]">{v.name}</h4>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h4 className="font-semibold text-[var(--brand-primary)]">{v.name}</h4>
+                      <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-500">
+                        {CARE_TYPE_LABELS[v.careType]}
+                      </span>
+                    </div>
                     <p className="mt-0.5 text-xs text-slate-400">
                       ჩატარდა: {formatDate(v.administered)}
                     </p>

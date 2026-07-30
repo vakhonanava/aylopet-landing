@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Check, ChevronDown, Search } from "lucide-react";
+import { Check, ChevronDown, Search, X } from "lucide-react";
 import {
   ACTIVITY_OPTIONS,
   TEMPERAMENT_OPTIONS,
@@ -13,6 +13,8 @@ import {
 export const fieldLabel = "block text-sm font-medium text-[var(--brand-primary)]";
 export const textInput =
   "w-full rounded-2xl border border-[#e5e7eb] bg-white px-4 py-3 text-sm text-[var(--brand-primary)] outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-[var(--brand-primary)]/40 focus:ring-4 focus:ring-[var(--brand-primary)]/5";
+export const addButton =
+  "inline-flex items-center justify-center gap-2 rounded-full bg-[var(--brand-primary)] px-5 py-2.5 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[var(--brand-primary-hover)]";
 
 /* ----------------------------- Breed Combobox ---------------------------- */
 
@@ -213,6 +215,78 @@ export function TemperamentTags({
           </button>
         );
       })}
+    </div>
+  );
+}
+
+/* --------------------------- Text Chip Input ------------------------------ */
+
+export function TextChipInput({
+  value,
+  onChange,
+  placeholder,
+  variant = "light",
+}: {
+  value: string[];
+  onChange: (value: string[]) => void;
+  placeholder?: string;
+  variant?: "light" | "dark";
+}) {
+  const [draft, setDraft] = useState("");
+  const isDark = variant === "dark";
+
+  const commit = () => {
+    const trimmed = draft.trim();
+    setDraft("");
+    if (!trimmed || value.includes(trimmed)) return;
+    onChange([...value, trimmed]);
+  };
+
+  const remove = (chip: string) => onChange(value.filter((c) => c !== chip));
+
+  return (
+    <div
+      className={`flex flex-wrap items-center gap-2 rounded-2xl border px-3 py-2.5 transition-all duration-200 focus-within:ring-4 ${
+        isDark
+          ? "border-white/10 bg-[#111827]/80 focus-within:border-cyan-300/40 focus-within:ring-cyan-300/15"
+          : "border-[#e5e7eb] bg-white focus-within:border-[var(--brand-primary)]/40 focus-within:ring-[var(--brand-primary)]/5"
+      }`}
+    >
+      {value.map((chip) => (
+        <span
+          key={chip}
+          className="inline-flex items-center gap-1.5 rounded-full border border-[var(--brand-primary)] bg-[var(--brand-primary)] px-3 py-1 text-sm font-medium text-white"
+        >
+          {chip}
+          <button
+            type="button"
+            onClick={() => remove(chip)}
+            className="rounded-full transition-opacity hover:opacity-70"
+            aria-label={`${chip} წაშლა`}
+          >
+            <X className="h-3 w-3" />
+          </button>
+        </span>
+      ))}
+      <input
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === ",") {
+            e.preventDefault();
+            commit();
+          } else if (e.key === "Backspace" && !draft && value.length > 0) {
+            onChange(value.slice(0, -1));
+          }
+        }}
+        onBlur={commit}
+        placeholder={value.length === 0 ? placeholder : ""}
+        className={`min-w-[8rem] flex-1 bg-transparent text-sm outline-none ${
+          isDark
+            ? "text-white placeholder:text-white/35"
+            : "text-[var(--brand-primary)] placeholder:text-slate-400"
+        }`}
+      />
     </div>
   );
 }

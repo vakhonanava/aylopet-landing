@@ -270,3 +270,9 @@ body {
     transform: none;
   }
 }
+
+@media print {
+  @page {
+    margin: 12mm;
+  }
+}

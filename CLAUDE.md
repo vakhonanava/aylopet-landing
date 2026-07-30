@@ -60,8 +60,9 @@ Run in **Supabase SQL Editor** if tables/columns are missing.
 | `supabase/migrations/002_profiles_pets_platform.sql` | profiles, pets |
 | `supabase/migrations/003_unify_platform.sql` | Platform unification |
 | `supabase/migrations/004_pet_dashboard_extensions.sql` | **activity, temperament, avatar_url** on pets; **pet_vaccines**; **pet_profile_snapshots** |
+| `supabase/migrations/005_medical_module.sql` | **birth_date, bcs_score, microchip_id** on pets; **care_type** on pet_vaccines (unifies vaccine/deworming/flea_tick); **medical_records**, **symptom_logs**, **medications**, **vet_report_shares**; **pet-medical-docs** storage bucket |
 
-**One-shot:** run `supabase/RUN_ALL_MIGRATIONS.sql` (001→004 consolidated).
+**One-shot:** run `supabase/RUN_ALL_MIGRATIONS.sql` (001→005 consolidated).
 
 **CLI helpers:**
 
@@ -119,6 +120,9 @@ If migration **004** is not applied, dashboard save/vaccines/history will fail i
 | Breed picker | `src/components/dashboard/FormControls.tsx` → `BreedCombobox` |
 | Breed data (294 FCI) | `src/lib/content/dog-breeds.ts` |
 | Types/constants | `src/lib/dashboard.ts` |
+| Medical module (symptoms, record, meds, export) | `src/components/dashboard/medical/` |
+| Medical Supabase CRUD | `src/lib/platform/medical-persistence.ts` |
+| Vet report data assembly (auth + public share) | `src/lib/platform/vet-report.ts` |
 | Platform onboarding | `src/components/onboarding/AyliopetOnboarding.tsx` |
 | Header nav | `src/components/layout/GlobalHeader.tsx` — `DASHBOARD_HREF = "/dashboard"` |
 
@@ -207,6 +211,7 @@ Inspect: `https://vercel.com/theteam4/aylopet-landing`
 4. **Wrong Site URL in Supabase** — auth emails/redirects break.
 5. **Save button** — only appears after editing a field (draft dirty state).
 6. **Next.js 16** — middleware deprecated in favor of “proxy”; heed build warnings.
+7. **Migration 005 not run** — Medical module (symptom tracker, medical record, medications, vet report export) fails on save/load; the „ვაქცინები“ tab will error too since it now depends on `care_type`.
 
 ---
 

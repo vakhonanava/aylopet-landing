@@ -2,6 +2,9 @@
 
 Next.js marketing site and product prototype for Aylopet — fresh pet food, AylopetAI, DNA platform, and smart collar.
 
+**→ [HOW_TO_WORK.md](./HOW_TO_WORK.md)** — full developer guide (setup, structure, workflow, testing)  
+**→ [CLAUDE.md](./CLAUDE.md)** — AI assistant handoff instructions
+
 ## Quick start
 
 ```bash

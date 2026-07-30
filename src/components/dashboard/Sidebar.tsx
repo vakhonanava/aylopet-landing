@@ -26,7 +26,7 @@ export function Sidebar() {
   const { signOut, displayName, email } = useAuth();
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-[var(--border-light)] bg-white px-4 py-6 lg:flex">
+    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-[var(--border-light)] bg-white px-4 py-6 lg:flex print:hidden">
       <AylopetLogo href="/" className="px-3" />
 
       <nav className="mt-8 flex flex-col gap-1">

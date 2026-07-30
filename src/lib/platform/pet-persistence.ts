@@ -140,6 +140,7 @@ export async function upsertVaccineInSupabase(
     pet_id: petId,
     owner_id: userId,
     name: entry.name.trim(),
+    care_type: entry.careType,
     administered: entry.administered,
     next_due: entry.nextDue || null,
     updated_at: new Date().toISOString(),

@@ -28,7 +28,7 @@ export function EmailVerificationBanner() {
   };
 
   return (
-    <div className="mb-6 rounded-[1.5rem] border border-amber-200/80 bg-amber-50/90 px-4 py-4 sm:px-5">
+    <div className="mb-6 rounded-[1.5rem] border border-amber-200/80 bg-amber-50/90 px-4 py-4 sm:px-5 print:hidden">
       <div className="flex items-start gap-3">
         <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
           <ShieldCheck className="h-4 w-4" />

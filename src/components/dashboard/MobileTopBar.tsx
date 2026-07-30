@@ -9,7 +9,7 @@ export function MobileTopBar() {
   const { pets, ready } = useDashboard();
 
   return (
-    <div className="sticky top-0 z-30 border-b border-[var(--border-light)] bg-white/80 backdrop-blur-md lg:hidden">
+    <div className="sticky top-0 z-30 border-b border-[var(--border-light)] bg-white/80 backdrop-blur-md lg:hidden print:hidden">
       <div className="flex items-center justify-between px-5 py-3">
         <AylopetLogo size="sm" />
         <Link

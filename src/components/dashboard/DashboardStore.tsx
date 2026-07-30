@@ -22,6 +22,7 @@ import {
   type SupplementEntry,
   type VaccineEntry,
 } from "@/lib/dashboard";
+import type { MedicalRecord, Medication, SymptomLog } from "@/lib/medical";
 import {
   fetchUserDashboardFromSupabase,
   isPlatformPetId,
@@ -36,6 +37,16 @@ import {
   upsertVaccineInSupabase,
   type PetProfilePayload,
 } from "@/lib/platform/pet-persistence";
+import {
+  createSymptomLogInSupabase,
+  deleteMedicationInSupabase,
+  deleteSymptomLogInSupabase,
+  updatePetIdentityInSupabase,
+  upsertMedicalRecordInSupabase,
+  upsertMedicationInSupabase,
+  type MedicalRecordPayload,
+  type PetIdentityPayload,
+} from "@/lib/platform/medical-persistence";
 import { createClient } from "@/utils/supabase/client";
 
 interface DashboardState {
@@ -49,7 +60,16 @@ interface DashboardContextValue extends DashboardState {
   addPet: (
     pet: Omit<
       Pet,
-      "id" | "vaccines" | "supplements" | "food" | "moods" | "labReports" | "profileHistory"
+      | "id"
+      | "vaccines"
+      | "supplements"
+      | "food"
+      | "moods"
+      | "labReports"
+      | "profileHistory"
+      | "medicalRecord"
+      | "medications"
+      | "symptomLogs"
     >,
     options?: { id?: string },
   ) => string;
@@ -81,6 +101,34 @@ interface DashboardContextValue extends DashboardState {
   addMood: (petId: string, entry: Omit<MoodEntry, "id">) => void;
   addLabReport: (petId: string, entry: LabReportEntry) => void;
   removeLabReport: (petId: string, reportId: string) => void;
+  updatePetIdentity: (
+    petId: string,
+    payload: PetIdentityPayload,
+  ) => Promise<{ ok: boolean; error?: string }>;
+  saveMedicalRecord: (
+    petId: string,
+    payload: MedicalRecordPayload,
+  ) => Promise<{ ok: boolean; error?: string }>;
+  addSymptomLog: (
+    petId: string,
+    entry: Omit<SymptomLog, "id" | "petId">,
+  ) => Promise<{ ok: boolean; error?: string }>;
+  removeSymptomLog: (
+    petId: string,
+    logId: string,
+  ) => Promise<{ ok: boolean; error?: string }>;
+  addMedication: (
+    petId: string,
+    entry: Omit<Medication, "id" | "petId">,
+  ) => Promise<{ ok: boolean; error?: string }>;
+  updateMedication: (
+    petId: string,
+    entry: Medication,
+  ) => Promise<{ ok: boolean; error?: string }>;
+  removeMedication: (
+    petId: string,
+    medicationId: string,
+  ) => Promise<{ ok: boolean; error?: string }>;
 }
 
 const STORAGE_KEY = "aylopet.dashboard.v1";
@@ -97,6 +145,9 @@ function emptyPetExtras() {
     moods: [] as MoodEntry[],
     labReports: [] as LabReportEntry[],
     profileHistory: [] as PetProfileSnapshot[],
+    medicalRecord: null as MedicalRecord | null,
+    medications: [] as Medication[],
+    symptomLogs: [] as SymptomLog[],
   };
 }
 
@@ -123,6 +174,13 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
                 ...pet,
                 labReports: pet.labReports ?? [],
                 profileHistory: pet.profileHistory ?? [],
+                medicalRecord: pet.medicalRecord ?? null,
+                medications: pet.medications ?? [],
+                symptomLogs: pet.symptomLogs ?? [],
+                vaccines: (pet.vaccines ?? []).map((v) => ({
+                  ...v,
+                  careType: v.careType ?? "vaccine",
+                })),
               })),
             });
           } else {
@@ -414,6 +472,118 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
             (report) => report.id !== reportId,
           ),
         })),
+      updatePetIdentity: async (petId, payload) => {
+        if (user && isPlatformPetId(petId)) {
+          const supabase = getSupabaseClient();
+          if (!supabase) return { ok: false, error: "Supabase არ არის კონფიგურირებული." };
+          const result = await updatePetIdentityInSupabase(supabase, user.id, petId, payload);
+          if (result.error) return { ok: false, error: result.error };
+        }
+
+        updatePetState(petId, (p) => ({
+          ...p,
+          birthDate: payload.birthDate ?? undefined,
+          bcsScore: payload.bcsScore ?? undefined,
+          microchipId: payload.microchipId ?? undefined,
+        }));
+        return { ok: true };
+      },
+      saveMedicalRecord: async (petId, payload) => {
+        if (user && isPlatformPetId(petId)) {
+          const supabase = getSupabaseClient();
+          if (!supabase) return { ok: false, error: "Supabase არ არის კონფიგურირებული." };
+          const result = await upsertMedicalRecordInSupabase(supabase, user.id, petId, payload);
+          if (result.error) return { ok: false, error: result.error };
+        }
+
+        updatePetState(petId, (p) => ({
+          ...p,
+          medicalRecord: { ...payload, updatedAt: new Date().toISOString() },
+        }));
+        return { ok: true };
+      },
+      addSymptomLog: async (petId, entry) => {
+        const localEntry: SymptomLog = { ...entry, id: uid("sym"), petId };
+
+        if (user && isPlatformPetId(petId)) {
+          const supabase = getSupabaseClient();
+          if (!supabase) return { ok: false, error: "Supabase არ არის კონფიგურირებული." };
+          const result = await createSymptomLogInSupabase(supabase, user.id, petId, entry);
+          if (result.error || !result.id) {
+            return { ok: false, error: result.error ?? "სიმპტომი ვერ შეინახა." };
+          }
+          localEntry.id = result.id;
+        }
+
+        updatePetState(petId, (p) => ({
+          ...p,
+          symptomLogs: [localEntry, ...p.symptomLogs],
+        }));
+        return { ok: true };
+      },
+      removeSymptomLog: async (petId, logId) => {
+        if (user && isPlatformPetId(petId) && UUID_LIKE.test(logId)) {
+          const supabase = getSupabaseClient();
+          if (supabase) {
+            const result = await deleteSymptomLogInSupabase(supabase, user.id, logId);
+            if (result.error) return { ok: false, error: result.error };
+          }
+        }
+
+        updatePetState(petId, (p) => ({
+          ...p,
+          symptomLogs: p.symptomLogs.filter((s) => s.id !== logId),
+        }));
+        return { ok: true };
+      },
+      addMedication: async (petId, entry) => {
+        const localEntry: Medication = { ...entry, id: uid("med"), petId };
+
+        if (user && isPlatformPetId(petId)) {
+          const supabase = getSupabaseClient();
+          if (!supabase) return { ok: false, error: "Supabase არ არის კონფიგურირებული." };
+          const result = await upsertMedicationInSupabase(supabase, user.id, petId, localEntry);
+          if (result.error || !result.id) {
+            return { ok: false, error: result.error ?? "მედიკამენტი ვერ შეინახა." };
+          }
+          localEntry.id = result.id;
+        }
+
+        updatePetState(petId, (p) => ({
+          ...p,
+          medications: [localEntry, ...p.medications],
+        }));
+        return { ok: true };
+      },
+      updateMedication: async (petId, entry) => {
+        if (user && isPlatformPetId(petId)) {
+          const supabase = getSupabaseClient();
+          if (!supabase) return { ok: false, error: "Supabase არ არის კონფიგურირებული." };
+          const result = await upsertMedicationInSupabase(supabase, user.id, petId, entry);
+          if (result.error) return { ok: false, error: result.error };
+        }
+
+        updatePetState(petId, (p) => ({
+          ...p,
+          medications: p.medications.map((m) => (m.id === entry.id ? entry : m)),
+        }));
+        return { ok: true };
+      },
+      removeMedication: async (petId, medicationId) => {
+        if (user && isPlatformPetId(petId) && UUID_LIKE.test(medicationId)) {
+          const supabase = getSupabaseClient();
+          if (supabase) {
+            const result = await deleteMedicationInSupabase(supabase, user.id, medicationId);
+            if (result.error) return { ok: false, error: result.error };
+          }
+        }
+
+        updatePetState(petId, (p) => ({
+          ...p,
+          medications: p.medications.filter((m) => m.id !== medicationId),
+        }));
+        return { ok: true };
+      },
     }),
     [state, ready, user, updatePetState, getSupabaseClient],
   );

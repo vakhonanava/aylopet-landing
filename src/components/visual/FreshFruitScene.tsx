@@ -1,6 +1,6 @@
 "use client";
 
-import { FruitBowl3D } from "@/components/visual/FruitBowl3D";
+import { FoodFloatCluster } from "@/components/visual/FoodFloatCluster";
 import { FloatingOrb, ScenePedestal } from "@/components/visual/FloatingOrb";
 
 interface FreshFruitSceneProps {
@@ -16,11 +16,11 @@ const DEFAULT_BADGE: Record<"ka" | "en", string> = {
 };
 
 const DEFAULT_CAPTION: Record<"ka" | "en", string> = {
-  ka: "ნამდვილი ხილი და ბოსტნეული",
-  en: "Real fruit and vegetables",
+  ka: "ხორცი, თევზი და ბოსტნეული",
+  en: "Meat, fish and vegetables",
 };
 
-/** Real 3D ingredient still-life · apple, citrus, blueberries · for fresh-food brand moments. */
+/** Flat ingredient still-life · steak, chicken, broccoli, salmon, sweet potato, apple · for fresh-food brand moments. */
 export function FreshFruitScene({
   className = "",
   locale = "ka",
@@ -65,7 +65,7 @@ export function FreshFruitScene({
           </span>
 
           <div className="relative min-h-0 flex-1">
-            <FruitBowl3D />
+            <FoodFloatCluster />
           </div>
 
           <div className="glass absolute bottom-3 left-3 right-3 z-30 flex items-center justify-between rounded-xl px-3 py-2 sm:bottom-4 sm:left-4 sm:right-4 sm:px-4 sm:py-2.5">
