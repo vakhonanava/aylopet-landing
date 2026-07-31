@@ -2,17 +2,30 @@
 
 import { motion } from "framer-motion";
 import { Clock, Lock } from "lucide-react";
+import { useEffect, useState } from "react";
+import { fetchLiveWaitlistCount } from "@/app/actions/waitlist-count";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { fadeUp } from "@/lib/motion";
 
+const POLL_INTERVAL_MS = 20_000;
+
 interface ScarcityBarClientProps {
-  count: number;
+  initialCount: number;
   cap: number;
 }
 
-export function ScarcityBarClient({ count, cap }: ScarcityBarClientProps) {
+export function ScarcityBarClient({ initialCount, cap }: ScarcityBarClientProps) {
   const { dict } = useLocale();
   const s = dict.scarcity;
+  const [count, setCount] = useState(initialCount);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      void fetchLiveWaitlistCount().then(setCount);
+    }, POLL_INTERVAL_MS);
+    return () => clearInterval(interval);
+  }, []);
+
   const displayCount = Math.min(Math.max(count, 1), cap - 1);
   const pct = Math.round((displayCount / cap) * 100);
   const filledText = s.filled

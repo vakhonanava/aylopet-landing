@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { BreedCombobox } from "@/components/dashboard/FormControls";
+import { checkWaitlistDuplicate } from "@/app/onboarding/actions";
 import {
   createPetProfile,
   deletePetDocument,
@@ -193,6 +194,18 @@ export function AyliopetOnboarding() {
       });
       await refreshCount();
       setStep(2);
+      setLoading(false);
+      return;
+    }
+
+    const duplicateCheck = await checkWaitlistDuplicate(
+      waitlist.email,
+      waitlist.phone,
+    );
+    if (duplicateCheck.emailTaken || duplicateCheck.phoneTaken) {
+      setError(
+        "თქვენ უკვე ხართ ჩვენს მოლოდინის სიაში! შეტყობინებას მოგივლენთ დაუყოვნებლივ გაშვებისთანავე.",
+      );
       setLoading(false);
       return;
     }

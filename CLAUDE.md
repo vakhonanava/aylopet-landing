@@ -61,8 +61,9 @@ Run in **Supabase SQL Editor** if tables/columns are missing.
 | `supabase/migrations/003_unify_platform.sql` | Platform unification |
 | `supabase/migrations/004_pet_dashboard_extensions.sql` | **activity, temperament, avatar_url** on pets; **pet_vaccines**; **pet_profile_snapshots** |
 | `supabase/migrations/005_medical_module.sql` | **birth_date, bcs_score, microchip_id** on pets; **care_type** on pet_vaccines (unifies vaccine/deworming/flea_tick); **medical_records**, **symptom_logs**, **medications**, **vet_report_shares**; **pet-medical-docs** storage bucket |
+| `supabase/migrations/006_b2b_and_expectations.sql` | **b2b_requests** (partnership inquiries), **project_expectations** (project-status poll) — both service-role-only, no client access |
 
-**One-shot:** run `supabase/RUN_ALL_MIGRATIONS.sql` (001→005 consolidated).
+**One-shot:** run `supabase/RUN_ALL_MIGRATIONS.sql` (001→006 consolidated).
 
 **CLI helpers:**
 

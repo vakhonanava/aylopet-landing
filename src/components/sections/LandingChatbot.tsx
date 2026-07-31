@@ -75,7 +75,7 @@ export function LandingChatbot() {
 
   useEffect(() => {
     const el = scrollRef.current;
-    if (!el || isSimulationComplete) return;
+    if (!el) return;
     el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
   }, [
     messages,

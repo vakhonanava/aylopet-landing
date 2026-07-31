@@ -3,6 +3,7 @@ import {
   type ExpectationStats,
   type StoredExpectationVote,
 } from "@/lib/expectations/types";
+import { isSupabaseConfigured } from "@/lib/supabase/env";
 
 const BLOB_INDEX_PATH = "expectations/index.json";
 
@@ -67,6 +68,12 @@ async function writeVotesToFile(votes: StoredExpectationVote[]): Promise<void> {
 }
 
 export async function readExpectationVotes(): Promise<StoredExpectationVote[]> {
+  if (isSupabaseConfigured()) {
+    const { readExpectationVotesFromSupabase } = await import(
+      "@/lib/expectations/supabase-storage"
+    );
+    return readExpectationVotesFromSupabase();
+  }
   if (isBlobEnabled()) return readVotesFromBlob();
   return readVotesFromFile();
 }
@@ -89,6 +96,13 @@ export async function getExpectationStats(): Promise<ExpectationStats> {
 export async function saveExpectationVote(
   vote: StoredExpectationVote,
 ): Promise<ExpectationStats> {
+  if (isSupabaseConfigured()) {
+    const { saveExpectationVoteToSupabase } = await import(
+      "@/lib/expectations/supabase-storage"
+    );
+    return saveExpectationVoteToSupabase(vote);
+  }
+
   const votes = await readExpectationVotes();
 
   const duplicate = votes.some(

@@ -6,7 +6,7 @@ import { PawDecor } from "@/components/decor/PawDecor";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { Button } from "@/components/ui/Button";
 
-export function WaitlistSectionContent({ count }: { count: number }) {
+export function WaitlistSectionContent() {
   const { dict } = useLocale();
   const w = dict.landing.waitlist;
   return (
