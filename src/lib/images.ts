@@ -6,7 +6,14 @@ export const IMAGES = {
     "https://images.unsplash.com/photo-1552053831-71594a27632d?w=1400&q=90&auto=format&fit=crop",
   storyPekingese:
     "https://images.unsplash.com/photo-1546527868-ccb7ee7dfa6a?w=900&q=90&auto=format&fit=crop",
+  /**
+   * Dante · Cane Corso, the founder's dog shown in "Our story".
+   * Set NEXT_PUBLIC_DANTE_PHOTO_URL (a full URL, or "/images/dante.jpg" after
+   * dropping the file in public/images) to use the real photo. The stock
+   * fallback below is a placeholder and does not show a Cane Corso.
+   */
   storyCaneCorso:
+    process.env.NEXT_PUBLIC_DANTE_PHOTO_URL ||
     "https://images.unsplash.com/photo-1558788353-f76d92427f16?w=900&q=90&auto=format&fit=crop",
   aiDog:
     "https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=1200&q=90&auto=format&fit=crop",
@@ -23,6 +30,8 @@ export const IMAGES = {
     "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800&q=85&auto=format&fit=crop",
   foodSquash:
     "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=800&q=85&auto=format&fit=crop",
+  foodBeef:
+    "https://images.unsplash.com/photo-1603048297172-c92544798d5a?w=800&q=85&auto=format&fit=crop",
   foodChicken:
     "https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=800&q=85&auto=format&fit=crop",
   foodRation:

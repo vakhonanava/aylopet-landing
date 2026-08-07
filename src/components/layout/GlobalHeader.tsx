@@ -184,9 +184,10 @@ export function GlobalHeader() {
                   onClick={scrollToWaitlist}
                   className={`hidden items-center gap-1 whitespace-nowrap bg-[var(--terracotta)] px-2.5 py-1.5 text-xs font-semibold text-white hover:opacity-90 sm:inline-flex xl:px-4 xl:py-2 xl:text-sm ${ctaBase}`}
                 >
+                  {/* The offer-led copy is too long for the top bar · the hero,
+                      sticky CTA, and mobile menu carry the full wording. */}
                   <Sparkles className="h-3 w-3 xl:h-3.5 xl:w-3.5" />
-                  <span className="hidden xl:inline">{t.joinWaitlistPromo}</span>
-                  <span className="xl:hidden">{t.joinWaitlist}</span>
+                  {t.joinWaitlist}
                 </button>
               </>
             )}

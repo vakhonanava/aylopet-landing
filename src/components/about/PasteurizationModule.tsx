@@ -48,12 +48,12 @@ const METHOD_DESCRIPTIONS: Record<Locale, Record<ProcessingMethod, string>> = {
   ka: {
     raw: "მაქსიმალური ნუტრიენტები, თუმცა პათოგენების მაღალი რისკი გულდასმითი დამუშავების გარეშე.",
     kibble: "მაღალტემპერატურული ექსტრუზია ანადგურებს კოლაგენს და სითბოსადმი მგრძნობიარე ვიტამინებს.",
-    aylopet: "60-80°C, 1-6 საათი · პათოგენების განადგურება სტრუქტურის შენარჩუნებით.",
+    aylopet: "75-80°C, 1-6 საათი · პათოგენების განადგურება სტრუქტურის შენარჩუნებით.",
   },
   en: {
     raw: "Maximum nutrients, significant pathogen risk without careful handling.",
     kibble: "High-heat extrusion destroys collagen and heat-sensitive vitamins.",
-    aylopet: "60 to 80°C for 1 to 6 hours · eliminates pathogens while preserving structure.",
+    aylopet: "75 to 80°C for 1 to 6 hours · eliminates pathogens while preserving structure.",
   },
 };
 
@@ -61,7 +61,7 @@ const COPY = {
   ka: {
     heading: "პასტერიზაციის გამჭვირვალობა",
     intro:
-      "დაბალტემპერატურული თერმული დამუშავება (60-80°C, 1-6 საათი) სრულად ანადგურებს პათოგენებს სტრუქტურული ნუტრიენტების დაკარგვის გარეშე.",
+      "დაბალტემპერატურული თერმული დამუშავება (75-80°C, 1-6 საათი) სრულად ანადგურებს პათოგენებს სტრუქტურული ნუტრიენტების დაკარგვის გარეშე.",
     compareLabel: "შეადარეთ დამუშავების მეთოდები",
     viewing: "ნახულობთ",
     highlight1Title: "პათოგენების განადგურება",
@@ -74,7 +74,7 @@ const COPY = {
   en: {
     heading: "Pasteurization transparency",
     intro:
-      "Low-temperature thermal processing (60 to 80°C, 1 to 6 hours) delivers complete pathogen destruction without sacrificing structural nutrients.",
+      "Low-temperature thermal processing (75 to 80°C, 1 to 6 hours) delivers complete pathogen destruction without sacrificing structural nutrients.",
     compareLabel: "Compare processing methods",
     viewing: "Viewing",
     highlight1Title: "Pathogen destruction",

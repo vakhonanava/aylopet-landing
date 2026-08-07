@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, Building2, Handshake, Sparkles } from "lucide-react";
+import { ArrowRight, Building2, Handshake, HeartHandshake, Store, Sparkles } from "lucide-react";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { fadeUp, staggerContainer } from "@/lib/motion";
@@ -13,6 +13,8 @@ export function B2BSolutions() {
 
   const highlights = [
     { icon: Building2, title: t.vetTitle, description: t.vetDescription },
+    { icon: HeartHandshake, title: t.shelterTitle, description: t.shelterDescription },
+    { icon: Store, title: t.retailTitle, description: t.retailDescription },
     { icon: Handshake, title: t.corporateTitle, description: t.corporateDescription },
   ];
 
@@ -36,7 +38,7 @@ export function B2BSolutions() {
 
           <motion.div
             variants={fadeUp}
-            className="mt-10 grid gap-6 sm:grid-cols-2"
+            className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
           >
             {highlights.map((item) => {
               const Icon = item.icon;

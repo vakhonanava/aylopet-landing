@@ -1,13 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
-import { Quote } from "lucide-react";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { LandingReviewSection } from "@/components/reviews/LandingReviewForm";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { PawDecor } from "@/components/decor/PawDecor";
-import { IMAGES } from "@/lib/images";
 import { fadeUp, staggerContainer } from "@/lib/motion";
 
 export function SocialProof() {
@@ -53,35 +50,6 @@ export function SocialProof() {
               </div>
             ))}
           </motion.div>
-
-          <motion.blockquote
-            variants={fadeUp}
-            className="mt-12 rounded-[var(--radius-organic-xl)] border border-[var(--border-light)] bg-white p-6 shadow-soft sm:p-8"
-          >
-            <Quote
-              aria-hidden
-              className="h-8 w-8 text-[var(--brand-accent)]/40"
-              strokeWidth={1.5}
-            />
-            <p className="mt-4 text-base leading-relaxed text-[var(--text-body)] sm:text-lg">
-              &ldquo;{sp.authority.quote}&rdquo;
-            </p>
-            <footer className="mt-5 flex items-center gap-4 border-t border-[var(--border-light)] pt-5">
-              <div className="relative h-12 w-12 overflow-hidden rounded-full bg-[var(--brand-accent-soft)]">
-                <Image
-                  src={IMAGES.healthDog3D}
-                  alt=""
-                  fill
-                  className="object-cover"
-                  sizes="48px"
-                />
-              </div>
-              <cite className="not-italic">
-                <p className="font-semibold text-[var(--forest-deep)]">{sp.authority.name}</p>
-                <p className="text-sm text-[var(--text-secondary)]">{sp.authority.role}</p>
-              </cite>
-            </footer>
-          </motion.blockquote>
 
           <motion.div variants={fadeUp}>
             <LandingReviewSection />

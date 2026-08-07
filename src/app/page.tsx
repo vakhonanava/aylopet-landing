@@ -1,3 +1,4 @@
+import { B2BSolutions } from "@/components/sections/B2BSolutions";
 import { Hero3D } from "@/components/sections/Hero3D";
 import { HowItWorksStrip } from "@/components/sections/HowItWorksStrip";
 import { LandingChatbot } from "@/components/sections/LandingChatbot";
@@ -23,6 +24,7 @@ export default function Home() {
         <LandingChatbot />
         <SocialProof />
         <HomeFaqSection />
+        <B2BSolutions />
         <TrustStrip />
         <WaitlistSection />
       </main>

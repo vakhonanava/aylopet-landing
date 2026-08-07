@@ -36,7 +36,7 @@ export function BentoGrid() {
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
-              {["70°C", "72°C", "75°C"].map((temp) => (
+              {["75°C", "78°C", "80°C"].map((temp) => (
                 <span
                   key={temp}
                   className="rounded-full border border-[#d6e1db] bg-[#e3ece7]/80 px-4 py-1.5 text-sm font-semibold text-[var(--brand-primary-hover)]"

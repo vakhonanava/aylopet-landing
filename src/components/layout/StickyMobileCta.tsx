@@ -38,12 +38,11 @@ export function StickyMobileCta() {
         onClick={scrollToWaitlist}
         className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-2xl bg-[var(--terracotta)] px-4 py-3.5 text-left text-white active:scale-[0.99]"
       >
+        {/* Offer-led label is two lines on narrow screens · the old sublabel
+            restated it and pushed the bar past a tenth of the viewport. */}
         <span className="flex items-center gap-2">
           <Sparkles className="h-4 w-4 shrink-0" aria-hidden />
-          <span>
-            <span className="block text-sm font-bold">{t.label}</span>
-            <span className="block text-xs text-white/85">{t.sublabel}</span>
-          </span>
+          <span className="text-sm font-bold leading-snug">{t.label}</span>
         </span>
         <ArrowRight className="h-5 w-5 shrink-0" aria-hidden />
       </button>

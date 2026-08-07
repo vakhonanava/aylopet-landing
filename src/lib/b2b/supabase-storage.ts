@@ -8,6 +8,7 @@ interface B2BRow {
   email: string;
   phone: string;
   partnership_type: string;
+  custom_type: string | null;
   message: string;
   created_at: string;
 }
@@ -20,6 +21,7 @@ function rowToInquiry(row: B2BRow): StoredB2BInquiry {
     email: row.email,
     phone: row.phone,
     partnershipType: row.partnership_type as StoredB2BInquiry["partnershipType"],
+    customType: row.custom_type ?? undefined,
     message: row.message,
     createdAt: row.created_at,
   };
@@ -47,6 +49,7 @@ export async function saveB2BInquiryToSupabase(
     email: inquiry.email.toLowerCase(),
     phone: inquiry.phone,
     partnership_type: inquiry.partnershipType,
+    custom_type: inquiry.customType ?? null,
     message: inquiry.message,
     created_at: inquiry.createdAt,
   });

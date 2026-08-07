@@ -9,12 +9,23 @@ export interface FoodLayer {
   image: string;
 }
 
-/** Tossable ingredient slices · base ration is the settled bowl, not tossed */
+/**
+ * Tossable ingredient slices · base ration is the settled bowl, not tossed.
+ * Meat leads the composition; produce follows.
+ */
 export const FOOD_LAYERS: FoodLayer[] = [
   {
+    id: "beef",
+    labelKa: "საქონლის ხორცი",
+    labelEn: "Beef",
+    color: "#8c3b32",
+    highlight: "#b85a4c",
+    image: IMAGES.foodBeef,
+  },
+  {
     id: "greens",
-    labelKa: "ბროკოლი & შვიკი",
-    labelEn: "Broccoli & greens",
+    labelKa: "ბროკოლი & ტკბილი კარტოფილი",
+    labelEn: "Broccoli & sweet potato",
     color: "#4a7c59",
     highlight: "#6b9b6e",
     image: IMAGES.foodGreens,

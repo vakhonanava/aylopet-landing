@@ -83,7 +83,7 @@ export const ABOUT_KA: AboutCopy = {
       "გადავდივართ ბოლო ეტაპზე · გაყინვაზე.",
     ],
     pasteurizationNote:
-      "ეს არის დაბალი ტემპერატურის თერმული დამუშავების მეთოდი, რომლის დროსაც ხორცი 60-80°C-ზე ჩერდება პასტერიზაციის ღუმელში 1-6 სთ. მისი მიზანია მავნე ბაქტერიების სრული განადგურება (სალმონელა, ლისტერია, ე. კოლი). ეს პროცესი სრულად ანადგურებს მავნე ბაქტერიებს, თუმცა ინარჩუნებს ხორცის ყველა სასარგებლო თვისებას: ამინომჟავებს, ვიტამინებს, მინერალებსა და კოლაგენს. შედეგად ვიღებთ უსაფრთხო, ნოყიერ და წვნიან საკვებს.",
+      "ეს არის დაბალი ტემპერატურის თერმული დამუშავების მეთოდი, რომლის დროსაც ხორცი 75-80°C-ზე ჩერდება პასტერიზაციის ღუმელში 1-6 სთ. მისი მიზანია მავნე ბაქტერიების სრული განადგურება (სალმონელა, ლისტერია, ე. კოლი). ეს პროცესი სრულად ანადგურებს მავნე ბაქტერიებს, თუმცა ინარჩუნებს ხორცის ყველა სასარგებლო თვისებას: ამინომჟავებს, ვიტამინებს, მინერალებსა და კოლაგენს. შედეგად ვიღებთ უსაფრთხო, ნოყიერ და წვნიან საკვებს.",
   },
   team: {
     title: "ჩვენი გუნდი",
@@ -139,7 +139,7 @@ export const ABOUT_EN: AboutCopy = {
       "We move to the final stage · freezing.",
     ],
     pasteurizationNote:
-      "This is a low-temperature thermal processing method, where the meat is held at 60-80°C in the pasteurization chamber for 1 to 6 hours. Its purpose is to fully eliminate harmful bacteria (Salmonella, Listeria, E. coli). This process fully destroys harmful bacteria while preserving every beneficial property of the meat: amino acids, vitamins, minerals, and collagen. The result is safe, nutrient-rich, and moist food.",
+      "This is a low-temperature thermal processing method, where the meat is held at 75-80°C in the pasteurization chamber for 1 to 6 hours. Its purpose is to fully eliminate harmful bacteria (Salmonella, Listeria, E. coli). This process fully destroys harmful bacteria while preserving every beneficial property of the meat: amino acids, vitamins, minerals, and collagen. The result is safe, nutrient-rich, and moist food.",
   },
   team: {
     title: "Our team",

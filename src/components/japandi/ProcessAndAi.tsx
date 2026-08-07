@@ -24,8 +24,8 @@ const STEPS: Record<"ka" | "en", { label: string; short: string; tooltip?: boole
 };
 
 const PASTEURIZATION_TOOLTIP: Record<"ka" | "en", string> = {
-  ka: "60 to 80°C · 1 to 6 სთ · სალმონელა, ლისტერია, ე. კოლი",
-  en: "60 to 80°C · 1 to 6 hrs · Salmonella, Listeria, E. coli",
+  ka: "75 to 80°C · 1 to 6 სთ · სალმონელა, ლისტერია, ე. კოლი",
+  en: "75 to 80°C · 1 to 6 hrs · Salmonella, Listeria, E. coli",
 };
 
 export function ProcessTimeline({ locale = "ka" }: { locale?: "ka" | "en" }) {
@@ -85,7 +85,7 @@ export function PasteurizationCard({
         <div className="flex items-start gap-4">
           <span className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-white text-[var(--brand-primary)] shadow-soft">
             <Thermometer className="h-6 w-6" />
-            <span className="mt-0.5 text-[10px] font-bold">60 to 80°C</span>
+            <span className="mt-0.5 text-[10px] font-bold">75 to 80°C</span>
           </span>
           <div>
             <h3 className="text-lg font-bold text-[var(--text-primary)]">

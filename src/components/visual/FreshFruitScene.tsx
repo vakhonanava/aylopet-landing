@@ -60,22 +60,23 @@ export function FreshFruitScene({
             }}
           />
 
-          <span className="absolute right-3 top-3 z-30 rounded-full border border-white/50 bg-white/85 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-[var(--brand-primary)] shadow-soft backdrop-blur-sm sm:right-4 sm:top-4 sm:text-[11px]">
-            {badge}
-          </span>
+          {badge ? (
+            <span className="absolute right-3 top-3 z-30 rounded-full border border-white/50 bg-white/85 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-[var(--brand-primary)] shadow-soft backdrop-blur-sm sm:right-4 sm:top-4 sm:text-[11px]">
+              {badge}
+            </span>
+          ) : null}
 
           <div className="relative min-h-0 flex-1">
             <FoodFloatCluster />
           </div>
 
-          <div className="glass absolute bottom-3 left-3 right-3 z-30 flex items-center justify-between rounded-xl px-3 py-2 sm:bottom-4 sm:left-4 sm:right-4 sm:px-4 sm:py-2.5">
-            <span className="text-[11px] font-semibold text-[var(--text-primary)] sm:text-xs">
-              {caption}
-            </span>
-            <span className="rounded-full bg-[var(--brand-accent)] px-2 py-0.5 text-[10px] font-bold text-white">
-              Fresh
-            </span>
-          </div>
+          {caption ? (
+            <div className="glass absolute bottom-3 left-3 right-3 z-30 flex items-center rounded-xl px-3 py-2 sm:bottom-4 sm:left-4 sm:right-4 sm:px-4 sm:py-2.5">
+              <span className="text-[11px] font-semibold text-[var(--text-primary)] sm:text-xs">
+                {caption}
+              </span>
+            </div>
+          ) : null}
         </div>
 
         <ScenePedestal className="bottom-[-6%] w-full" />

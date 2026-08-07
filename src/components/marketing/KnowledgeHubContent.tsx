@@ -34,7 +34,12 @@ export function KnowledgeHubContent() {
           backHref="/"
           backLabel={dict.common.backHome}
         />
-        <section className="mx-auto max-w-3xl space-y-8 px-6 pb-20 lg:px-8">
+        {/* Health & wellness guide · its own section, independent of the
+            "Why fresh food?" article below. */}
+        <section
+          id="wellness-guide"
+          className="mx-auto max-w-3xl px-6 pb-14 lg:px-8"
+        >
           <div>
             <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--terracotta)]">
               {k.categoriesTitle}
@@ -59,16 +64,28 @@ export function KnowledgeHubContent() {
               ))}
             </ul>
           </div>
+        </section>
 
-          <ArticleCard
-            title={
-              dict.locale === "ka"
-                ? "რატომ ცოცხალი საკვები?"
-                : "Why fresh food?"
-            }
-            href="/why-fresh-food"
-            description={k.articleDescription}
-          />
+        <section
+          id="why-fresh-food"
+          className="border-t border-[var(--border-light)] bg-[var(--background-secondary)] py-14"
+        >
+          <div className="mx-auto max-w-3xl px-6 lg:px-8">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--terracotta)]">
+              {dict.locale === "ka" ? "კვების მეცნიერება" : "Nutrition science"}
+            </h2>
+            <div className="mt-4">
+              <ArticleCard
+                title={
+                  dict.locale === "ka"
+                    ? "რატომ ცოცხალი საკვები?"
+                    : "Why fresh food?"
+                }
+                href="/why-fresh-food"
+                description={k.articleDescription}
+              />
+            </div>
+          </div>
         </section>
       </main>
       <SiteFooter />

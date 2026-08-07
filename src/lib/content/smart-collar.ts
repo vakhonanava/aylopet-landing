@@ -60,12 +60,6 @@ export const SMART_COLLAR_KA: SmartCollarCopy = {
         "ყოველთვის იცოდეთ, სად არის თქვენი ძაღლი, ზუსტი ლოკაცია და გავლილი მანძილი ერთ აპლიკაციაში.",
     },
     {
-      icon: "activity",
-      title: "ჯანმრთელობისა და აქტივობის მონიტორინგი",
-      description:
-        "ჩვეულებრივი GPS თრექერისგან განსხვავებით, Aylopet Smart Collar აკონტროლებს ძილის ფაზებს, გულისცემას, დახარჯულ კალორიებსა და შფოთვის დონეს.",
-    },
-    {
       icon: "ai",
       title: "AI კალორიების ზუსტი გამოთვლა",
       description:
@@ -147,12 +141,6 @@ export const SMART_COLLAR_EN: SmartCollarCopy = {
       title: "Real time GPS location",
       description:
         "Always know where your dog is, precise location and distance traveled, right in the app.",
-    },
-    {
-      icon: "activity",
-      title: "Health & activity monitoring",
-      description:
-        "Unlike a regular GPS tracker, Aylopet Smart Collar tracks sleep phases, heart rate, calories burned, and stress levels.",
     },
     {
       icon: "ai",

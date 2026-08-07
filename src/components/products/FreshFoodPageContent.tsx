@@ -18,7 +18,6 @@ const INGREDIENTS = FOOD_LAYERS.filter((layer) => layer.id !== "base");
 const COPY = {
   ka: {
     badge: "Gently Cooked",
-    ingredientsEyebrow: "ნედლი ინგრედიენტები",
     ingredientsTitle: "მთლიანი ინგრედიენტები",
     ingredientsDescription:
       "ჩვენი რაციონის საფუძველი მაღალი ხარისხის, მთლიანი ინგრედიენტებია და არა ჩამნაცვლებელი მცენარეული და ცხოველური ფხვნილები.",
@@ -27,7 +26,6 @@ const COPY = {
   },
   en: {
     badge: "Gently Cooked",
-    ingredientsEyebrow: "Raw ingredients",
     ingredientsTitle: "Real fruit and vegetables, not powders",
     ingredientsDescription:
       "Every drop and fiber in our ration starts with fresh, seasonal ingredients. No synthetic additive replaces natural nutritional value.",
@@ -66,11 +64,10 @@ export function FreshFoodPageContent() {
         <section className="relative overflow-hidden bg-[var(--bone-alabaster)] py-16 sm:py-20 lg:py-24">
           <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
             <RevealOnScroll y={20} className="order-2 flex justify-center lg:order-1">
-              <FreshFruitScene locale={locale} />
+              <FreshFruitScene locale={locale} badgeLabel="" />
             </RevealOnScroll>
             <RevealOnScroll y={20} delay={0.1} className="order-1 lg:order-2">
               <SectionHeader
-                eyebrow={c.ingredientsEyebrow}
                 title={c.ingredientsTitle}
                 description={c.ingredientsDescription}
                 align="left"

@@ -46,14 +46,16 @@ export function DnaHero() {
             ))}
           </motion.h1>
 
-          <motion.p
+          <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="max-w-lg text-lg leading-relaxed text-white/60"
+            className="flex max-w-lg flex-col gap-4 text-lg leading-[1.75] text-white/60"
           >
-            {DNA.hero.subheadline}
-          </motion.p>
+            {DNA.hero.subheadline.split("\n\n").map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 24 }}

@@ -26,6 +26,7 @@ const TOSS_ARCS = [
   { startX: 22, peakX: 10, peakY: -48, rotate: 14, delay: 0.18 },
   { startX: -12, peakX: -2, peakY: -55, rotate: -8, delay: 0.36 },
   { startX: 18, peakX: 6, peakY: -38, rotate: 22, delay: 0.52 },
+  { startX: -20, peakX: 4, peakY: -50, rotate: 10, delay: 0.68 },
 ] as const;
 
 const CYCLE_MS = 9000;

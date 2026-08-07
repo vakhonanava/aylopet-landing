@@ -34,13 +34,10 @@ export function DnaUnifiedPlatform() {
             <h2 className="mt-4 font-display text-3xl font-semibold text-[var(--forest-deep)] sm:text-4xl">
               {t.title}
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-[var(--text-body)] sm:text-lg">
-              {t.intro}
-            </p>
-            {t.details?.map((paragraph) => (
+            {[...t.intro.split("\n\n"), ...(t.details ?? [])].map((paragraph) => (
               <p
                 key={paragraph.slice(0, 48)}
-                className="mt-4 text-base leading-relaxed text-[var(--text-body)] sm:text-lg"
+                className="mt-5 text-base leading-[1.8] text-[var(--text-body)] sm:text-lg"
               >
                 {paragraph}
               </p>

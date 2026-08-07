@@ -21,6 +21,10 @@ const DANTE_ALT: Record<"ka" | "en", string> = {
 
 const KOKO_NAME: Record<"ka" | "en", string> = { ka: "კოკო", en: "Koko" };
 const DANTE_NAME: Record<"ka" | "en", string> = { ka: "დანტე", en: "Dante" };
+const DANTE_BREED: Record<"ka" | "en", string> = {
+  ka: "კანე კორსო",
+  en: "Cane Corso",
+};
 
 export function StoryContent() {
   const { locale } = useLocale();
@@ -30,39 +34,62 @@ export function StoryContent() {
       <main className="flex-1 bg-[var(--background-main)]">
         <PageHero title={story.title} backHref="/about/what-is-aylopet" backLabel={backLabel} />
         <section className="mx-auto max-w-6xl px-6 pb-24 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
+          <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
             <RevealOnScroll className="lg:col-span-5">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="relative aspect-[3/4] overflow-hidden rounded-2xl shadow-soft">
-                  <Image
-                    src={IMAGES.storyPekingese}
-                    alt={KOKO_ALT[locale]}
-                    fill
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                    className="object-cover"
-                  />
-                  <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-[var(--text-primary)]">
-                    {KOKO_NAME[locale]}
-                  </span>
-                </div>
-                <div className="relative mt-8 aspect-[3/4] overflow-hidden rounded-2xl shadow-soft">
+              <div className="lg:sticky lg:top-28">
+                {/* Dante leads · his diagnosis is why the ecosystem exists. */}
+                <figure className="relative aspect-[4/5] overflow-hidden rounded-[var(--radius-organic-xl)] shadow-organic">
                   <Image
                     src={IMAGES.storyCaneCorso}
                     alt={DANTE_ALT[locale]}
                     fill
-                    sizes="(max-width: 768px) 50vw, 25vw"
+                    sizes="(max-width: 1024px) 100vw, 40vw"
+                    className="object-cover"
+                    priority
+                  />
+                  <figcaption className="absolute bottom-4 left-4 rounded-2xl bg-white/90 px-4 py-2 backdrop-blur-sm">
+                    <span className="block font-display text-lg font-semibold text-[var(--forest-deep)]">
+                      {DANTE_NAME[locale]}
+                    </span>
+                    <span className="block text-xs text-[var(--text-secondary)]">
+                      {DANTE_BREED[locale]}
+                    </span>
+                  </figcaption>
+                </figure>
+
+                <figure className="relative mt-4 aspect-[4/3] overflow-hidden rounded-[var(--radius-organic-lg)] shadow-soft">
+                  <Image
+                    src={IMAGES.storyPekingese}
+                    alt={KOKO_ALT[locale]}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 40vw"
                     className="object-cover"
                   />
-                  <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-[var(--text-primary)]">
-                    {DANTE_NAME[locale]}
-                  </span>
-                </div>
+                  <figcaption className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-[var(--text-primary)]">
+                    {KOKO_NAME[locale]}
+                  </figcaption>
+                </figure>
               </div>
             </RevealOnScroll>
             <RevealOnScroll delay={0.15} className="lg:col-span-7">
-              <p className="whitespace-pre-line text-base leading-[1.75] text-[var(--text-body)]">
-                {story.body}
-              </p>
+              <div className="max-w-prose space-y-6">
+                {story.body
+                  .split("\n")
+                  .map((paragraph) => paragraph.trim())
+                  .filter(Boolean)
+                  .map((paragraph, index) => (
+                    <p
+                      key={paragraph.slice(0, 40)}
+                      className={
+                        index === 0
+                          ? "text-lg leading-[1.8] text-[var(--forest-deep)] sm:text-xl"
+                          : "text-base leading-[1.85] text-[var(--text-body)] sm:text-[1.0625rem]"
+                      }
+                    >
+                      {paragraph}
+                    </p>
+                  ))}
+              </div>
             </RevealOnScroll>
           </div>
         </section>

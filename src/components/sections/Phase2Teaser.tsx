@@ -22,7 +22,7 @@ export function Phase2Teaser() {
             ეტაპი 2 | მალე
           </span>
           <h2 className="mx-auto max-w-3xl text-3xl font-bold leading-[1.15] tracking-tight text-[var(--brand-primary)] sm:text-4xl lg:text-5xl">
-            შენი ძაღლის გენეტიკა. ხელოვნური ინტელექტი. სრულყოფილი კვება.
+            მეტი წელი, მეტი სიყვარული. მართული დნმ-ითა და AI-ით.
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-[var(--text-body)]">
             შეისწავლე შენი ძაღლის დნმ და მართე მისი მომავალი
@@ -93,9 +93,11 @@ export function Phase2Teaser() {
                 </span>
               </div>
 
-              <p className="text-lg leading-relaxed text-slate-600">
-                შეისწავლე შენი ოთხფეხა მეგობრის გენეტიკური პროფილი, აარიდე თავი ფარულ რისკებს და შექმენი მასზე იდეალურად მორგებული რაციონი.
-              </p>
+              <div className="space-y-4 text-lg leading-[1.75] text-slate-600">
+                <p>შეისწავლე შენი ოთხფეხა მეგობრის გენეტიკური პროფილი.</p>
+                <p>აარიდე თავი ფარულ რისკებს, ჯერ კიდევ სიმპტომებამდე.</p>
+                <p>შექმენი მასზე იდეალურად მორგებული რაციონი.</p>
+              </div>
 
               <Link
                 href="/dna-journey"

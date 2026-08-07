@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocale } from "@/components/i18n/LocaleProvider";
+import { CommunityBar } from "@/components/marketing/CommunityBar";
 import { PageHero } from "@/components/marketing/PageHero";
 import { ProjectStatusPhases } from "@/components/marketing/ProjectStatusPhases";
 import { UserExpectationsGraph } from "@/components/marketing/UserExpectationsGraph";
@@ -9,8 +10,10 @@ import type { ExpectationStats } from "@/lib/expectations/types";
 
 export function ProjectStatusContent({
   expectationStats,
+  waitlistCount,
 }: {
   expectationStats: ExpectationStats;
+  waitlistCount: number;
 }) {
   const { dict } = useLocale();
   const t = dict.projectStatus;
@@ -30,6 +33,8 @@ export function ProjectStatusContent({
           backHref="/"
           backLabel={c.backHome}
         />
+
+        <CommunityBar initialCount={waitlistCount} />
 
         <UserExpectationsGraph initialStats={expectationStats} />
 

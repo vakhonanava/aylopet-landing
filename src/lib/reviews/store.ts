@@ -18,19 +18,8 @@ export interface UserReview {
 
 const STORAGE_KEY = "aylopet-reviews.v2";
 
-export const SEED_REVIEWS: UserReview[] = [
-  {
-    id: "seed-aylopet",
-    email: "hello@aylopet.com",
-    authorName: "Aylopet",
-    dogInfo: "პლატფორმა · AI ზრუნვა",
-    quote:
-      "ჩვენთვის Aylopet არის მეტი სიყვარული ყოველდღიურ ზრუნვაში — AI რჩევები, პერსონალური კვება და ცოცხალი საკვები ერთ სივრცეში.",
-    rating: 5,
-    imageKey: "healthDog3D",
-    updatedAt: "2026-01-01T00:00:00.000Z",
-  },
-];
+/** No seeded/demo reviews · the wall only shows what real users wrote. */
+export const SEED_REVIEWS: UserReview[] = [];
 
 function readAll(): UserReview[] {
   if (typeof window === "undefined") return SEED_REVIEWS;

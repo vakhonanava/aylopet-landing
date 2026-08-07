@@ -76,6 +76,16 @@ export interface ReviewsCopy {
   loginPrompt: string;
   loginCta: string;
   noReviews: string;
+  /** Explains what the comment area is for, shown above the collapsed trigger. */
+  sectionHelper: string;
+  /** Trigger that expands the collapsed comment form. */
+  writeCta: string;
+  /** Collapses the expanded comment form. */
+  closeForm: string;
+  /** Shown instead of the form when nobody is signed in. */
+  authRequired: string;
+  authLoginCta: string;
+  authRegisterCta: string;
 }
 
 export interface DnaPortalCopy {
@@ -92,6 +102,8 @@ export interface CommonCopy {
   promoText: string;
   joinWaitlist: string;
   joinWaitlistPromo: string;
+  /** Secondary waitlist CTA · offer-led wording for sticky/section triggers */
+  joinWaitlistOffer: string;
   charityMessage: string;
   login: string;
   myPanel: string;
@@ -187,6 +199,10 @@ export interface LandingB2bCopy {
   description: string;
   vetTitle: string;
   vetDescription: string;
+  shelterTitle: string;
+  shelterDescription: string;
+  retailTitle: string;
+  retailDescription: string;
   corporateTitle: string;
   corporateDescription: string;
   cta: string;
@@ -214,6 +230,9 @@ export interface B2bFormCopy {
   workEmail: string;
   phone: string;
   partnershipType: string;
+  /** Shown only when partnership type is "other". */
+  customType: string;
+  customTypePlaceholder: string;
   partnershipGoals: string;
   goalsPlaceholder: string;
   submit: string;
@@ -261,7 +280,6 @@ export interface HomeFaqCopy {
 
 export interface StickyCtaCopy {
   label: string;
-  sublabel: string;
 }
 
 export interface ValueComparisonCopy {
@@ -307,11 +325,6 @@ export interface SocialProofCopy {
   title: string;
   description: string;
   stats: { value: string; label: string }[];
-  authority: {
-    quote: string;
-    name: string;
-    role: string;
-  };
   testimonials: {
     name: string;
     dog: string;
@@ -341,6 +354,8 @@ export interface ProjectPhaseCopy {
   reaction: string;
   reactionNote: string;
   status: "live" | "active" | "soon";
+  /** Extra caveat rendered under the card · e.g. long-term horizon. */
+  horizonNote?: string;
 }
 
 export interface ProjectStatusCopy {
@@ -352,6 +367,41 @@ export interface ProjectStatusCopy {
   statusSoon: string;
   beAmongFirst: string;
   phases: ProjectPhaseCopy[];
+}
+
+export interface AmbassadorCopy {
+  eyebrow: string;
+  tierName: string;
+  intro: string;
+  basePointsLabel: string;
+  pointsSuffix: string;
+  upgradeRule: string;
+  progressLabel: string;
+  upgradedLabel: string;
+}
+
+export interface PetPricingCopy {
+  eyebrow: string;
+  title: string;
+  firstPetLabel: string;
+  firstPetNote: string;
+  secondPetLabel: string;
+  secondPetNote: string;
+  totalLabel: string;
+  lockedNote: string;
+  limitNote: string;
+  familySharingTag: string;
+}
+
+export interface CommunityCopy {
+  waitlistTotal: string;
+  /** Shown in place of the number while the waitlist total is still 0. */
+  waitlistEmpty: string;
+  waitlistNote: string;
+  whatsappTitle: string;
+  whatsappBody: string;
+  whatsappCta: string;
+  whatsappSoon: string;
 }
 
 export interface UserExpectationsCopy {
@@ -407,6 +457,9 @@ export interface Dictionary {
   homeFaq: HomeFaqCopy;
   stickyCta: StickyCtaCopy;
   projectStatus: ProjectStatusCopy;
+  community: CommunityCopy;
+  ambassador: AmbassadorCopy;
+  petPricing: PetPricingCopy;
   userExpectations: UserExpectationsCopy;
   onboarding: OnboardingCopy;
   quizGate: QuizGateCopy;

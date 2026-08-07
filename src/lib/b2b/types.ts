@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const b2bPartnershipTypes = [
   "vet-clinic",
+  "shelter",
   "retail",
   "corporate",
   "breeder",
@@ -9,18 +10,30 @@ export const b2bPartnershipTypes = [
   "other",
 ] as const;
 
-export const b2bInquirySchema = z.object({
-  companyName: z.string().min(2, "Enter company name"),
-  contactName: z.string().min(2, "Enter contact name"),
-  email: z.string().email("Invalid email address"),
-  phone: z
-    .string()
-    .min(9, "Enter a valid phone number")
-    .regex(/^[\d\s+()-]+$/, "Invalid phone format"),
-  partnershipType: z.enum(b2bPartnershipTypes),
-  message: z.string().min(20, "Tell us more about your partnership goals"),
-  website: z.string().max(0).optional(),
-});
+export const b2bInquirySchema = z
+  .object({
+    companyName: z.string().min(2, "Enter company name"),
+    contactName: z.string().min(2, "Enter contact name"),
+    email: z.string().email("Invalid email address"),
+    phone: z
+      .string()
+      .min(9, "Enter a valid phone number")
+      .regex(/^[\d\s+()-]+$/, "Invalid phone format"),
+    partnershipType: z.enum(b2bPartnershipTypes),
+    /** Free-text partnership kind · required when partnershipType is "other". */
+    customType: z.string().max(120).optional(),
+    message: z.string().min(20, "Tell us more about your partnership goals"),
+    website: z.string().max(0).optional(),
+  })
+  .superRefine((value, ctx) => {
+    if (value.partnershipType === "other" && !value.customType?.trim()) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["customType"],
+        message: "Describe the partnership you have in mind",
+      });
+    }
+  });
 
 export type B2BInquiryInput = z.infer<typeof b2bInquirySchema>;
 
@@ -34,6 +47,7 @@ export const PARTNERSHIP_TYPE_LABELS: Record<
   string
 > = {
   "vet-clinic": "Veterinary clinic / hospital",
+  shelter: "Shelter or rescue organization",
   retail: "Pet retail or e-commerce",
   corporate: "Corporate employee benefits",
   breeder: "Breeder or kennel",

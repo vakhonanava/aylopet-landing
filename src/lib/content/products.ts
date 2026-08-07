@@ -36,7 +36,7 @@ export const PRODUCTS_KA: ProductsCopy = {
     paragraph1:
       "ჩვენ გვჯერა, რომ ნამდვილი სიცოცხლისუნარიანობა მხოლოდ ბუნებრივი, მინიმალური დაუმუშავებელი საკვებიდან მოდის. Aylopet-ის რაციონი, რომელიც მზადდება ნაზი დამუშავების (Gently Cooked) მეთოდით, არის ევოლუციური ხიდი ველურ ინსტინქტებსა და თანამედროვე უსაფრთხოებას შორის. ჩვენ შევქმენით ფორმულა, სადაც თქვენს ოთხფეხა მეგობარს აღარ უწევს არჩევანის გაკეთება ცოცხალ კვებასა და უსაფრთხოებას შორის.",
     paragraph2:
-      "ჩვენი დაბალტემპერატურული პასტერიზაციის (70-დან 75°C-მდე) მეთოდით, სრულად ვანადგურებთ მავნე პათოგენებს, თუმცა ცოცხლად ვინარჩუნებთ იმ სასიცოცხლო ფერმენტებს, ნუტრიენტებსა და ამინომჟავებს, რომლებიც მხოლოდ ნედლ ხორცშია. ეს სწორედ ის კომპონენტებია, რომლებიც მაღალტემპერატურული თერმული დამუშავებისას (150-200°C-ზე ხარშვის ან გამოცხობისას) მომენტალურად ნადგურდება.",
+      "ჩვენი დაბალტემპერატურული პასტერიზაციის (75-დან 80°C-მდე) მეთოდით, სრულად ვანადგურებთ მავნე პათოგენებს, თუმცა ცოცხლად ვინარჩუნებთ იმ სასიცოცხლო ფერმენტებს, ნუტრიენტებსა და ამინომჟავებს, რომლებიც მხოლოდ ნედლ ხორცშია. ეს სწორედ ის კომპონენტებია, რომლებიც მაღალტემპერატურული თერმული დამუშავებისას (150-200°C-ზე ხარშვის ან გამოცხობისას) მომენტალურად ნადგურდება.",
     whyAylopet:
       "ჩვენ არ ვაწარმოებთ ინდუსტრიულ „ძაღლის საჭმელს“, ჩვენ ბუნებრივ პროდუქტს უსაფრთხო, ცოცხალ საკვებად ვაქცევთ. შედეგად, თქვენი ოთხფეხა მეგობარი იღებს ბიოლოგიურად აქტიურ რაციონს, რომელსაც მხოლოდ აუცილებელ ვიტამინებს ვამატებთ, ყოველგვარი ხელოვნური დანამატების, ფარული შაქრების, სინთეზური კონსერვანტებისა და გემოს გამაძლიერებლების გარეშე.",
     cta: "ნახეთ წარმოების პროცესი",
@@ -60,7 +60,7 @@ export const PRODUCTS_EN: ProductsCopy = {
     paragraph1:
       "We believe true vitality comes only from natural, unprocessed food. Aylopet's ration, made with the Gently Cooked method, is an evolutionary bridge between wild instincts and modern safety. We built a formula so your four legged friend never has to choose between fresh food and safety.",
     paragraph2:
-      "With our low temperature pasteurization method (70 to 75°C), we fully eliminate harmful pathogens while keeping alive the vital enzymes, nutrients, and amino acids found only in raw meat. These are exactly the components that high heat processing (boiling or baking at 200°C) destroys instantly.",
+      "With our low temperature pasteurization method (75 to 80°C), we fully eliminate harmful pathogens while keeping alive the vital enzymes, nutrients, and amino acids found only in raw meat. These are exactly the components that high heat processing (boiling or baking at 200°C) destroys instantly.",
     whyAylopet:
       "We don't make \"dog food\", we turn real ingredients into safe, fresh nutrition. As a result, your companion gets a biologically active ration with no artificial additives, synthetic preservatives, hidden sugars, or flavor enhancers. We offer what dry food makers won't tell you: real meat instead of synthetic vitamins.",
     cta: "See our production process",

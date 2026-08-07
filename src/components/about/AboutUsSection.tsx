@@ -6,6 +6,7 @@ import { FoodLayersVisual } from "@/components/visual/FoodLayersVisual";
 import { IMAGES } from "@/lib/images";
 import { ValueLineIcon } from "@/components/japandi/LineArtIcons";
 import { PasteurizationModule } from "@/components/about/PasteurizationModule";
+import { ProductionVideo } from "@/components/about/ProductionVideo";
 import { fadeUp, staggerContainer } from "@/lib/motion";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { getAbout } from "@/lib/content/about";
@@ -26,6 +27,8 @@ const COPY = {
     partnerTitle: "Natural Selection · ისრაელი",
     partnerBody:
       "ჩვენი სპეციალიზირებული საწარმოო პარტნიორი ისრაელში მუშაობს კლინიკური დონის სამზარეულოებში, დადასტურებული დაბალტემპერატურული პასტერიზაციის პროტოკოლებით. ყოველი პარტია სრულად თვალსაჩინოა წყაროდან თეფშამდე — შეესაბამება ევროკავშირისა და ისრაელის სურსათის უსაფრთხოების სტანდარტებს.",
+    videoLabel: "წარმოების პროცესი",
+    videoTitle: "ნახე, როგორ იქმნება Aylopet-ის რაციონი",
   },
   en: {
     eyebrow: "Our story",
@@ -40,6 +43,8 @@ const COPY = {
     partnerTitle: "Natural Selection · Israel",
     partnerBody:
       "Our specialized production partner in Israel operates clinical-grade kitchens with validated low-temperature pasteurization protocols. Every batch is traceable from source to bowl · meeting EU and Israeli food safety standards.",
+    videoLabel: "Production process",
+    videoTitle: "See how the Aylopet ration is made",
   },
 } as const satisfies Record<Locale, Record<string, string>>;
 
@@ -142,6 +147,22 @@ export function AboutUsSection() {
               />
             </div>
           </div>
+        </motion.div>
+
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="mt-16"
+        >
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--terracotta)]">
+            {c.videoLabel}
+          </p>
+          <h3 className="mt-3 font-display text-2xl font-semibold text-[var(--forest-deep)] sm:text-3xl">
+            {c.videoTitle}
+          </h3>
+          <ProductionVideo locale={locale} className="mt-6" />
         </motion.div>
 
         <div className="mt-16">

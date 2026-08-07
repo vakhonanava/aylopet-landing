@@ -7,6 +7,7 @@ import {
   ArrowRight,
   Brain,
   Dna,
+  Hourglass,
   Radio,
   Sparkles,
   UtensilsCrossed,
@@ -37,18 +38,19 @@ const PHASE_META = [
     glow: "var(--brand-primary)",
   },
   {
-    href: "/dna-journey",
-    icon: Dna,
-    visual: "helix" as const,
-    accent: "from-[var(--forest-deep)]/10 via-white to-[var(--status-emerald)]/10",
-    glow: "var(--status-emerald)",
-  },
-  {
     href: "/products/smart-collar",
     icon: Radio,
     visual: "collar" as const,
     accent: "from-[var(--terracotta-bright)]/15 via-white to-[var(--brand-accent-soft)]",
     glow: "var(--terracotta-bright)",
+  },
+  // DNA Lab sits last · the long-term goal at the bottom of the timeline.
+  {
+    href: "/dna-journey",
+    icon: Dna,
+    visual: "helix" as const,
+    accent: "from-[var(--forest-deep)]/10 via-white to-[var(--status-emerald)]/10",
+    glow: "var(--status-emerald)",
   },
 ] as const;
 
@@ -223,6 +225,16 @@ function PhaseCard({
                   {phase.reactionNote}
                 </p>
               </blockquote>
+
+              {phase.horizonNote ? (
+                <p className="mt-4 flex items-start gap-2 rounded-2xl border border-dashed border-[var(--terracotta)]/40 bg-[var(--terracotta)]/5 px-4 py-3 text-xs leading-relaxed text-[var(--text-secondary)]">
+                  <Hourglass
+                    className="mt-0.5 h-4 w-4 shrink-0 text-[var(--terracotta)]"
+                    aria-hidden
+                  />
+                  {phase.horizonNote}
+                </p>
+              ) : null}
 
               <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--brand-primary)] transition-[gap] group-hover:gap-2.5">
                 {locale === "ka" ? "გახსნა" : "Open"}

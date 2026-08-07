@@ -30,9 +30,12 @@ export function B2BInquiryForm() {
     email: "",
     phone: "",
     partnershipType: "vet-clinic" as B2BInquiryInput["partnershipType"],
+    customType: "",
     message: "",
     website: "",
   });
+
+  const needsCustomType = form.partnershipType === "other";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,6 +48,7 @@ export function B2BInquiryForm() {
       email: form.email.trim().toLowerCase(),
       phone: form.phone.trim(),
       partnershipType: form.partnershipType,
+      customType: needsCustomType ? form.customType.trim() : undefined,
       message: form.message.trim(),
       website: form.website,
     });
@@ -163,6 +167,27 @@ export function B2BInquiryForm() {
             ))}
           </select>
         </label>
+
+        {needsCustomType && (
+          <motion.label
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25, ease: motionEase }}
+            className="flex flex-col gap-1.5"
+          >
+            <span className={labelClass}>{f.customType}</span>
+            <input
+              className={inputClass}
+              value={form.customType}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, customType: e.target.value }))
+              }
+              placeholder={f.customTypePlaceholder}
+              maxLength={120}
+              required
+            />
+          </motion.label>
+        )}
 
         <label className="flex flex-col gap-1.5">
           <span className={labelClass}>{f.partnershipGoals}</span>

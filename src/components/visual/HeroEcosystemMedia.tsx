@@ -76,7 +76,7 @@ export function HeroEcosystemMedia() {
                 <div className="grid grid-cols-2 gap-2.5">
                   <div className="rounded-2xl border border-white/10 bg-white/[0.07] p-3">
                     <Dna className="h-3.5 w-3.5 text-cyan-300" />
-                    <p className="mt-2 text-sm font-bold text-white">200K+</p>
+                    <p className="mt-2 text-sm font-bold text-white">230K+</p>
                     <p className="text-[9px] text-white/45">DNA</p>
                   </div>
                   <div className="rounded-2xl border border-white/10 bg-white/[0.07] p-3">

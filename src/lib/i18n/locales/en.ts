@@ -12,7 +12,8 @@ export const en: Dictionary = {
   common: {
     promoText: "Get 40% OFF! Join our waitlist now.",
     joinWaitlist: "Join Waitlist",
-    joinWaitlistPromo: "Waitlist · Reserve your spot",
+    joinWaitlistPromo: "Register · 40% off + free consultation",
+    joinWaitlistOffer: "Register and get an exclusive offer",
     charityMessage: "5% of revenue supports charity, join us.",
     login: "Log in",
     myPanel: "My dashboard",
@@ -46,7 +47,7 @@ export const en: Dictionary = {
       },
       {
         label: "AylopetAI",
-        title: "Conversational guidance",
+        title: "Interactive consultation",
         description: "Dynamic Q&A · personalized nutrition advice.",
         open: "Open",
         status: "waitlist",
@@ -75,8 +76,8 @@ export const en: Dictionary = {
       {
         eyebrow: "Phase 3 · Coming soon",
         title: "Your dog's genetics",
-        body: "One simple cheek swab, Aylopet AI reads 200,000+ genetic markers for your companion.",
-        stat: "200,000+",
+        body: "One simple cheek swab, Aylopet AI reads 230,000+ genetic markers for your companion.",
+        stat: "230,000+",
         statLabel: "genetic markers",
       },
       {
@@ -98,7 +99,7 @@ export const en: Dictionary = {
   landing: {
     hero: {
       titleLine1: "More years,",
-      titleHighlight: "more love.",
+      titleHighlight: "more love",
       titleLine2: "",
       emotionalLine:
         "Help your dog live longer, healthier with Aylopet.",
@@ -108,7 +109,7 @@ export const en: Dictionary = {
       techPlatform: "Tech platform",
       ctaNote: "Reserve your spot · no payment required now",
       metrics: [
-        { value: "200K+", label: "genetic markers" },
+        { value: "230K+", label: "genetic markers" },
         { value: "AI", label: "personal insights" },
         { value: "6", label: "step nutrition" },
         { value: "24/7", label: "digital monitoring" },
@@ -155,9 +156,15 @@ export const en: Dictionary = {
       title: "Grow with Aylopet",
       description:
         "From veterinary clinics to retail networks, a pet health tech platform that drives loyalty and outcomes.",
-      vetTitle: "Vet clinics & retail",
+      vetTitle: "Vet clinics",
       vetDescription:
         "White label tech, referral programs, and co branded nutrition plans.",
+      shelterTitle: "Shelters & rescues",
+      shelterDescription:
+        "Subsidized rations, group health profiles, and post adoption support.",
+      retailTitle: "Retail & ecommerce",
+      retailDescription:
+        "In store and online distribution, joint campaigns, and stock support.",
       corporateTitle: "Corporate & breeders",
       corporateDescription:
         "Employee pet benefits, bulk DNA screening, and breed specific programs.",
@@ -183,7 +190,7 @@ export const en: Dictionary = {
         },
         {
           title: "Genomic sequencing & QC",
-          body: "Cheek swab DNA is sequenced against 200,000+ markers. Our backend validates sample quality and breed specific risk alleles.",
+          body: "Cheek swab DNA is sequenced against 230,000+ markers. Our backend validates sample quality and breed specific risk alleles.",
         },
         {
           title: "AI fusion engine",
@@ -216,6 +223,8 @@ export const en: Dictionary = {
     workEmail: "Work email *",
     phone: "Phone *",
     partnershipType: "Partnership type *",
+    customType: "Describe the partnership type *",
+    customTypePlaceholder: "e.g. boarding facility, training centre...",
     partnershipGoals: "Partnership goals *",
     goalsPlaceholder:
       "Describe your audience, volume, and what you hope to achieve with Aylopet...",
@@ -225,6 +234,7 @@ export const en: Dictionary = {
     successSaved: "Your request was saved securely. Our team will contact you soon.",
     partnershipTypes: {
       "vet-clinic": "Veterinary clinic / hospital",
+      shelter: "Shelter or rescue organization",
       retail: "Pet retail or ecommerce",
       corporate: "Corporate employee benefits",
       breeder: "Breeder or kennel",
@@ -306,7 +316,7 @@ export const en: Dictionary = {
       imageAlt: "Dog with AylopetAI platform",
     },
     punchline: "Your dog's health matters more than a cup of coffee.",
-    cta: "Join the Early Adopter waitlist",
+    cta: "Register and get an exclusive offer",
     priceNote:
       "Coffee ₾10/day · AylopetAI ₾10/month, full access for your dog.",
     lossTitle: "What you lose by waiting",
@@ -344,16 +354,10 @@ export const en: Dictionary = {
     description:
       "Early Adopter cohort experiences, real stories, real outcomes.",
     stats: [
-      { value: "200K+", label: "genetic markers (DNA)" },
+      { value: "230K+", label: "genetic markers (DNA)" },
       { value: "AI", label: "AylopetAI" },
       { value: "40%", label: "Early Adopter discount" },
     ],
-    authority: {
-      quote:
-        "Personalized nutrition is the most effective tool for preventive dog health, especially when AI helps interpret the data.",
-      name: "Dr. Nino Beridze",
-      role: "Veterinarian · Nutritionist",
-    },
     testimonials: [
       {
         name: "Nino K.",
@@ -412,7 +416,7 @@ export const en: Dictionary = {
         description: "AI nutrition, portions, and health tracking in one place.",
       },
     ],
-    cta: "Start now, free to join",
+    cta: "Register and get an exclusive offer",
   },
   homeFaq: {
     eyebrow: "Questions",
@@ -421,8 +425,7 @@ export const en: Dictionary = {
     items: [],
   },
   stickyCta: {
-    label: "Waitlist · Reserve your spot",
-    sublabel: "Join the first wave",
+    label: "Register and get an exclusive offer",
   },
   projectStatus: {
     title: "Project status",
@@ -451,21 +454,59 @@ export const en: Dictionary = {
       },
       {
         label: "Phase 3",
+        title: "Aylopet Smart Collar",
+        description: "GPS and health signals · integrated with Aylopet.",
+        reaction: "Heartwarming delight",
+        reactionNote: "\"I'd know where and how my dog is, every day.\"",
+        status: "soon",
+      },
+      {
+        label: "Phase 4 · Long term goal",
         title: "DNA Platform",
         description: "Genomic insights and health profile · the ultimate end product.",
         reaction: "Deep anticipation",
         reactionNote: "\"This will truly change everything.\"",
         status: "soon",
-      },
-      {
-        label: "Phase 4",
-        title: "Aylopet Smart Collar",
-        description: "GPS, activity, and health signals · integrated with Aylopet.",
-        reaction: "Heartwarming delight",
-        reactionNote: "\"I'd know where and how my dog is, every day.\"",
-        status: "soon",
+        horizonNote:
+          "This is our most ambitious stage. It needs lab partnerships, regulatory approvals, and a large dataset, so it will take considerably longer than the other phases.",
       },
     ],
+  },
+  community: {
+    waitlistTotal: "people on the waitlist",
+    waitlistEmpty: "Be the first on the waitlist",
+    waitlistNote:
+      "Updates in real time · every signup helps us move the roadmap faster.",
+    whatsappTitle: "Join the WhatsApp community",
+    whatsappBody:
+      "Talk to the team directly, get updates first, and swap notes with other dog parents.",
+    whatsappCta: "Join WhatsApp group",
+    whatsappSoon: "WhatsApp group link coming soon",
+  },
+  ambassador: {
+    eyebrow: "Referral program",
+    tierName: "Ambassadors",
+    intro:
+      "One status for everyone — no complicated ladder. You get the base package the moment you join.",
+    basePointsLabel: "Base package",
+    pointsSuffix: "points",
+    upgradeRule:
+      "Invite {count} active users and your status upgrades automatically.",
+    progressLabel: "{count} invites to go",
+    upgradedLabel: "Status upgraded",
+  },
+  petPricing: {
+    eyebrow: "Pricing",
+    title: "Pay for exactly as many dogs as you have",
+    firstPetLabel: "First dog profile",
+    firstPetNote: "Full access to AylopetAI and the digital profile.",
+    secondPetLabel: "Add a second dog",
+    secondPetNote: "An extra profile on the same account.",
+    totalLabel: "Total for two dogs",
+    lockedNote:
+      "Adding a second dog unlocks once the first profile is paid for.",
+    limitNote: "For now an account supports up to two profiles.",
+    familySharingTag: "Family Sharing — Coming Soon",
   },
   userExpectations: {
     eyebrow: "Your voice",

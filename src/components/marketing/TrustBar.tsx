@@ -13,7 +13,7 @@ const TRUST_ITEMS = [
   },
   {
     icon: Dna,
-    label: "200K+ Markers",
+    label: "230K+ Markers",
     detail: "გენომური ანალიზის სიღრმე",
   },
   {

@@ -39,7 +39,9 @@ export function Hero3D({ media = "ecosystem" }: { media?: "current" | "ecosystem
         className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-32 bg-gradient-to-t from-white/70 to-transparent"
       />
 
-      <div className="relative mx-auto grid min-h-[calc(100svh-7.5rem)] max-w-7xl items-center gap-8 px-5 py-10 sm:px-8 sm:py-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-10 lg:px-10 lg:py-12 xl:gap-16">
+      {/* Even split from lg up · the copy column needs the width to keep
+          "მეტი სიყვარული" on one line at display size. */}
+      <div className="relative mx-auto grid min-h-[calc(100svh-7.5rem)] max-w-7xl items-center gap-8 px-5 py-10 sm:px-8 sm:py-14 lg:grid-cols-[1fr_1fr] lg:gap-10 lg:px-10 lg:py-12 xl:gap-16">
         <motion.div
           variants={staggerContainer}
           initial={false}
@@ -60,11 +62,17 @@ export function Hero3D({ media = "ecosystem" }: { media?: "current" | "ecosystem
 
           <motion.h1
             variants={fadeUp}
-            className="mt-7 text-balance font-display text-[2.75rem] font-semibold leading-[0.98] tracking-[-0.045em] text-[var(--forest-deep)] sm:text-6xl lg:text-[4rem] xl:text-[4.6rem]"
+            /* Sizes are capped so the highlight phrase fits its column on one
+               line at every breakpoint · it wraps awkwardly otherwise. */
+            className="mt-7 text-balance font-display text-[2.5rem] font-semibold leading-[0.98] tracking-[-0.045em] text-[var(--forest-deep)] sm:text-6xl lg:text-[3.4rem] xl:text-[4.3rem]"
           >
             {h.titleLine1}
             <br />
-            <span className="inline-block whitespace-nowrap bg-gradient-to-r from-[var(--brand-primary)] to-[var(--sage-herbaceous)] bg-clip-text text-transparent">
+            {/* bg-clip-text paints only inside the box, and leading-[0.98] is
+                shorter than Georgian ascenders/descenders (ყ, ვ), so they get
+                clipped. Pad the paint box and cancel it with negative margins
+                to keep the heading's layout height identical. */}
+            <span className="-my-[0.18em] inline-block bg-gradient-to-r from-[var(--brand-primary)] to-[var(--sage-herbaceous)] bg-clip-text py-[0.18em] text-transparent">
               {h.titleHighlight}
             </span>
             {h.titleLine2 ? (
@@ -84,19 +92,19 @@ export function Hero3D({ media = "ecosystem" }: { media?: "current" | "ecosystem
 
           <motion.div
             variants={fadeUp}
-            className="mx-auto mt-8 flex max-w-md flex-wrap justify-center gap-2.5 lg:mx-0 lg:justify-start"
+            className="mx-auto mt-8 grid max-w-md grid-cols-2 gap-2.5 lg:mx-0"
           >
             {visibleMetrics.map(({ value, label }, i) => {
               const Icon = METRIC_ICONS[i] ?? LineChart;
               return (
               <div
                 key={label}
-                className="flex min-w-[9.75rem] items-center gap-3 rounded-2xl border border-white/80 bg-white/70 px-4 py-3 text-left shadow-[0_12px_30px_rgba(13,46,39,0.07)] backdrop-blur-lg"
+                className="flex items-center gap-2.5 rounded-2xl border border-white/80 bg-white/70 px-3 py-3 text-left shadow-[0_12px_30px_rgba(13,46,39,0.07)] backdrop-blur-lg sm:gap-3 sm:px-4"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-accent-soft)] text-[var(--brand-primary)]">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-accent-soft)] text-[var(--brand-primary)] sm:h-10 sm:w-10">
                   <Icon className="h-4 w-4" aria-hidden />
                 </span>
-                <span>
+                <span className="min-w-0">
                   <span className="block text-lg font-bold text-[var(--forest-deep)]">{value}</span>
                   <span className="block text-[10px] font-medium leading-tight text-[var(--text-secondary)]">
                     {label}
@@ -114,7 +122,7 @@ export function Hero3D({ media = "ecosystem" }: { media?: "current" | "ecosystem
             <button
               type="button"
               onClick={scrollToWaitlist}
-              className={`${linkClass} w-full bg-[var(--brand-primary)] text-white shadow-[0_16px_42px_rgba(58,90,64,0.25)] hover:bg-[var(--brand-primary-hover)] hover:shadow-[0_20px_48px_rgba(58,90,64,0.3)] sm:w-auto`}
+              className={`${linkClass} w-full max-w-full bg-[var(--brand-primary)] px-6 text-center text-sm leading-snug text-white shadow-[0_16px_42px_rgba(58,90,64,0.25)] hover:bg-[var(--brand-primary-hover)] hover:shadow-[0_20px_48px_rgba(58,90,64,0.3)] sm:w-auto sm:max-w-[27rem] sm:text-sm`}
             >
               {t.joinWaitlistPromo}
               <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden />

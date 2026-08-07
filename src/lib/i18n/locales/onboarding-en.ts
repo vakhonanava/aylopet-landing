@@ -25,6 +25,14 @@ export const reviewsEn: ReviewsCopy = {
   editSubtitle: "You can update your comment anytime.",
   formTitle: "Share your story",
   formSubtitle: "Tell us how Aylopet helps your dog — you can upload a photo too.",
+  sectionHelper:
+    "This space is yours: share your experience with Aylopet, tell us what your dog needs, suggest a feature, or simply ask a question — we read every comment and use it to shape the product.",
+  writeCta: "Write a comment",
+  closeForm: "Close",
+  authRequired:
+    "You need to be signed in to write a comment. It keeps every comment genuine.",
+  authLoginCta: "Log in",
+  authRegisterCta: "Register",
   nameLabel: "Name",
   namePlaceholder: "e.g. Nina",
   dogInfo: "Dog (name · breed)",
@@ -51,7 +59,7 @@ export const dnaPortalEn: DnaPortalCopy = {
   description:
     "We're building the genomic portal · sample tracking, breed composition, and genetic health guidance.",
   features: [
-    "200,000+ genetic markers",
+    "230,000+ genetic markers",
     "Breed chart and allergy risk flags",
     "Personalized feeding recommendations",
   ],

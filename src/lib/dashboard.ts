@@ -152,6 +152,12 @@ export interface Pet {
 export interface Account {
   name: string;
   email: string;
+  /**
+   * True once the first pet profile is paid for. Gates adding a second dog
+   * (see `canAddPet`). Billing is not wired up yet, so this stays undefined
+   * until a payment provider sets it.
+   */
+  hasPaidPlan?: boolean;
 }
 
 export const MOOD_SCALE = [

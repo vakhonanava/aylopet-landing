@@ -8,12 +8,27 @@ import {
 } from "framer-motion";
 import { FoodLayersVisual } from "@/components/visual/FoodLayersVisual";
 import { useRef, useState } from "react";
-import { Cpu, Dna, UtensilsCrossed } from "lucide-react";
+import { Activity, Cpu, Dna, ShieldPlus, UtensilsCrossed } from "lucide-react";
 import { DnaSection } from "@/components/dna/DnaSection";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { DNA } from "@/lib/constants";
 
-const icons = [Dna, Cpu, UtensilsCrossed];
+const icons = [Dna, Cpu, ShieldPlus, UtensilsCrossed, Activity];
+
+/** Steps 0-2 read the genome; 3-4 are downstream of it and show the ration. */
+const HELIX_STEPS = 3;
+
+/** Overlay badge pinned to the visual for each journey step. */
+const STEP_BADGES = [
+  "60s · cheek swab",
+  "230,000+ markers",
+  "risk map · prevention",
+  "tailored fresh ration",
+  "24/7 AI monitoring",
+] as const;
+
+/** Helix travel per step · the strand is fully read by the risk-mapping step. */
+const HELIX_STOPS = [0.28, 0.62, 0.95, 1, 1] as const;
 
 export function Journey() {
   const [active, setActive] = useState(0);
@@ -24,11 +39,12 @@ export function Journey() {
     offset: ["start start", "end end"],
   });
 
-  // DNA progresses through first ~2/3 of the journey; food takes the last step
+  // The helix is fully read across the first three steps; the last two steps
+  // hand off to the ration visual, so progress saturates before they arrive.
   const helixProgress = useTransform(
     scrollYProgress,
-    [0, 0.12, 0.45, 0.68, 1],
-    [0.05, 0.22, 0.55, 0.92, 1],
+    [0, 0.1, 0.3, 0.5, 1],
+    [0.05, 0.22, 0.6, 0.95, 1],
     { clamp: true },
   );
 
@@ -49,7 +65,7 @@ export function Journey() {
             <div className="sticky top-28 flex h-[28rem] items-center">
               <div className="relative h-full w-full">
                 <AnimatePresence mode="wait">
-                  {active < 2 ? (
+                  {active < HELIX_STEPS ? (
                     <motion.div
                       key="helix"
                       initial={{ opacity: 0, scale: 0.97 }}
@@ -61,9 +77,7 @@ export function Journey() {
                       <DnaSection
                         progress={helixProgress}
                         interactive
-                        badge={
-                          active === 0 ? "60s · cheek swab" : "200,000 markers"
-                        }
+                        badge={STEP_BADGES[active]}
                         className="h-full"
                       />
                     </motion.div>
@@ -85,7 +99,7 @@ export function Journey() {
                         />
                       </div>
                       <div className="glass absolute right-4 top-4 rounded-2xl px-4 py-2.5 text-xs font-medium text-[var(--brand-accent)] shadow-soft">
-                        100% personalized
+                        {STEP_BADGES[active]}
                       </div>
                     </motion.div>
                   )}
@@ -155,11 +169,11 @@ export function Journey() {
             return (
               <RevealOnScroll key={step.index} delay={0.05 * i}>
                 <div className="h-64 overflow-hidden rounded-[2rem]">
-                  {i < 2 ? (
+                  {i < HELIX_STEPS ? (
                     <DnaSection
-                      progress={i === 0 ? 0.28 : 0.75}
+                      progress={HELIX_STOPS[i]}
                       interactive={false}
-                      badge={i === 0 ? "60s · cheek swab" : "200,000 markers"}
+                      badge={STEP_BADGES[i]}
                       className="h-full"
                     />
                   ) : (

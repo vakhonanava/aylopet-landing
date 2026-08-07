@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCallback } from "react";
 import { CheckCircle2, Share2 } from "lucide-react";
+import { AmbassadorProgram } from "@/components/early-access/AmbassadorProgram";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 
 interface EarlyAccessSuccessContentProps {
@@ -65,6 +66,8 @@ export function EarlyAccessSuccessContent({
           ))}
         </ul>
       </div>
+
+      <AmbassadorProgram className="mt-6" />
 
       <div className="mt-6 rounded-2xl border border-dashed border-[var(--terracotta)]/40 bg-[var(--terracotta)]/5 p-5 text-left">
         <p className="font-semibold text-[var(--forest-deep)]">{s.shareTitle}</p>

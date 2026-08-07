@@ -91,7 +91,12 @@ export function LandingChatbot() {
 
   useEffect(() => {
     if (!isSimulationComplete) return;
-    const t = window.setTimeout(() => inputRef.current?.focus(), 400);
+    // preventScroll · a plain focus() yanks the page back to the widget when
+    // the demo finishes, which read as "it sent me back to the homepage".
+    const t = window.setTimeout(
+      () => inputRef.current?.focus({ preventScroll: true }),
+      400,
+    );
     return () => window.clearTimeout(t);
   }, [isSimulationComplete]);
 

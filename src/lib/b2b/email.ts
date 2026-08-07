@@ -15,6 +15,10 @@ export async function sendB2BInquiryEmail(
 
   const partnership =
     PARTNERSHIP_TYPE_LABELS[data.partnershipType] ?? data.partnershipType;
+  const custom = data.customType?.trim();
+  const partnershipLine = custom
+    ? `${partnership} · ${custom}`
+    : partnership;
 
   const body = [
     `New B2B partnership inquiry`,
@@ -23,7 +27,7 @@ export async function sendB2BInquiryEmail(
     `Contact: ${data.contactName}`,
     `Email: ${data.email}`,
     `Phone: ${data.phone}`,
-    `Partnership type: ${partnership}`,
+    `Partnership type: ${partnershipLine}`,
     ``,
     `Message:`,
     data.message,
@@ -39,7 +43,7 @@ export async function sendB2BInquiryEmail(
       from,
       to: [to],
       reply_to: data.email,
-      subject: `[Aylopet B2B] ${data.companyName} · ${partnership}`,
+      subject: `[Aylopet B2B] ${data.companyName} · ${partnershipLine}`,
       text: body,
     }),
   });
