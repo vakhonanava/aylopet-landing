@@ -101,6 +101,7 @@ export interface DnaPortalCopy {
 export interface CommonCopy {
   promoText: string;
   joinWaitlist: string;
+  /** Primary waitlist action · hero CTA and the mobile menu button. */
   joinWaitlistPromo: string;
   /** Secondary waitlist CTA · offer-led wording for sticky/section triggers */
   joinWaitlistOffer: string;

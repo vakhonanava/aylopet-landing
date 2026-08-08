@@ -12,7 +12,7 @@ export const en: Dictionary = {
   common: {
     promoText: "Get 40% OFF! Join our waitlist now.",
     joinWaitlist: "Join Waitlist",
-    joinWaitlistPromo: "Register · 40% off + free consultation",
+    joinWaitlistPromo: "Add to waiting list",
     joinWaitlistOffer: "Register and get an exclusive offer",
     charityMessage: "5% of revenue supports charity, join us.",
     login: "Log in",

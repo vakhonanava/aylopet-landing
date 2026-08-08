@@ -122,7 +122,7 @@ export function Hero3D({ media = "ecosystem" }: { media?: "current" | "ecosystem
             <button
               type="button"
               onClick={scrollToWaitlist}
-              className={`${linkClass} w-full max-w-full bg-[var(--brand-primary)] px-6 text-center text-sm leading-snug text-white shadow-[0_16px_42px_rgba(58,90,64,0.25)] hover:bg-[var(--brand-primary-hover)] hover:shadow-[0_20px_48px_rgba(58,90,64,0.3)] sm:w-auto sm:max-w-[27rem] sm:text-sm`}
+              className={`${linkClass} w-full bg-[var(--brand-primary)] text-white shadow-[0_16px_42px_rgba(58,90,64,0.25)] hover:bg-[var(--brand-primary-hover)] hover:shadow-[0_20px_48px_rgba(58,90,64,0.3)] sm:w-auto`}
             >
               {t.joinWaitlistPromo}
               <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden />

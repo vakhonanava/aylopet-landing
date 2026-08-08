@@ -12,7 +12,7 @@ export const ka: Dictionary = {
   common: {
     promoText: "მიიღე 40% ფასდაკლება! შემოუერთდი მოლოდინის სიას.",
     joinWaitlist: "მოლოდინის სია",
-    joinWaitlistPromo: "დარეგისტრირდი · 40% ფასდაკლება + უფასო კონსულტაცია",
+    joinWaitlistPromo: "მოლოდინის სიაში დამატება",
     joinWaitlistOffer: "დარეგისტრირდი და მიიღე ექსკლუზიური შეთავაზება",
     charityMessage: "მოგების ნაწილი ხმარდება ქველმოქმედებას, შემოგვიერთდი!",
     login: "შესვლა",
