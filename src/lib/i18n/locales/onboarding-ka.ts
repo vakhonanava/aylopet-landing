@@ -12,7 +12,7 @@ export const onboardingKa: OnboardingCopy = {
 export const quizGateKa: QuizGateCopy = {
   title: "ჯერ შემოუერთდი Ambassador სიას",
   description:
-    "AylopetAI-ზე წვდომისთვის ჯერ დარეგისტრირდი მოლოდინის სიაში. შენ და შენი ძაღლი მიიღებთ 40% ფასდაკლებას და უფასო კონსულტაციას.",
+    "AylopetAI-ზე წვდომისთვის ჯერ დარეგისტრირდი მოლოდინის სიაში. შენ და შენი ძაღლი მიიღებთ უფასო კონსულტაციას.",
   ctaRegister: "რეგისტრაცია სიაში",
   ctaHome: "მთავარი გვერდი",
   waitingNote: "რეგისტრაციის შემდეგ AylopetAI ავტომატურად გაიხსნება.",

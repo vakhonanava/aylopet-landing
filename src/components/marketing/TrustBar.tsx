@@ -24,7 +24,7 @@ const TRUST_ITEMS = [
   {
     icon: Award,
     label: "Ambassador",
-    detail: "40% OFF · Waitlist უპირატესობა",
+    detail: "Waitlist უპირატესობა",
   },
 ] as const;
 

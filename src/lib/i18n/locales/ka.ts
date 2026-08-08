@@ -10,7 +10,7 @@ export const ka: Dictionary = {
   locale: "ka",
   languageName: "ქართული",
   common: {
-    promoText: "მიიღე 40% ფასდაკლება! შემოუერთდი მოლოდინის სიას.",
+    promoText: "შემოუერთდი მოლოდინის სიას და მიიღე ექსკლუზიური შეთავაზება!",
     joinWaitlist: "მოლოდინის სია",
     joinWaitlistPromo: "მოლოდინის სიაში დამატება",
     joinWaitlistOffer: "დარეგისტრირდი და მიიღე ექსკლუზიური შეთავაზება",
@@ -21,7 +21,7 @@ export const ka: Dictionary = {
     menuClose: "დახურვა",
     joinPetParents: "შემოუერთდი {count}+ ძაღლის მფრობელს მოლოდინის სიაში!",
     verifiedAdopters: "დადასტურებული Ambassador",
-    earlyAdopterBadge: "Ambassador · 40% ფასდაკლება",
+    earlyAdopterBadge: "Ambassador · ექსკლუზიური წვდომა",
     tryAiAssistant: "AylopetAI",
     openFullChat: "სრული AylopetAI ჩატის გახსნა",
     backHome: "მთავარი",
@@ -41,7 +41,7 @@ export const ka: Dictionary = {
       {
         label: "Ambassador",
         title: "შემოუერთდი სიას",
-        description: "დარეგისტრირდი · 40% ფასდაკლება + უფასო კონსულტაცია.",
+        description: "დარეგისტრირდი · უფასო კონსულტაცია.",
         open: "გახსნა",
         status: "waitlist",
       },
@@ -119,7 +119,7 @@ export const ka: Dictionary = {
       badge: "Waitlist · დაჯავშნე ადგილი",
       title: "შემოუერთდი Ambassador სიას",
       description:
-        "დაგვეხმარე პროდუქტის განვითარებაში, მიიღე ექსკლუზიური ფასდაკლება და პირველობით წვდომა ტექ პლატფორმაზე.",
+        "დაგვეხმარე პროდუქტის განვითარებაში, მიიღე ექსკლუზიური შეთავაზება და პირველობით წვდომა ტექ პლატფორმაზე.",
     },
     chatbot: {
       eyebrow: "AylopetAI",
@@ -184,7 +184,7 @@ export const ka: Dictionary = {
         "ბექენდ პროცესი კლინიკური ხარისხის ტრეისებადობითა და გამჭვირვალობით.",
       readyTitle: "მზად ხარ დასაწყებად?",
       readyBody:
-        "შემოუერთდი მოლოდინის სიას, Ambassador-ებს 40% ფასდაკლება ეკუთვნით.",
+        "შემოუერთდი მოლოდინის სიას, Ambassador-ები პირველები იღებენ წვდომას.",
       joinWaitlist: "Waitlist-ში ჩაწერა",
       tryAssistant: "სცადე AylopetAI",
       steps: [
@@ -275,7 +275,7 @@ export const ka: Dictionary = {
   waitlistForm: {
     quickTitle: "შემოუერთდი 30 წამში",
     quickSubtitle:
-      "სახელი, ელ. ფოსტა და ტელეფონი, 40% ფასდაკლება დაგიფიქსირდება.",
+      "სახელი, ელ. ფოსტა და ტელეფონი, ადგილი დაგიფიქსირდება.",
     name: "სახელი *",
     namePlaceholder: "შენი სახელი",
     dogName: "ძაღლის სახელი (არასავალდებულო)",
@@ -284,7 +284,7 @@ export const ka: Dictionary = {
     consent: "ვეთანხმები Aylopet-ის წესებსა და პირადი მონაცემების დამუშავებას",
     privacy:
       "არ გამოგიგზავნით სპამს. მონაცემები მხოლოდ waitlist-ისთვის გამოიყენება.",
-    submit: "შემოუერთდი სიას · 40% OFF",
+    submit: "შემოუერთდი სიას",
     fullProfileLink: "სრული პროფილი (ძაღლის დეტალები)",
     familiesJoined: "{count} ოჯახი უკვე მოლოდინის სიაშია",
     featureWishlist: "რა ფუნქციებს ან პროდუქტებს გელოდები?",
@@ -326,7 +326,7 @@ export const ka: Dictionary = {
     priceNote: "",
     lossTitle: "რას კარგავთ ლოდინით?",
     lossItems: [
-      "40% ფასდაკლებას საკვებზე",
+      "ექსკლუზიურ შეთავაზებას საკვებზე",
       "3 თვიან უფასო წვდომას AylopetAI-ზე",
       "3 თვიან უფასო გამოწერას ჭკვიან ყელსაბამზე",
     ],
@@ -365,7 +365,7 @@ export const ka: Dictionary = {
     stats: [
       { value: "230K+", label: "გენეტიკური მარკერი (DNA)" },
       { value: "AI", label: "AylopetAI" },
-      { value: "40%", label: "Ambassador ფასდაკლება" },
+      { value: "100%", label: "პერსონალური რაციონი" },
     ],
     testimonials: [
       {
@@ -400,7 +400,7 @@ export const ka: Dictionary = {
     nextItems: [
       "განვიხილავთ შენს ძაღლის პროფილს",
       "მოგიწოდებთ პერსონალურ რაციონს",
-      "40% ფასდაკლება პირველ შეკვეთაზე",
+      "ექსკლუზიური შეთავაზება პირველ შეკვეთაზე",
     ],
     tryAi: "სცადე AylopetAI",
     backHome: "მთავარ გვერდზე",

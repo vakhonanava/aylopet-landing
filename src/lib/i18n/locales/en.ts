@@ -10,7 +10,7 @@ export const en: Dictionary = {
   locale: "en",
   languageName: "English",
   common: {
-    promoText: "Get 40% OFF! Join our waitlist now.",
+    promoText: "Join our waitlist and get an exclusive offer!",
     joinWaitlist: "Join Waitlist",
     joinWaitlistPromo: "Add to waiting list",
     joinWaitlistOffer: "Register and get an exclusive offer",
@@ -21,7 +21,7 @@ export const en: Dictionary = {
     menuClose: "Close",
     joinPetParents: "Join {count}+ pet parents already on the waitlist!",
     verifiedAdopters: "verified Ambassadors registered",
-    earlyAdopterBadge: "Ambassador · 40% OFF",
+    earlyAdopterBadge: "Ambassador · exclusive access",
     tryAiAssistant: "AylopetAI",
     openFullChat: "Open full AylopetAI chat",
     backHome: "Home",
@@ -41,7 +41,7 @@ export const en: Dictionary = {
       {
         label: "Ambassador",
         title: "Join the waitlist",
-        description: "Register · 40% off + free consultation.",
+        description: "Register · free consultation.",
         open: "Open",
         status: "waitlist",
       },
@@ -119,7 +119,7 @@ export const en: Dictionary = {
       badge: "Waitlist · Reserve your spot",
       title: "Join the Ambassador waitlist",
       description:
-        "Help shape the product, get an exclusive discount and first access to the tech platform.",
+        "Help shape the product, get an exclusive offer and first access to the tech platform.",
     },
     chatbot: {
       eyebrow: "AylopetAI",
@@ -180,7 +180,7 @@ export const en: Dictionary = {
         "Backend process validated for clinical grade traceability and transparency.",
       readyTitle: "Ready to start?",
       readyBody:
-        "Join the waitlist to be first in line, Ambassadors get 40% OFF.",
+        "Join the waitlist to be first in line · Ambassadors get access first.",
       joinWaitlist: "Join Waitlist",
       tryAssistant: "Try AylopetAI",
       steps: [
@@ -271,7 +271,7 @@ export const en: Dictionary = {
   },
   waitlistForm: {
     quickTitle: "Join in 30 seconds",
-    quickSubtitle: "Name, email, and phone, lock in your 40% discount.",
+    quickSubtitle: "Name, email, and phone, and your spot is reserved.",
     name: "Your name *",
     namePlaceholder: "Your name",
     dogName: "Dog's name (optional)",
@@ -279,7 +279,7 @@ export const en: Dictionary = {
     city: "City",
     consent: "I agree to Aylopet terms and data processing",
     privacy: "No spam. Your data is used only for the waitlist.",
-    submit: "Join waitlist · 40% OFF",
+    submit: "Join waitlist",
     fullProfileLink: "Full profile (dog details)",
     familiesJoined: "{count} families already on the waitlist",
     featureWishlist: "What features or products would you love to see added?",
@@ -321,7 +321,7 @@ export const en: Dictionary = {
       "Coffee ₾10/day · AylopetAI ₾10/month, full access for your dog.",
     lossTitle: "What you lose by waiting",
     lossItems: [
-      "Locking in 40% off",
+      "An exclusive offer on food",
       "First AI consultation slot",
       "Limited Ambassador spot",
     ],
@@ -329,7 +329,7 @@ export const en: Dictionary = {
   },
   scarcity: {
     filled: "{count}/{cap} Ambassador spots filled",
-    priceLocked: "40% price locked when you sign up",
+    priceLocked: "Exclusive offers when you sign up",
     urgency: "Spots are filling, don't wait",
   },
   trustStrip: {
@@ -356,7 +356,7 @@ export const en: Dictionary = {
     stats: [
       { value: "230K+", label: "genetic markers (DNA)" },
       { value: "AI", label: "AylopetAI" },
-      { value: "40%", label: "Ambassador discount" },
+      { value: "100%", label: "personalized ration" },
     ],
     testimonials: [
       {
@@ -390,7 +390,7 @@ export const en: Dictionary = {
     nextItems: [
       "We review your dog's profile",
       "You get a personalized ration plan",
-      "40% off your first order",
+      "An exclusive offer on your first order",
     ],
     tryAi: "Try AylopetAI",
     backHome: "Back to home",
@@ -405,7 +405,7 @@ export const en: Dictionary = {
     steps: [
       {
         title: "Join the waitlist",
-        description: "30 second signup, lock in 40% off.",
+        description: "30 second signup, limited spots.",
       },
       {
         title: "Get Ambassador status",

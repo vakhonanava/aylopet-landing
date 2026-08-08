@@ -12,7 +12,7 @@ export const onboardingEn: OnboardingCopy = {
 export const quizGateEn: QuizGateCopy = {
   title: "Join the Ambassador waitlist first",
   description:
-    "To access AylopetAI, register on the waitlist first. You and your dog get 40% off and a free consultation.",
+    "To access AylopetAI, register on the waitlist first. You and your dog get a free consultation.",
   ctaRegister: "Join waitlist",
   ctaHome: "Back to home",
   waitingNote: "After registration, AylopetAI will unlock automatically.",

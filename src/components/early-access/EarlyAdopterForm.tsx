@@ -612,8 +612,8 @@ export function EarlyAdopterForm() {
               variants={fadeUp}
               className="mt-5 rounded-xl border border-[var(--brand-accent)]/30 bg-[var(--brand-accent-soft)] p-4 text-sm text-[var(--brand-primary)]"
             >
-              🎁 Ambassador სტატუსი: 40% ფასდაკლება პირველ შეკვეთაზე + უფასო
-              კონსულტაცია
+              🎁 Ambassador სტატუსი: ექსკლუზიური შეთავაზება პირველ შეკვეთაზე +
+              უფასო კონსულტაცია
             </motion.div>
           </motion.div>
         )}
