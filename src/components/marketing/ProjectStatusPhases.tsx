@@ -1,10 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import {
-  ArrowRight,
   Brain,
   Dna,
   Hourglass,
@@ -24,21 +22,18 @@ import type { ProjectPhaseCopy } from "@/lib/i18n/types";
 
 const PHASE_META = [
   {
-    href: "/products/fresh-food",
     icon: UtensilsCrossed,
     visual: "food" as const,
     accent: "from-[var(--terracotta)]/20 via-white to-[var(--brand-accent-soft)]",
     glow: "var(--terracotta)",
   },
   {
-    href: "/products/aylopet-ai",
     icon: Brain,
     visual: "ai" as const,
     accent: "from-[var(--brand-primary)]/15 via-white to-[var(--brand-accent-soft)]",
     glow: "var(--brand-primary)",
   },
   {
-    href: "/products/smart-collar",
     icon: Radio,
     visual: "collar" as const,
     accent: "from-[var(--terracotta-bright)]/15 via-white to-[var(--brand-accent-soft)]",
@@ -46,7 +41,6 @@ const PHASE_META = [
   },
   // DNA Lab sits last · the long-term goal at the bottom of the timeline.
   {
-    href: "/dna-journey",
     icon: Dna,
     visual: "helix" as const,
     accent: "from-[var(--forest-deep)]/10 via-white to-[var(--status-emerald)]/10",
@@ -157,7 +151,9 @@ function PhaseCard({
 
   return (
     <motion.div variants={fadeUp}>
-      <Link href={meta.href} className="group block">
+      {/* Status cards, not navigation · they no longer redirect into product
+          pages. The header nav still links to every product. */}
+      <div className="group block">
         <div className="perspective-[1200px]">
           <div
             ref={tilt.ref}
@@ -235,15 +231,10 @@ function PhaseCard({
                   {phase.horizonNote}
                 </p>
               ) : null}
-
-              <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--brand-primary)] transition-[gap] group-hover:gap-2.5">
-                {locale === "ka" ? "გახსნა" : "Open"}
-                <ArrowRight className="h-4 w-4" aria-hidden />
-              </span>
             </div>
           </div>
         </div>
-      </Link>
+      </div>
     </motion.div>
   );
 }
