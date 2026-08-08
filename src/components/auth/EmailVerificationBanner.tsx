@@ -3,9 +3,13 @@
 import { LoaderCircle, MailCheck, ShieldCheck, X } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import { getAuthCopy } from "@/lib/content/auth";
 
 export function EmailVerificationBanner() {
   const { user, ready, emailVerified, sendVerificationEmail } = useAuth();
+  const { locale } = useLocale();
+  const a = getAuthCopy(locale);
   const [dismissed, setDismissed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -20,9 +24,9 @@ export function EmailVerificationBanner() {
 
     const result = await sendVerificationEmail();
     if (result.error) {
-      setError(result.error);
+      setError(a.errors[result.error]);
     } else {
-      setMessage("დამატებითი დაცვისთვის დადასტურების ბმული გამოგიგზავნეთ.");
+      setMessage(a.verifySent);
     }
     setLoading(false);
   };
@@ -35,11 +39,10 @@ export function EmailVerificationBanner() {
         </span>
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold text-amber-950">
-            გსურს ელ. ფოსტის დამატებითი დაცვა?
+            {a.verifyPrompt}
           </p>
           <p className="mt-1 text-sm leading-relaxed text-amber-900/80">
-            რეგისტრაცია უკვე დასრულებულია. სურვილის შემთხვევაში დაადასტურე ელ.
-            ფოსტა უსაფრთხოებისთვის — ეს არ არის სავალდებულო.
+            {a.verifyBody}
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <button
@@ -53,14 +56,14 @@ export function EmailVerificationBanner() {
               ) : (
                 <MailCheck className="h-3.5 w-3.5" />
               )}
-              გაგზავნე დადასტურების ბმული
+              {a.verifySend}
             </button>
             <button
               type="button"
               onClick={() => setDismissed(true)}
               className="rounded-full px-3 py-2 text-xs font-medium text-amber-800/80 transition hover:bg-amber-100"
             >
-              ახლა არა
+              {a.verifyLater}
             </button>
           </div>
           {message && (
@@ -72,7 +75,7 @@ export function EmailVerificationBanner() {
           type="button"
           onClick={() => setDismissed(true)}
           className="shrink-0 rounded-lg p-1 text-amber-700/70 transition hover:bg-amber-100 hover:text-amber-900"
-          aria-label="დახურვა"
+          aria-label={a.close}
         >
           <X className="h-4 w-4" />
         </button>

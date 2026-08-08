@@ -5,8 +5,12 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { AuthFormShell, ResetPasswordForm } from "@/components/auth/AuthForm";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import { getAuthCopy } from "@/lib/content/auth";
 
 export default function ResetPasswordPage() {
+  const { locale } = useLocale();
+  const a = getAuthCopy(locale);
   const router = useRouter();
   const { user, ready } = useAuth();
 
@@ -19,7 +23,7 @@ export default function ResetPasswordPage() {
   if (!ready) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[var(--background-main)]">
-        <p className="text-sm text-[var(--text-secondary)]">იტვირთება…</p>
+        <p className="text-sm text-[var(--text-secondary)]">Loading…</p>
       </main>
     );
   }
@@ -30,16 +34,16 @@ export default function ResetPasswordPage() {
 
   return (
     <AuthFormShell
-      title="ახალი პაროლი"
-      subtitle="აირჩიე ახალი პაროლი შენი Aylopet ანგარიშისთვის."
+      title={a.resetTitle}
+      subtitle={a.resetSubtitle}
       footer={
         <>
-          გსურს გაუქმება?{" "}
+          {a.resetFooterPrompt}{" "}
           <Link
             href="/dashboard"
             className="font-medium text-[var(--brand-primary)] hover:underline"
           >
-            პანელში დაბრუნება
+            {a.resetFooterCta}
           </Link>
         </>
       }

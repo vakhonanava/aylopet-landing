@@ -3,6 +3,8 @@
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import { getAuthCopy } from "@/lib/content/auth";
 
 interface GoogleSignInButtonProps {
   nextPath?: string;
@@ -11,9 +13,11 @@ interface GoogleSignInButtonProps {
 
 export function GoogleSignInButton({
   nextPath = "/dashboard",
-  label = "Google-ით შესვლა",
+  label,
 }: GoogleSignInButtonProps) {
   const { signInWithGoogle } = useAuth();
+  const { locale } = useLocale();
+  const a = getAuthCopy(locale);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,7 +26,7 @@ export function GoogleSignInButton({
     setError(null);
     const result = await signInWithGoogle(nextPath);
     if (result.error) {
-      setError(result.error);
+      setError(a.errors[result.error]);
       setLoading(false);
     }
   };
@@ -57,7 +61,7 @@ export function GoogleSignInButton({
             />
           </svg>
         )}
-        {label}
+        {label ?? a.googleSignIn}
       </button>
       {error && (
         <p className="text-center text-xs text-red-600">{error}</p>

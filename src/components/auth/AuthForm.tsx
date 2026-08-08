@@ -6,6 +6,8 @@ import { useState, type ReactNode } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { PasswordField } from "@/components/auth/PasswordField";
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import { getAuthCopy } from "@/lib/content/auth";
 
 const input =
   "w-full rounded-2xl border border-[var(--border-light)] bg-white px-4 py-3 text-sm text-[var(--brand-primary)] outline-none transition-all duration-200 placeholder:text-[var(--text-tertiary)] focus:border-[var(--brand-primary)]/40 focus:ring-4 focus:ring-[var(--brand-primary)]/5";
@@ -53,6 +55,8 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ nextPath = "/dashboard" }: LoginFormProps) {
+  const { locale } = useLocale();
+  const a = getAuthCopy(locale);
   const { signInWithPassword } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -80,14 +84,14 @@ export function LoginForm({ nextPath = "/dashboard" }: LoginFormProps) {
 
       <div className="flex items-center gap-3 text-xs text-[var(--text-tertiary)]">
         <span className="h-px flex-1 bg-[var(--border-light)]" />
-        ან ელ. ფოსტით
+        {a.orWithEmail}
         <span className="h-px flex-1 bg-[var(--border-light)]" />
       </div>
 
       <form onSubmit={onSubmit} className="flex flex-col gap-5">
         <div className="flex flex-col gap-1.5">
           <label className={label} htmlFor="email">
-            ელ. ფოსტა
+            {a.emailLabel}
           </label>
           <input
             id="email"
@@ -102,16 +106,16 @@ export function LoginForm({ nextPath = "/dashboard" }: LoginFormProps) {
         </div>
         <PasswordField
           id="login-password"
-          label="პაროლი"
+          label={a.passwordLabel}
           labelExtra={
             <Link
               href="/auth/forgot-password"
               className="text-xs font-medium text-[var(--brand-primary)] hover:underline"
             >
-              დაგავიწყდა პაროლი?
+              {a.forgotPasswordLink}
             </Link>
           }
-          placeholder="შენი პაროლი"
+          placeholder={a.passwordPlaceholder}
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           autoComplete="current-password"
@@ -134,7 +138,7 @@ export function LoginForm({ nextPath = "/dashboard" }: LoginFormProps) {
             <LoaderCircle className="h-4 w-4 animate-spin" />
           ) : (
             <>
-              შესვლა
+              {a.signIn}
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
             </>
           )}
@@ -149,6 +153,8 @@ interface RegisterFormProps {
 }
 
 export function RegisterForm({ nextPath = "/dashboard" }: RegisterFormProps) {
+  const { locale } = useLocale();
+  const a = getAuthCopy(locale);
   const { signUpWithPassword } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -172,7 +178,7 @@ export function RegisterForm({ nextPath = "/dashboard" }: RegisterFormProps) {
 
     if (result.needsEmailConfirmation) {
       setInfo(
-        "ანგარიში შეიქმნა. შეამოწმე ელ. ფოსტა (inbox და spam) დადასტურების ბმულისთვის, შემდეგ შედი.",
+        a.registerSuccess,
       );
       setLoading(false);
       return;
@@ -183,24 +189,24 @@ export function RegisterForm({ nextPath = "/dashboard" }: RegisterFormProps) {
 
   return (
     <>
-      <GoogleSignInButton nextPath={nextPath} label="Google-ით რეგისტრაცია" />
+      <GoogleSignInButton nextPath={nextPath} label={a.googleRegister} />
 
       <div className="flex items-center gap-3 text-xs text-[var(--text-tertiary)]">
         <span className="h-px flex-1 bg-[var(--border-light)]" />
-        ან ელ. ფოსტით
+        {a.orWithEmail}
         <span className="h-px flex-1 bg-[var(--border-light)]" />
       </div>
 
       <form onSubmit={onSubmit} className="flex flex-col gap-5">
         <div className="flex flex-col gap-1.5">
           <label className={label} htmlFor="name">
-            სახელი
+            {a.nameLabel}
           </label>
           <input
             id="name"
             type="text"
             className={input}
-            placeholder="შენი სახელი"
+            placeholder={a.namePlaceholder}
             value={name}
             onChange={(event) => setName(event.target.value)}
             autoComplete="name"
@@ -210,7 +216,7 @@ export function RegisterForm({ nextPath = "/dashboard" }: RegisterFormProps) {
         </div>
         <div className="flex flex-col gap-1.5">
           <label className={label} htmlFor="email">
-            ელ. ფოსტა
+            {a.emailLabel}
           </label>
           <input
             id="email"
@@ -225,8 +231,8 @@ export function RegisterForm({ nextPath = "/dashboard" }: RegisterFormProps) {
         </div>
         <PasswordField
           id="password"
-          label="პაროლი"
-          placeholder="მინიმუმ 6 სიმბოლო"
+          label={a.passwordLabel}
+          placeholder={a.minSixChars}
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           autoComplete="new-password"
@@ -254,7 +260,7 @@ export function RegisterForm({ nextPath = "/dashboard" }: RegisterFormProps) {
             <LoaderCircle className="h-4 w-4 animate-spin" />
           ) : (
             <>
-              ანგარიშის შექმნა
+              {a.createAccount}
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
             </>
           )}
@@ -262,13 +268,13 @@ export function RegisterForm({ nextPath = "/dashboard" }: RegisterFormProps) {
       </form>
 
       <p className="text-center text-xs leading-relaxed text-[var(--text-tertiary)]">
-        რეგისტრაციით ეთანხმები{" "}
+        {a.termsPrefix}{" "}
         <Link href="/terms" className="underline hover:text-[var(--brand-primary)]">
-          წესებს
+          {a.termsLink}
         </Link>{" "}
-        და{" "}
+        {a.termsAnd}{" "}
         <Link href="/privacy" className="underline hover:text-[var(--brand-primary)]">
-          კონფიდენციალურობას
+          {a.privacyLink}
         </Link>
         .
       </p>
@@ -277,6 +283,8 @@ export function RegisterForm({ nextPath = "/dashboard" }: RegisterFormProps) {
 }
 
 export function ForgotPasswordForm() {
+  const { locale } = useLocale();
+  const a = getAuthCopy(locale);
   const { requestPasswordReset } = useAuth();
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -297,7 +305,7 @@ export function ForgotPasswordForm() {
     }
 
     setInfo(
-      "თუ ეს ელ. ფოსტა არსებობს, აღდგენის ბმული გამოგიგზავნეთ. შეამოწმე inbox და spam.",
+      a.forgotSent,
     );
     setLoading(false);
   };
@@ -306,7 +314,7 @@ export function ForgotPasswordForm() {
     <form onSubmit={onSubmit} className="flex flex-col gap-5">
       <div className="flex flex-col gap-1.5">
         <label className={label} htmlFor="email">
-          ელ. ფოსტა
+          {a.emailLabel}
         </label>
         <input
           id="email"
@@ -340,7 +348,7 @@ export function ForgotPasswordForm() {
           <LoaderCircle className="h-4 w-4 animate-spin" />
         ) : (
           <>
-            აღდგენის ბმულის გაგზავნა
+            {a.forgotSubmit}
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
           </>
         )}
@@ -350,6 +358,8 @@ export function ForgotPasswordForm() {
 }
 
 export function ResetPasswordForm() {
+  const { locale } = useLocale();
+  const a = getAuthCopy(locale);
   const { updatePassword } = useAuth();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -361,11 +371,11 @@ export function ResetPasswordForm() {
     setError(null);
 
     if (password.length < 6) {
-      setError("პაროლი უნდა იყოს მინიმუმ 6 სიმბოლო.");
+      setError(a.passwordTooShort);
       return;
     }
     if (password !== confirmPassword) {
-      setError("პაროლები არ ემთხვევა.");
+      setError(a.passwordsDoNotMatch);
       return;
     }
 
@@ -384,8 +394,8 @@ export function ResetPasswordForm() {
     <form onSubmit={onSubmit} className="flex flex-col gap-5">
       <PasswordField
         id="password"
-        label="ახალი პაროლი"
-        placeholder="მინიმუმ 6 სიმბოლო"
+        label={a.newPassword}
+        placeholder={a.minSixChars}
         value={password}
         onChange={(event) => setPassword(event.target.value)}
         autoComplete="new-password"
@@ -394,8 +404,8 @@ export function ResetPasswordForm() {
       />
       <PasswordField
         id="confirmPassword"
-        label="გაიმეორე ახალი პაროლი"
-        placeholder="გაიმეორე პაროლი"
+        label={a.repeatNewPassword}
+        placeholder={a.repeatPassword}
         value={confirmPassword}
         onChange={(event) => setConfirmPassword(event.target.value)}
         autoComplete="new-password"
@@ -418,7 +428,7 @@ export function ResetPasswordForm() {
           <LoaderCircle className="h-4 w-4 animate-spin" />
         ) : (
           <>
-            პაროლის შენახვა
+            {a.savePassword}
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
           </>
         )}
@@ -428,6 +438,8 @@ export function ResetPasswordForm() {
 }
 
 export function ChangePasswordForm() {
+  const { locale } = useLocale();
+  const a = getAuthCopy(locale);
   const { changePassword, hasPasswordLogin, email } = useAuth();
   const [currentPassword, setCurrentPassword] = useState("");
   const [password, setPassword] = useState("");
@@ -439,8 +451,7 @@ export function ChangePasswordForm() {
   if (!hasPasswordLogin) {
     return (
       <p className="rounded-xl border border-[var(--border-light)] bg-[var(--background-main)] px-4 py-3 text-sm leading-relaxed text-[var(--text-body)]">
-        შენი ანგარიში Google-ით შედის ({email}). პაროლის შეცვლა ამ ანგარიშისთვის არ
-        არის საჭირო.
+        {a.googleAccountNotice} ({email})
       </p>
     );
   }
@@ -451,15 +462,15 @@ export function ChangePasswordForm() {
     setInfo(null);
 
     if (password.length < 6) {
-      setError("ახალი პაროლი უნდა იყოს მინიმუმ 6 სიმბოლო.");
+      setError(a.passwordTooShort);
       return;
     }
     if (password !== confirmPassword) {
-      setError("ახალი პაროლები არ ემთხვევა.");
+      setError(a.passwordsDoNotMatch);
       return;
     }
     if (password === currentPassword) {
-      setError("ახალი პაროლი უნდა განსხვავდებოდეს მიმდინარისგან.");
+      setError(a.newPasswordMustDiffer);
       return;
     }
 
@@ -471,7 +482,7 @@ export function ChangePasswordForm() {
       return;
     }
 
-    setInfo("პაროლი წარმატებით შეიცვალა.");
+    setInfo(a.passwordChanged);
     setCurrentPassword("");
     setPassword("");
     setConfirmPassword("");
@@ -482,7 +493,7 @@ export function ChangePasswordForm() {
     <form onSubmit={onSubmit} className="flex flex-col gap-5">
       <PasswordField
         id="currentPassword"
-        label="მიმდინარე პაროლი"
+        label={a.currentPassword}
         value={currentPassword}
         onChange={(event) => setCurrentPassword(event.target.value)}
         autoComplete="current-password"
@@ -491,7 +502,7 @@ export function ChangePasswordForm() {
       />
       <PasswordField
         id="newPassword"
-        label="ახალი პაროლი"
+        label={a.newPassword}
         value={password}
         onChange={(event) => setPassword(event.target.value)}
         autoComplete="new-password"
@@ -500,7 +511,7 @@ export function ChangePasswordForm() {
       />
       <PasswordField
         id="confirmNewPassword"
-        label="გაიმეორე ახალი პაროლი"
+        label={a.repeatNewPassword}
         value={confirmPassword}
         onChange={(event) => setConfirmPassword(event.target.value)}
         autoComplete="new-password"
@@ -527,7 +538,7 @@ export function ChangePasswordForm() {
         {loading ? (
           <LoaderCircle className="h-4 w-4 animate-spin" />
         ) : (
-          "პაროლის შეცვლა"
+          a.changePassword
         )}
       </button>
     </form>

@@ -1,5 +1,6 @@
 import type { SupabaseClient, User } from "@supabase/supabase-js";
 import { formatAuthError } from "@/lib/auth/display";
+import type { AuthErrorCode } from "@/lib/content/auth";
 
 export function isEmailVerified(user: User | null | undefined): boolean {
   return Boolean(user?.email_confirmed_at);
@@ -10,7 +11,7 @@ export async function establishSessionAfterSignUp(
   supabase: SupabaseClient,
   email: string,
   password: string,
-): Promise<{ userId: string | null; error: string | null }> {
+): Promise<{ userId: string | null; error: AuthErrorCode | null }> {
   const normalizedEmail = email.trim().toLowerCase();
 
   const {
@@ -35,7 +36,7 @@ export async function establishSessionAfterSignUp(
   } = await supabase.auth.getUser();
 
   if (!user?.id) {
-    return { userId: null, error: "ანგარიში ვერ შეიქმნა." };
+    return { userId: null, error: "account_not_created" };
   }
 
   return { userId: user.id, error: null };

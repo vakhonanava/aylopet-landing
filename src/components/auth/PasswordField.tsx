@@ -3,6 +3,8 @@
 import { Eye, EyeOff } from "lucide-react";
 import { useState, type InputHTMLAttributes, type ReactNode } from "react";
 import { authInputClass, authLabelClass } from "@/components/auth/AuthForm";
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import { getAuthCopy } from "@/lib/content/auth";
 
 interface PasswordFieldProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
@@ -15,12 +17,14 @@ interface PasswordFieldProps
 export function PasswordField({
   label,
   labelExtra,
-  showLabel = "პაროლის ჩვენება",
-  hideLabel = "პაროლის დამალვა",
+  showLabel,
+  hideLabel,
   id,
   className,
   ...props
 }: PasswordFieldProps) {
+  const { locale } = useLocale();
+  const a = getAuthCopy(locale);
   const [visible, setVisible] = useState(false);
   const inputId = id ?? props.name ?? "password";
 
@@ -43,7 +47,7 @@ export function PasswordField({
           type="button"
           onClick={() => setVisible((v) => !v)}
           className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--background-secondary)] hover:text-[var(--brand-primary)]"
-          aria-label={visible ? hideLabel : showLabel}
+          aria-label={visible ? (hideLabel ?? a.hidePassword) : (showLabel ?? a.showPassword)}
           aria-pressed={visible}
         >
           {visible ? (

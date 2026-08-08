@@ -1,6 +1,7 @@
 "use client";
 
 import type { User } from "@supabase/supabase-js";
+import type { AuthErrorCode } from "@/lib/content/auth";
 import {
   createContext,
   useCallback,
@@ -22,7 +23,8 @@ import {
 import { createClient } from "@/utils/supabase/client";
 
 export interface AuthResult {
-  error: string | null;
+  /** Stable code · the form resolves it to a localized message. */
+  error: AuthErrorCode | null;
   needsEmailConfirmation?: boolean;
 }
 
@@ -103,7 +105,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (email: string, password: string): Promise<AuthResult> => {
       const supabase = getBrowserClient();
       if (!supabase) {
-        return { error: "Supabase არ არის კონფიგურირებული." };
+        return { error: "supabase_not_configured" };
       }
 
       const { error } = await supabase.auth.signInWithPassword({
@@ -125,7 +127,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     ): Promise<AuthResult> => {
       const supabase = getBrowserClient();
       if (!supabase) {
-        return { error: "Supabase არ არის კონფიგურირებული." };
+        return { error: "supabase_not_configured" };
       }
 
       const { data, error } = await supabase.auth.signUp({
@@ -159,7 +161,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         password,
       );
       if (sessionResult.error) {
-        if (sessionResult.error.includes("დადასტურებული")) {
+        if (sessionResult.error === "email_not_confirmed") {
           return { error: null, needsEmailConfirmation: true };
         }
         return { error: sessionResult.error };
@@ -173,7 +175,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const sendVerificationEmail = useCallback(async (): Promise<AuthResult> => {
     const supabase = getBrowserClient();
     if (!supabase) {
-      return { error: "Supabase არ არის კონფიგურირებული." };
+      return { error: "supabase_not_configured" };
     }
 
     const {
@@ -181,7 +183,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } = await supabase.auth.getUser();
 
     if (!currentUser?.email) {
-      return { error: "ელ. ფოსტა ვერ მოიძებნა." };
+      return { error: "email_not_found" };
     }
 
     if (isEmailVerified(currentUser)) {
@@ -204,7 +206,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (email: string): Promise<AuthResult> => {
       const supabase = getBrowserClient();
       if (!supabase) {
-        return { error: "Supabase არ არის კონფიგურირებული." };
+        return { error: "supabase_not_configured" };
       }
 
       const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent("/auth/reset-password")}`;
@@ -223,7 +225,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (newPassword: string): Promise<AuthResult> => {
       const supabase = getBrowserClient();
       if (!supabase) {
-        return { error: "Supabase არ არის კონფიგურირებული." };
+        return { error: "supabase_not_configured" };
       }
 
       const { error } = await supabase.auth.updateUser({ password: newPassword });
@@ -240,7 +242,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     ): Promise<AuthResult> => {
       const supabase = getBrowserClient();
       if (!supabase) {
-        return { error: "Supabase არ არის კონფიგურირებული." };
+        return { error: "supabase_not_configured" };
       }
 
       const {
@@ -248,13 +250,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } = await supabase.auth.getUser();
 
       if (!currentUser?.email) {
-        return { error: "ანგარიში ვერ მოიძებნა." };
+        return { error: "account_not_created" };
       }
 
       if (!userHasPasswordLogin(currentUser)) {
-        return {
-          error: "ეს ანგარიში Google-ით შედის. პაროლის შეცვლა აქ არ არის ხელმისაწვდომი.",
-        };
+        return { error: "google_account_no_password" };
       }
 
       const { error: verifyError } = await supabase.auth.signInWithPassword({
@@ -263,7 +263,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (verifyError) {
-        return { error: "მიმდინარე პაროლი არასწორია." };
+        return { error: "current_password_wrong" };
       }
 
       const { error } = await supabase.auth.updateUser({ password: newPassword });
@@ -277,7 +277,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (nextPath = "/dashboard"): Promise<AuthResult> => {
       const supabase = getBrowserClient();
       if (!supabase) {
-        return { error: "Supabase არ არის კონფიგურირებული." };
+        return { error: "supabase_not_configured" };
       }
 
       const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(nextPath)}`;
