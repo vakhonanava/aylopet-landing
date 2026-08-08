@@ -7,7 +7,7 @@ import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { getLegalContent, type LegalPageKey } from "@/lib/content/legal";
 
 export function LegalPageContent({ page }: { page: LegalPageKey }) {
-  const { dict, locale } = useLocale();
+  const { locale } = useLocale();
   const copy = getLegalContent(locale);
   const doc = copy[page];
 
@@ -17,8 +17,6 @@ export function LegalPageContent({ page }: { page: LegalPageKey }) {
         <PageHero
           title={doc.title}
           subtitle={`${copy.lastUpdatedLabel}: ${doc.lastUpdated}`}
-          backHref="/"
-          backLabel={dict.common.backHome}
         />
 
         <section className="mx-auto max-w-3xl px-6 pb-24 lg:px-8">

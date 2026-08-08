@@ -11,11 +11,11 @@ import { getAbout } from "@/lib/content/about";
 
 export function ProcessContent() {
   const { locale } = useLocale();
-  const { process, backLabel } = getAbout(locale);
+  const { process } = getAbout(locale);
   return (
     <>
       <main className="flex-1 bg-[var(--background-main)]">
-        <PageHero title={process.title} backHref="/about/what-is-aylopet" backLabel={backLabel} />
+        <PageHero title={process.title} />
         <ProseSection>
           <p className="whitespace-pre-line">{process.subInfo}</p>
         </ProseSection>

@@ -18,7 +18,7 @@ export default function WhyFreshFoodPage() {
   return (
     <>
       <main className="flex-1 bg-[var(--background-main)]">
-        <PageHero title={WHY_FRESH.title} backHref="/" backLabel="მთავარი" />
+        <PageHero title={WHY_FRESH.title} />
         <ProseSection>
           <p>{WHY_FRESH.philosophy}</p>
         </ProseSection>

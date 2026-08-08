@@ -4,8 +4,8 @@ export const IMAGES = {
     "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=1400&q=90&auto=format&fit=crop",
   heroDog3D:
     "https://images.unsplash.com/photo-1552053831-71594a27632d?w=1400&q=90&auto=format&fit=crop",
-  storyPekingese:
-    "https://images.unsplash.com/photo-1546527868-ccb7ee7dfa6a?w=900&q=90&auto=format&fit=crop",
+  /** Koko · the founder's first dog, shown in "Our story". */
+  storyPekingese: "/images/American-Cocker-Spaniel.png",
   /**
    * Dante · Cane Corso, the founder's dog shown in "Our story".
    * Transparent-background cutout · render it with object-contain over a

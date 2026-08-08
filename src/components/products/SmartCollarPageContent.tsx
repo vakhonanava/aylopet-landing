@@ -38,8 +38,6 @@ export function SmartCollarPageContent() {
           eyebrow={copy.eyebrow}
           title={copy.title}
           subtitle={copy.subtitle}
-          backHref="/"
-          backLabel={dict.common.backHome}
         />
 
         <section className="mx-auto max-w-3xl px-6 pb-4 lg:px-8">

@@ -94,7 +94,7 @@ function FaqAccordionRow({
 }
 
 export function FaqPageContent() {
-  const { dict, locale } = useLocale();
+  const { locale } = useLocale();
   const copy = getFaqContent(locale);
 
   const [query, setQuery] = useState("");
@@ -155,8 +155,6 @@ export function FaqPageContent() {
         <PageHero
           title={copy.title}
           subtitle={copy.subtitle}
-          backHref="/"
-          backLabel={dict.common.backHome}
         />
 
         <section className="mx-auto max-w-3xl px-6 pb-24 lg:px-8">

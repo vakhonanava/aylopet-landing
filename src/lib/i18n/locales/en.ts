@@ -102,10 +102,10 @@ export const en: Dictionary = {
       titleHighlight: "more love",
       titleLine2: "",
       emotionalLine:
-        "Help your dog live longer, healthier with Aylopet.",
+        "Help your dog live a longer, healthier life with AylopetAI's personal assistant.",
       identityTag: "For pet parents who expect more",
       subtitle:
-        "Aylopet unites AI nutrition, genomic insights, and fresh food, data driven care, not just a ration.",
+        "Aylopet unites AI nutrition, genomic insights, and fresh food — data-driven care, not just a ration.",
       techPlatform: "Tech platform",
       ctaNote: "Reserve your spot · no payment required now",
       metrics: [
@@ -174,7 +174,12 @@ export const en: Dictionary = {
       badge: "Ultimate End Product",
       title: "DNA Platform · Journey & Portal, Unified",
       intro:
-        "This is the ultimate end product we are building toward. To launch it fully, we gather information incrementally, you can share your dog's health history, vet records, and lab test analysis as you are ready.",
+        "This is the ultimate end product we are building toward.\n\nIt will help prevent health problems by catching them early, through daily behaviour, nutrition, and the right veterinary guidance.\n\nWe are gathering the information to launch it step by step. You can join us in this and share your dog's health history: vet records, lab results, X-rays, MRI scans, and prescriptions.",
+      details: [
+        "Aylopet DNA Lab is our most ambitious project. Its purpose is to prevent disease and to help treat problems that already exist.",
+        "A DNA test alone is not enough for prevention. That is why we are building a system that analyses your dog's genetics, veterinary records, lab results, X-rays and MRI scans together. By combining that data with everyday behaviour, we aim to surface hidden risks early and help you avoid them.",
+        "Become part of this work · share your companion's medical history and help us set a new standard for canine health and longevity.",
+      ],
       stepLabel: "Step",
       backendNote:
         "Backend process validated for clinical grade traceability and transparency.",
@@ -325,7 +330,10 @@ export const en: Dictionary = {
       "First AI consultation slot",
       "Limited Ambassador spot",
     ],
-    vetAnchor: "One vet visit ~80 to 150 ₾ · AylopetAI ~₾10/month",
+    vetAnchor:
+      "One vet visit = hours stuck in traffic, then queuing at the clinic",
+    vetAnchorSecondary:
+      "With AylopetAI you get guidance on your dog's food and care without leaving home.",
   },
   scarcity: {
     filled: "{count}/{cap} Ambassador spots filled",
@@ -352,7 +360,7 @@ export const en: Dictionary = {
     eyebrow: "Reviews",
     title: "Pet parents who trust Aylopet",
     description:
-      "Ambassador cohort experiences, real stories, real outcomes.",
+      "Share your experience · every story helps us build better care.",
     stats: [
       { value: "230K+", label: "genetic markers (DNA)" },
       { value: "AI", label: "AylopetAI" },
@@ -409,11 +417,11 @@ export const en: Dictionary = {
       },
       {
         title: "Get Ambassador status",
-        description: "First access to AylopetAI and fresh food.",
+        description: "With exclusive perks.",
       },
       {
         title: "Start personalized care",
-        description: "AI nutrition, portions, and health tracking in one place.",
+        description: "From the very first day of launch.",
       },
     ],
     cta: "Register and get an exclusive offer",

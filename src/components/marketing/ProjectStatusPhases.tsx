@@ -10,7 +10,6 @@ import {
   Sparkles,
   UtensilsCrossed,
 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { DnaHelix3D } from "@/components/visual/DnaHelix3D";
 import { FloatingOrb } from "@/components/visual/FloatingOrb";

@@ -7,7 +7,8 @@ import { useLocale } from "@/components/i18n/LocaleProvider";
 import { Button } from "@/components/ui/Button";
 
 export function WaitlistSectionContent() {
-  const { dict } = useLocale();
+  const { dict, locale } = useLocale();
+  const ka = locale === "ka";
   const w = dict.landing.waitlist;
   return (
     <section
@@ -35,8 +36,9 @@ export function WaitlistSectionContent() {
               Secure Supabase onboarding
             </p>
             <p className="mt-3 text-sm leading-relaxed text-[var(--text-body)]">
-              ერთი უსაფრთხო რეგისტრაცია — waitlist, ანგარიში, ძაღლის პროფილი და
-              სამედიცინო დოკუმენტების ატვირთვა.
+              {ka
+                ? "ერთი უსაფრთხო რეგისტრაცია — waitlist, ანგარიში, ძაღლის პროფილი და სამედიცინო დოკუმენტების ატვირთვა."
+                : "One secure signup — waitlist, account, dog profile, and medical document uploads."}
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
               <Button href="/onboarding/platform" showArrow>
@@ -46,7 +48,7 @@ export function WaitlistSectionContent() {
                 href="/auth/login"
                 className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-[var(--brand-primary)] transition hover:bg-[var(--brand-primary)]/5"
               >
-                უკვე გაქვს ანგარიში?
+                {ka ? "უკვე გაქვს ანგარიში?" : "Already have an account?"}
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>

@@ -31,8 +31,6 @@ export function KnowledgeHubContent() {
         <PageHero
           title={k.title}
           subtitle={k.subtext}
-          backHref="/"
-          backLabel={dict.common.backHome}
         />
         {/* Health & wellness guide · its own section, independent of the
             "Why fresh food?" article below. */}

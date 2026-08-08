@@ -18,8 +18,6 @@ export function B2BPageContent() {
           title={t.title}
           subtitle={t.subtitle}
           eyebrow={t.eyebrow}
-          backHref="/"
-          backLabel={t.backLabel}
         />
         <section className="relative z-[1] mx-auto max-w-2xl px-4 pb-24 sm:px-6 lg:px-8">
           <B2BInquiryForm />

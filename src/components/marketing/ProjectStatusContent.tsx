@@ -17,7 +17,6 @@ export function ProjectStatusContent({
 }) {
   const { dict } = useLocale();
   const t = dict.projectStatus;
-  const c = dict.common;
 
   return (
     <>
@@ -30,8 +29,6 @@ export function ProjectStatusContent({
         <PageHero
           title={t.title}
           subtitle={t.subtitle}
-          backHref="/"
-          backLabel={c.backHome}
         />
 
         <CommunityBar initialCount={waitlistCount} />

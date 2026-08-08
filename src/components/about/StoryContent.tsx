@@ -28,11 +28,11 @@ const DANTE_BREED: Record<"ka" | "en", string> = {
 
 export function StoryContent() {
   const { locale } = useLocale();
-  const { story, backLabel } = getAbout(locale);
+  const { story } = getAbout(locale);
   return (
     <>
       <main className="flex-1 bg-[var(--background-main)]">
-        <PageHero title={story.title} backHref="/about/what-is-aylopet" backLabel={backLabel} />
+        <PageHero title={story.title} />
         <section className="mx-auto max-w-6xl px-6 pb-24 lg:px-8">
           <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
             <RevealOnScroll className="lg:col-span-5">

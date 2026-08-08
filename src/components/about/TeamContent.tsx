@@ -8,11 +8,11 @@ import { getAbout } from "@/lib/content/about";
 
 export function TeamContent() {
   const { locale } = useLocale();
-  const { team, backLabel } = getAbout(locale);
+  const { team } = getAbout(locale);
   return (
     <>
       <main className="flex-1 bg-[var(--background-main)]">
-        <PageHero title={team.title} backHref="/about/what-is-aylopet" backLabel={backLabel} />
+        <PageHero title={team.title} />
         <GlassTeamPlaceholder status={team.status} body={team.body} />
       </main>
       <SiteFooter />
