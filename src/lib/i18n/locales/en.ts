@@ -20,8 +20,8 @@ export const en: Dictionary = {
     menuOpen: "Menu",
     menuClose: "Close",
     joinPetParents: "Join {count}+ pet parents already on the waitlist!",
-    verifiedAdopters: "verified early adopters registered",
-    earlyAdopterBadge: "Early Adopter · 40% OFF",
+    verifiedAdopters: "verified Ambassadors registered",
+    earlyAdopterBadge: "Ambassador · 40% OFF",
     tryAiAssistant: "AylopetAI",
     openFullChat: "Open full AylopetAI chat",
     backHome: "Home",
@@ -39,7 +39,7 @@ export const en: Dictionary = {
     statusSoon: "Soon",
     features: [
       {
-        label: "Early Adopter",
+        label: "Ambassador",
         title: "Join the waitlist",
         description: "Register · 40% off + free consultation.",
         open: "Open",
@@ -117,7 +117,7 @@ export const en: Dictionary = {
     },
     waitlist: {
       badge: "Waitlist · Reserve your spot",
-      title: "Join the Early Adopter waitlist",
+      title: "Join the Ambassador waitlist",
       description:
         "Help shape the product, get an exclusive discount and first access to the tech platform.",
     },
@@ -180,7 +180,7 @@ export const en: Dictionary = {
         "Backend process validated for clinical grade traceability and transparency.",
       readyTitle: "Ready to start?",
       readyBody:
-        "Join the waitlist to be first in line, early adopters get 40% OFF.",
+        "Join the waitlist to be first in line, Ambassadors get 40% OFF.",
       joinWaitlist: "Join Waitlist",
       tryAssistant: "Try AylopetAI",
       steps: [
@@ -323,12 +323,12 @@ export const en: Dictionary = {
     lossItems: [
       "Locking in 40% off",
       "First AI consultation slot",
-      "Limited Early Adopter spot",
+      "Limited Ambassador spot",
     ],
     vetAnchor: "One vet visit ~80 to 150 ₾ · AylopetAI ~₾10/month",
   },
   scarcity: {
-    filled: "{count}/{cap} Early Adopter spots filled",
+    filled: "{count}/{cap} Ambassador spots filled",
     priceLocked: "40% price locked when you sign up",
     urgency: "Spots are filling, don't wait",
   },
@@ -352,11 +352,11 @@ export const en: Dictionary = {
     eyebrow: "Reviews",
     title: "Pet parents who trust Aylopet",
     description:
-      "Early Adopter cohort experiences, real stories, real outcomes.",
+      "Ambassador cohort experiences, real stories, real outcomes.",
     stats: [
       { value: "230K+", label: "genetic markers (DNA)" },
       { value: "AI", label: "AylopetAI" },
-      { value: "40%", label: "Early Adopter discount" },
+      { value: "40%", label: "Ambassador discount" },
     ],
     testimonials: [
       {
@@ -377,14 +377,14 @@ export const en: Dictionary = {
         name: "Mariam T.",
         dog: "Chipi · Mixed breed",
         quote:
-          "Early Adopter gave us a midday consultation. The first week already shows results.",
+          "Ambassador gave us a midday consultation. The first week already shows results.",
         imageKey: "healthDog3D",
       },
     ],
   },
   earlyAccessSuccess: {
     title: "Thank you, {name}!",
-    registered: "{dog} is registered in the Early Adopter program.",
+    registered: "{dog} is registered in the Ambassador program.",
     queuePosition: "You're #{position} in the queue. We'll email you soon.",
     nextTitle: "What happens next?",
     nextItems: [
@@ -408,7 +408,7 @@ export const en: Dictionary = {
         description: "30 second signup, lock in 40% off.",
       },
       {
-        title: "Get Early Adopter status",
+        title: "Get Ambassador status",
         description: "First access to AylopetAI and fresh food.",
       },
       {
@@ -439,7 +439,7 @@ export const en: Dictionary = {
       {
         label: "Phase 1",
         title: "Gently Cooked fresh food",
-        description: "Human grade meals · in production and early adopter delivery.",
+        description: "Human grade meals · in production and Ambassador delivery.",
         reaction: "Joy",
         reactionNote: "\"Finally, real food!\"",
         status: "live",

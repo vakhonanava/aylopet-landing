@@ -23,7 +23,7 @@ const TRUST_ITEMS = [
   },
   {
     icon: Award,
-    label: "Early Adopter",
+    label: "Ambassador",
     detail: "40% OFF · Waitlist უპირატესობა",
   },
 ] as const;

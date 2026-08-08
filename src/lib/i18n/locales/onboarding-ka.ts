@@ -10,7 +10,7 @@ export const onboardingKa: OnboardingCopy = {
 };
 
 export const quizGateKa: QuizGateCopy = {
-  title: "ჯერ შემოუერთდი Early Adopter სიას",
+  title: "ჯერ შემოუერთდი Ambassador სიას",
   description:
     "AylopetAI-ზე წვდომისთვის ჯერ დარეგისტრირდი მოლოდინის სიაში. შენ და შენი ძაღლი მიიღებთ 40% ფასდაკლებას და უფასო კონსულტაციას.",
   ctaRegister: "რეგისტრაცია სიაში",
@@ -20,7 +20,7 @@ export const quizGateKa: QuizGateCopy = {
 
 export const reviewsKa: ReviewsCopy = {
   title: "შეფასებები",
-  description: "რეალური გამოცდილებები Early Adopter მეგობრებისგან.",
+  description: "რეალური გამოცდილებები Ambassador მეგობრებისგან.",
   editTitle: "შენი შეფასება",
   editSubtitle: "შეგიძლია განაახლო შენი კომენტარი ნებისმიერ დროს.",
   formTitle: "გაგვიზიარე შენი ისტორია",
@@ -49,7 +49,7 @@ export const reviewsKa: ReviewsCopy = {
   addPhoto: "ატვირთვა",
   removePhoto: "წაშლა",
   photoTooLarge: "ფოტო ძალიან დიდია. სცადე უფრო პატარა ფაილი.",
-  loginPrompt: "შეფასების დასაწერად ჯერ დარეგისტრირდი Early Adopter პროგრამაში.",
+  loginPrompt: "შეფასების დასაწერად ჯერ დარეგისტრირდი Ambassador პროგრამაში.",
   loginCta: "რეგისტრაცია",
   noReviews: "ჯერ არ არის შეფასებები.",
 };
@@ -66,5 +66,5 @@ export const dnaPortalKa: DnaPortalCopy = {
   ],
   ctaWaitlist: "შემოუერთდი სიას",
   ctaNutrition: "AylopetAI",
-  note: "Early Adopter-ებმა პირველებმა მიიღებენ წვდომას.",
+  note: "Ambassador-ებმა პირველებმა მიიღებენ წვდომას.",
 };

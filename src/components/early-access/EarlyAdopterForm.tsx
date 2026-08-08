@@ -247,7 +247,7 @@ export function EarlyAdopterForm() {
                   შენი მონაცემები
                 </h2>
                 <p className="text-sm text-[var(--text-secondary)]">
-                  Early adopter სიაში რეგისტრაცია
+                  Ambassador სიაში რეგისტრაცია
                 </p>
               </div>
             </motion.div>
@@ -603,7 +603,7 @@ export function EarlyAdopterForm() {
                 required
               />
               <span className="text-sm text-[var(--text-secondary)]">
-                ვეთანხმები, რომ Aylopet დამიკავშირდეს early adopter პროგრამის
+                ვეთანხმები, რომ Aylopet დამიკავშირდეს Ambassador პროგრამის
                 ფარგლებში და შეინახოს ჩემი მონაცემები.
               </span>
             </motion.label>
@@ -612,7 +612,7 @@ export function EarlyAdopterForm() {
               variants={fadeUp}
               className="mt-5 rounded-xl border border-[var(--brand-accent)]/30 bg-[var(--brand-accent-soft)] p-4 text-sm text-[var(--brand-primary)]"
             >
-              🎁 Early adopter სტატუსი: 40% ფასდაკლება პირველ შეკვეთაზე + უფასო
+              🎁 Ambassador სტატუსი: 40% ფასდაკლება პირველ შეკვეთაზე + უფასო
               კონსულტაცია
             </motion.div>
           </motion.div>

@@ -10,7 +10,7 @@ export const onboardingEn: OnboardingCopy = {
 };
 
 export const quizGateEn: QuizGateCopy = {
-  title: "Join the Early Adopter waitlist first",
+  title: "Join the Ambassador waitlist first",
   description:
     "To access AylopetAI, register on the waitlist first. You and your dog get 40% off and a free consultation.",
   ctaRegister: "Join waitlist",
@@ -20,7 +20,7 @@ export const quizGateEn: QuizGateCopy = {
 
 export const reviewsEn: ReviewsCopy = {
   title: "Reviews",
-  description: "Real experiences from Early Adopter families.",
+  description: "Real experiences from Ambassador families.",
   editTitle: "Your review",
   editSubtitle: "You can update your comment anytime.",
   formTitle: "Share your story",
@@ -48,7 +48,7 @@ export const reviewsEn: ReviewsCopy = {
   addPhoto: "Upload",
   removePhoto: "Remove",
   photoTooLarge: "Photo is too large. Try a smaller file.",
-  loginPrompt: "Register as an Early Adopter to write a review.",
+  loginPrompt: "Register as an Ambassador to write a review.",
   loginCta: "Register",
   noReviews: "No reviews yet.",
 };
@@ -65,5 +65,5 @@ export const dnaPortalEn: DnaPortalCopy = {
   ],
   ctaWaitlist: "Join waitlist",
   ctaNutrition: "AylopetAI",
-  note: "Early Adopters will get access first.",
+  note: "Ambassadors will get access first.",
 };

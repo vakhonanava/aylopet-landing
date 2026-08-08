@@ -20,8 +20,8 @@ export const ka: Dictionary = {
     menuOpen: "მენიუ",
     menuClose: "დახურვა",
     joinPetParents: "შემოუერთდი {count}+ ძაღლის მფრობელს მოლოდინის სიაში!",
-    verifiedAdopters: "დადასტურებული early adopter",
-    earlyAdopterBadge: "Early Adopter · 40% ფასდაკლება",
+    verifiedAdopters: "დადასტურებული Ambassador",
+    earlyAdopterBadge: "Ambassador · 40% ფასდაკლება",
     tryAiAssistant: "AylopetAI",
     openFullChat: "სრული AylopetAI ჩატის გახსნა",
     backHome: "მთავარი",
@@ -39,7 +39,7 @@ export const ka: Dictionary = {
     statusSoon: "მალე",
     features: [
       {
-        label: "Early Adopter",
+        label: "Ambassador",
         title: "შემოუერთდი სიას",
         description: "დარეგისტრირდი · 40% ფასდაკლება + უფასო კონსულტაცია.",
         open: "გახსნა",
@@ -117,7 +117,7 @@ export const ka: Dictionary = {
     },
     waitlist: {
       badge: "Waitlist · დაჯავშნე ადგილი",
-      title: "შემოუერთდი Early Adopter სიას",
+      title: "შემოუერთდი Ambassador სიას",
       description:
         "დაგვეხმარე პროდუქტის განვითარებაში, მიიღე ექსკლუზიური ფასდაკლება და პირველობით წვდომა ტექ პლატფორმაზე.",
     },
@@ -184,7 +184,7 @@ export const ka: Dictionary = {
         "ბექენდ პროცესი კლინიკური ხარისხის ტრეისებადობითა და გამჭვირვალობით.",
       readyTitle: "მზად ხარ დასაწყებად?",
       readyBody:
-        "შემოუერთდი მოლოდინის სიას, early adopter-ებს 40% ფასდაკლება ეკუთვნით.",
+        "შემოუერთდი მოლოდინის სიას, Ambassador-ებს 40% ფასდაკლება ეკუთვნით.",
       joinWaitlist: "Waitlist-ში ჩაწერა",
       tryAssistant: "სცადე AylopetAI",
       steps: [
@@ -336,7 +336,7 @@ export const ka: Dictionary = {
       "AylopetAI-ის დამსახურებით სახლიდან გაუსვლელად მიიღებთ რჩევას ძაღლის კვებასა და მოვლაზე.",
   },
   scarcity: {
-    filled: "{count}/{cap} Early Adopter ადგილი დაკავებულია",
+    filled: "{count}/{cap} Ambassador ადგილი დაკავებულია",
     priceLocked: "რეგისტრაციისას მიიღეთ ექსკლუზიური შემოთავაზებები",
     urgency: "ადგილები შეზღუდულია",
   },
@@ -365,7 +365,7 @@ export const ka: Dictionary = {
     stats: [
       { value: "230K+", label: "გენეტიკური მარკერი (DNA)" },
       { value: "AI", label: "AylopetAI" },
-      { value: "40%", label: "Early Adopter ფასდაკლება" },
+      { value: "40%", label: "Ambassador ფასდაკლება" },
     ],
     testimonials: [
       {
@@ -386,14 +386,14 @@ export const ka: Dictionary = {
         name: "მარიამ თ.",
         dog: "ჩიპი · Mixed breed",
         quote:
-          "Early Adopter პროგრამამ საშუაღამოს კონსულტაცია მოგვცა. პირველი კვილი უკვე შედეგიანია.",
+          "Ambassador პროგრამამ საშუაღამოს კონსულტაცია მოგვცა. პირველი კვილი უკვე შედეგიანია.",
         imageKey: "healthDog3D",
       },
     ],
   },
   earlyAccessSuccess: {
     title: "მადლობა, {name}!",
-    registered: "{dog} წარმატებით დარეგისტრირდა early adopter პროგრამაში.",
+    registered: "{dog} წარმატებით დარეგისტრირდა Ambassador პროგრამაში.",
     queuePosition:
       "შენ ხარ #{position} მოლოდინის რიგში. მალე დაგიკავშირდებით ელ. ფოსტაზე.",
     nextTitle: "რა მოხდება შემდეგ?",
@@ -418,7 +418,7 @@ export const ka: Dictionary = {
         description: "30 წამიანი რეგისტრაცია, შეზღუდულ ადგილებზე",
       },
       {
-        title: "მიიღე Early Adopter სტატუსი",
+        title: "მიიღე Ambassador სტატუსი",
         description: "ექსკლუზიური საჩუქრებით",
       },
       {
@@ -450,7 +450,7 @@ export const ka: Dictionary = {
         label: "ეტაპი 1",
         title: "Gently Cooked ცოცხალი საკვები",
         description:
-          "Human grade რაციონი · უკვე წარმოებაში და early adopter მიწოდებაში.",
+          "Human grade რაციონი · უკვე წარმოებაში და Ambassador მიწოდებაში.",
         reaction: "სიხარული",
         reactionNote: "„საბოლოდ, ბოლოს ნამდვილი საკვები!“",
         status: "live",
