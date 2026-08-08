@@ -94,6 +94,7 @@ export function AboutUsSection() {
             breed={c.danteBreed}
             image={IMAGES.storyCaneCorso}
             story={c.danteStory}
+            fit="contain"
           />
         </motion.div>
 
@@ -178,11 +179,14 @@ function StoryCard({
   breed,
   image,
   story,
+  fit,
 }: {
   name: string;
   breed: string;
   image: string;
   story: string;
+  /** "contain" for transparent cutouts · keeps the whole dog in frame. */
+  fit?: "cover" | "contain";
 }) {
   return (
     <motion.article
@@ -195,6 +199,7 @@ function StoryCard({
           alt={`${name} · ${breed}`}
           aspect="landscape"
           glow="sage"
+          fit={fit}
           tilt
           overlay={
             <div className="absolute bottom-3 left-3 rounded-xl bg-[var(--forest-deep)]/75 px-3 py-2 backdrop-blur-sm">

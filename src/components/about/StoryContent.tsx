@@ -38,13 +38,15 @@ export function StoryContent() {
             <RevealOnScroll className="lg:col-span-5">
               <div className="lg:sticky lg:top-28">
                 {/* Dante leads · his diagnosis is why the ecosystem exists. */}
-                <figure className="relative aspect-[4/5] overflow-hidden rounded-[var(--radius-organic-xl)] shadow-organic">
+                {/* Dante is a transparent cutout · contain + a soft backdrop,
+                    so he is not cropped the way a photo would be. */}
+                <figure className="relative aspect-[4/5] overflow-hidden rounded-[var(--radius-organic-xl)] bg-gradient-to-b from-[var(--bone-alabaster)] to-[var(--brand-accent-soft)] shadow-organic">
                   <Image
                     src={IMAGES.storyCaneCorso}
                     alt={DANTE_ALT[locale]}
                     fill
                     sizes="(max-width: 1024px) 100vw, 40vw"
-                    className="object-cover"
+                    className="object-contain p-6"
                     priority
                   />
                   <figcaption className="absolute bottom-4 left-4 rounded-2xl bg-white/90 px-4 py-2 backdrop-blur-sm">

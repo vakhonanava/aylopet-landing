@@ -18,6 +18,8 @@ interface Scene3DProps {
   decorative?: boolean;
   overlay?: React.ReactNode;
   glow?: "sage" | "terracotta" | "forest";
+  /** "contain" for transparent cutouts that must not be cropped. */
+  fit?: "cover" | "contain";
 }
 
 const aspectClasses = {
@@ -46,6 +48,7 @@ export function Scene3D({
   decorative = true,
   overlay,
   glow = "sage",
+  fit = "cover",
 }: Scene3DProps) {
   const imageSrc = resolveImage(src);
   const { ref, style, onMouseMove, onMouseLeave } = useTilt(10);
@@ -94,7 +97,7 @@ export function Scene3D({
             alt={alt}
             fill
             sizes={sizes}
-            className="object-cover"
+            className={fit === "contain" ? "object-contain p-5" : "object-cover"}
             priority={priority}
           />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-[var(--forest-deep)]/25 via-transparent to-white/20" />

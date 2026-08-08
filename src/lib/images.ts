@@ -8,13 +8,10 @@ export const IMAGES = {
     "https://images.unsplash.com/photo-1546527868-ccb7ee7dfa6a?w=900&q=90&auto=format&fit=crop",
   /**
    * Dante · Cane Corso, the founder's dog shown in "Our story".
-   * Set NEXT_PUBLIC_DANTE_PHOTO_URL (a full URL, or "/images/dante.jpg" after
-   * dropping the file in public/images) to use the real photo. The stock
-   * fallback below is a placeholder and does not show a Cane Corso.
+   * Transparent-background cutout · render it with object-contain over a
+   * background, never object-cover, or the crop clips his head and legs.
    */
-  storyCaneCorso:
-    process.env.NEXT_PUBLIC_DANTE_PHOTO_URL ||
-    "https://images.unsplash.com/photo-1558788353-f76d92427f16?w=900&q=90&auto=format&fit=crop",
+  storyCaneCorso: "/images/Dante.png",
   aiDog:
     "https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=1200&q=90&auto=format&fit=crop",
   healthDog3D:
