@@ -21,7 +21,7 @@ export const ka: Dictionary = {
     menuClose: "დახურვა",
     joinPetParents: "შემოუერთდი {count}+ ძაღლის მფრობელს მოლოდინის სიაში!",
     verifiedAdopters: "დადასტურებული Ambassador",
-    earlyAdopterBadge: "Ambassador · ექსკლუზიური წვდომა",
+    earlyAdopterBadge: "Ambassador",
     tryAiAssistant: "AylopetAI",
     openFullChat: "სრული AylopetAI ჩატის გახსნა",
     backHome: "მთავარი",

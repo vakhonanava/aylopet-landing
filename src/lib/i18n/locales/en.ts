@@ -21,7 +21,7 @@ export const en: Dictionary = {
     menuClose: "Close",
     joinPetParents: "Join {count}+ pet parents already on the waitlist!",
     verifiedAdopters: "verified Ambassadors registered",
-    earlyAdopterBadge: "Ambassador · exclusive access",
+    earlyAdopterBadge: "Ambassador",
     tryAiAssistant: "AylopetAI",
     openFullChat: "Open full AylopetAI chat",
     backHome: "Home",
