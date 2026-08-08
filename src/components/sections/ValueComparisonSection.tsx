@@ -4,7 +4,6 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, Equal, Heart, X } from "lucide-react";
 import { useLocale } from "@/components/i18n/LocaleProvider";
-import { PetPricingCard } from "@/components/marketing/PetPricingCard";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { IMAGES } from "@/lib/images";
 import { fadeUp, staggerContainer } from "@/lib/motion";
@@ -161,10 +160,6 @@ export function ValueComparisonSection() {
                 </li>
               ))}
             </ul>
-          </motion.div>
-
-          <motion.div variants={fadeUp} className="mx-auto mt-8 max-w-2xl">
-            <PetPricingCard />
           </motion.div>
 
           <motion.div variants={fadeUp} className="mt-10 text-center">

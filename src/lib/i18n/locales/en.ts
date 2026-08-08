@@ -495,19 +495,6 @@ export const en: Dictionary = {
     progressLabel: "{count} invites to go",
     upgradedLabel: "Status upgraded",
   },
-  petPricing: {
-    eyebrow: "Pricing",
-    title: "Pay for exactly as many dogs as you have",
-    firstPetLabel: "First dog profile",
-    firstPetNote: "Full access to AylopetAI and the digital profile.",
-    secondPetLabel: "Add a second dog",
-    secondPetNote: "An extra profile on the same account.",
-    totalLabel: "Total for two dogs",
-    lockedNote:
-      "Adding a second dog unlocks once the first profile is paid for.",
-    limitNote: "For now an account supports up to two profiles.",
-    familySharingTag: "Family Sharing — Coming Soon",
-  },
   userExpectations: {
     eyebrow: "Your voice",
     question: "What would you like added? What do you expect from Aylopet?",

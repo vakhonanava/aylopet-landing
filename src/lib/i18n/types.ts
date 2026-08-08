@@ -381,19 +381,6 @@ export interface AmbassadorCopy {
   upgradedLabel: string;
 }
 
-export interface PetPricingCopy {
-  eyebrow: string;
-  title: string;
-  firstPetLabel: string;
-  firstPetNote: string;
-  secondPetLabel: string;
-  secondPetNote: string;
-  totalLabel: string;
-  lockedNote: string;
-  limitNote: string;
-  familySharingTag: string;
-}
-
 export interface CommunityCopy {
   waitlistTotal: string;
   /** Shown in place of the number while the waitlist total is still 0. */
@@ -460,7 +447,6 @@ export interface Dictionary {
   projectStatus: ProjectStatusCopy;
   community: CommunityCopy;
   ambassador: AmbassadorCopy;
-  petPricing: PetPricingCopy;
   userExpectations: UserExpectationsCopy;
   onboarding: OnboardingCopy;
   quizGate: QuizGateCopy;

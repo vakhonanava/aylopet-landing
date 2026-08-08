@@ -508,19 +508,6 @@ export const ka: Dictionary = {
     progressLabel: "დარჩა {count} მოწვევა",
     upgradedLabel: "სტატუსი განახლებულია",
   },
-  petPricing: {
-    eyebrow: "ფასი",
-    title: "გადაიხადე მხოლოდ იმდენი, რამდენი ძაღლიც გყავს",
-    firstPetLabel: "პირველი ძაღლის პროფილი",
-    firstPetNote: "სრული წვდომა AylopetAI-ზე და ციფრულ პროფილზე.",
-    secondPetLabel: "მეორე ძაღლის დამატება",
-    secondPetNote: "დამატებითი პროფილი იმავე ანგარიშზე.",
-    totalLabel: "ჯამში ორი ძაღლისთვის",
-    lockedNote:
-      "მეორე ძაღლის დამატება იხსნება პირველი პროფილის გადახდის შემდეგ.",
-    limitNote: "ამჟამად ერთ ანგარიშზე მაქსიმუმ ორი პროფილია ხელმისაწვდომი.",
-    familySharingTag: "Family Sharing — მალე",
-  },
   userExpectations: {
     eyebrow: "შენი აზრი",
     question: "რისი დამატება გსურს? რას ელოდები Aylopet-ისგან?",
