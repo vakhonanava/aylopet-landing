@@ -81,7 +81,7 @@ export function ZonesSection() {
                 გჭირდება პირველ რიგში.
               </p>
               <p className="mt-4 text-xs font-medium text-[var(--text-secondary)]">
-                მალე: {EXPANSION_CITIES.join(" · ")}
+                მალე: {EXPANSION_CITIES.join(", ")}
               </p>
               <button
                 type="button"

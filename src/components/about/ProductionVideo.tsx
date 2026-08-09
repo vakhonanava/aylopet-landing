@@ -16,16 +16,16 @@ const VIDEO_EMBED_URL = process.env.NEXT_PUBLIC_PRODUCTION_VIDEO_URL ?? "";
 
 const COPY = {
   ka: {
-    alt: "Natural Selection · წარმოების პროცესი ისრაელში",
+    alt: "Natural Selection, წარმოების პროცესი ისრაელში",
     play: "წარმოების ვიდეოს ჩართვა",
     soon: "ვიდეო მალე დაემატება",
-    caption: "Natural Selection · ისრაელი",
+    caption: "Natural Selection, ისრაელი",
   },
   en: {
-    alt: "Natural Selection · production process in Israel",
+    alt: "Natural Selection production process in Israel",
     play: "Play the production video",
     soon: "Video coming soon",
-    caption: "Natural Selection · Israel",
+    caption: "Natural Selection, Israel",
   },
 } as const;
 

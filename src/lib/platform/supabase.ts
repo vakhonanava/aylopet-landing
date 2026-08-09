@@ -83,6 +83,15 @@ export async function registerWaitlistUser(
   return { userId, error: null };
 }
 
+/** Everything before the first space is the first name. */
+function splitName(fullName: string): { first: string; last: string } {
+  const trimmed = fullName.trim().replace(/\s+/g, " ");
+  if (!trimmed) return { first: "", last: "" };
+  const index = trimmed.indexOf(" ");
+  if (index === -1) return { first: trimmed, last: "" };
+  return { first: trimmed.slice(0, index), last: trimmed.slice(index + 1) };
+}
+
 export async function upsertOwnerProfile(
   supabase: SupabaseClient,
   userId: string,
@@ -92,6 +101,10 @@ export async function upsertOwnerProfile(
     {
       id: userId,
       full_name: profile.fullName.trim(),
+      // Greetings use the first name only; keep both parts queryable rather
+      // than re-splitting full_name at every read site (migration 009).
+      first_name: splitName(profile.fullName).first,
+      last_name: splitName(profile.fullName).last,
       email: profile.email.trim().toLowerCase(),
       phone: profile.phone.trim() || null,
       updated_at: new Date().toISOString(),

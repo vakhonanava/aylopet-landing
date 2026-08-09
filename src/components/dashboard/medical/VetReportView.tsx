@@ -79,11 +79,11 @@ export function VetReportView({
         <div>
           <h1 className="text-2xl font-bold text-[var(--brand-primary)]">{pet.name}</h1>
           <p className="mt-1 text-sm text-slate-500">
-            {pet.breed} · {computeAge(pet.birthDate)} · {genderLabel(pet.gender)}
-            {pet.isNeutered ? " · კასტრირებული/სტერილიზებული" : ""}
+            {pet.breed}, {computeAge(pet.birthDate)}, {genderLabel(pet.gender)}
+            {pet.isNeutered ? ", კასტრირებული/სტერილიზებული" : ""}
           </p>
           <p className="mt-1 text-sm text-slate-500">
-            წონა: {pet.weightKg} კგ{pet.bcsScore ? ` · BCS: ${pet.bcsScore}/9` : ""}
+            წონა: {pet.weightKg} კგ{pet.bcsScore ? `, BCS: ${pet.bcsScore}/9` : ""}
           </p>
           {pet.microchipId && (
             <p className="mt-1 text-sm text-slate-500">მიკროჩიპი: {pet.microchipId}</p>

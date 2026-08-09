@@ -147,7 +147,7 @@ export function MedicationsPanel({ pet }: { pet: Pet }) {
               <div>
                 <h4 className="font-semibold text-[var(--brand-primary)]">{m.name}</h4>
                 <p className="mt-0.5 text-xs text-slate-400">
-                  {m.dosage} · {m.frequency}
+                  {m.dosage}, {m.frequency}
                 </p>
               </div>
               <button

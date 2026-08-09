@@ -19,7 +19,7 @@ export function SiteFooter() {
         <div className="sm:col-span-2 lg:col-span-1">
           <AylopetLogo href="/" size="sm" />
           <p className="mt-4 text-sm leading-relaxed text-[var(--text-secondary)]">
-            {BRAND.tagline} · {f.taglineSuffix}
+            {BRAND.tagline}, {f.taglineSuffix}
           </p>
         </div>
 

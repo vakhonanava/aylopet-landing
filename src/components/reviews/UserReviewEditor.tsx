@@ -36,7 +36,7 @@ export function UserReviewEditor({ onSaved }: { onSaved?: () => void }) {
           setQuote(existing.quote);
           setRating(existing.rating);
         } else if (session) {
-          setDogInfo(`${session.dogName} · `);
+          setDogInfo(`${session.dogName}, `);
         }
       }
     });

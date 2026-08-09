@@ -7,36 +7,36 @@ export function getMainNav(dict: Dictionary): NavItem[] {
       label: dict.locale === "ka" ? "პროდუქტები" : "Products",
       children: [
         {
-          label: dict.locale === "ka" ? "ძაღლის ცოცხალი საკვები" : "Fresh dog food",
-          href: "/products/fresh-food",
-          description:
-            dict.locale === "ka"
-              ? "Gently Cooked · Human grade რაციონი"
-              : "Gently Cooked · Human grade meals",
-        },
-        {
           label: "AylopetAI",
           href: "/products/aylopet-ai",
           description:
             dict.locale === "ka"
-              ? "პერსონალური ნუტრიციოლოგი · ჩატი და გეგმა"
-              : "Personal nutritionist · chat and plan",
+              ? "პერსონალური ნუტრიციოლოგი, ჩატი და გეგმა"
+              : "Personal nutritionist, chat and plan",
         },
         {
           label: "Aylopet Smart Collar",
           href: "/products/smart-collar",
           description:
             dict.locale === "ka"
-              ? "ჭკვიანი ყელსაბამი · GPS · აქტივობა · AI კალორიები"
-              : "Smart collar · GPS · activity · AI calories",
+              ? "ჭკვიანი ყელსაბამი, GPS, აქტივობა და AI კალორიები"
+              : "Smart collar, GPS, activity and AI calories",
         },
         {
           label: dict.locale === "ka" ? "Aylopet DNA Lab" : "Aylopet DNA Lab",
           href: "/dna-journey",
           description:
             dict.locale === "ka"
-              ? "საბოლოო პროდუქტი · გენომური პაიპლაინი"
-              : "Ultimate end product · genomic pipeline",
+              ? "საბოლოო პროდუქტი, გენომური პაიპლაინი"
+              : "Ultimate end product, genomic pipeline",
+        },
+        {
+          label: dict.locale === "ka" ? "ძაღლის ცოცხალი საკვები" : "Fresh dog food",
+          href: "/products/fresh-food",
+          description:
+            dict.locale === "ka"
+              ? "Gently Cooked, Human grade რაციონი"
+              : "Gently Cooked, Human grade meals",
         },
       ],
     },

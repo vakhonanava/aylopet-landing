@@ -68,7 +68,7 @@ function GentlyCookedBadge() {
   return (
     <div className="glass absolute bottom-3 left-3 right-3 z-30 flex items-center justify-between rounded-xl px-3 py-2 sm:bottom-4 sm:left-4 sm:right-4 sm:px-4 sm:py-2.5">
       <span className="text-[11px] font-semibold text-[var(--text-primary)] sm:text-xs">
-        Gently Cooked · Aylopet
+        Gently Cooked, Aylopet
       </span>
       <span className="rounded-full bg-[var(--brand-primary)] px-2 py-0.5 text-[10px] font-bold text-white">
         GC

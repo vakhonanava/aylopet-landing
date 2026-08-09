@@ -4,6 +4,10 @@ import Link from "next/link";
 import { ArrowRight, LoaderCircle } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
+import {
+  isValidReferralCode,
+  normalizeReferralCode,
+} from "@/lib/referral/codes";
 import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { PasswordField } from "@/components/auth/PasswordField";
 import { useLocale } from "@/components/i18n/LocaleProvider";
@@ -156,7 +160,9 @@ export function RegisterForm({ nextPath = "/dashboard" }: RegisterFormProps) {
   const { locale } = useLocale();
   const a = getAuthCopy(locale);
   const { signUpWithPassword } = useAuth();
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [referralCode, setReferralCode] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -169,7 +175,22 @@ export function RegisterForm({ nextPath = "/dashboard" }: RegisterFormProps) {
     setError(null);
     setInfo(null);
 
-    const result = await signUpWithPassword(name, email, password);
+    // An empty code is simply "no referral"; only a non-empty malformed one
+    // is an error worth blocking the signup for.
+    const trimmedReferral = referralCode.trim();
+    if (trimmedReferral && !isValidReferralCode(trimmedReferral)) {
+      setError(a.referralCodeInvalid);
+      setLoading(false);
+      return;
+    }
+
+    const result = await signUpWithPassword(
+      firstName,
+      lastName,
+      email,
+      password,
+      trimmedReferral ? normalizeReferralCode(trimmedReferral) : undefined,
+    );
     if (result.error) {
       setError(result.error);
       setLoading(false);
@@ -198,21 +219,39 @@ export function RegisterForm({ nextPath = "/dashboard" }: RegisterFormProps) {
       </div>
 
       <form onSubmit={onSubmit} className="flex flex-col gap-5">
-        <div className="flex flex-col gap-1.5">
-          <label className={label} htmlFor="name">
-            {a.nameLabel}
-          </label>
-          <input
-            id="name"
-            type="text"
-            className={input}
-            placeholder={a.namePlaceholder}
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            autoComplete="name"
-            minLength={2}
-            required
-          />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-1.5">
+            <label className={label} htmlFor="firstName">
+              {a.firstNameLabel}
+            </label>
+            <input
+              id="firstName"
+              type="text"
+              className={input}
+              placeholder={a.firstNamePlaceholder}
+              value={firstName}
+              onChange={(event) => setFirstName(event.target.value)}
+              autoComplete="given-name"
+              minLength={2}
+              required
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label className={label} htmlFor="lastName">
+              {a.lastNameLabel}
+            </label>
+            <input
+              id="lastName"
+              type="text"
+              className={input}
+              placeholder={a.lastNamePlaceholder}
+              value={lastName}
+              onChange={(event) => setLastName(event.target.value)}
+              autoComplete="family-name"
+              minLength={2}
+              required
+            />
+          </div>
         </div>
         <div className="flex flex-col gap-1.5">
           <label className={label} htmlFor="email">
@@ -239,6 +278,26 @@ export function RegisterForm({ nextPath = "/dashboard" }: RegisterFormProps) {
           minLength={6}
           required
         />
+
+        <div className="flex flex-col gap-1.5">
+          <label className={label} htmlFor="referralCode">
+            {a.referralCodeLabel}
+          </label>
+          <input
+            id="referralCode"
+            type="text"
+            className={`${input} uppercase`}
+            placeholder={a.referralCodePlaceholder}
+            value={referralCode}
+            onChange={(event) => setReferralCode(event.target.value)}
+            autoCapitalize="characters"
+            autoComplete="off"
+            spellCheck={false}
+          />
+          <p className="text-xs text-[var(--text-tertiary)]">
+            {a.referralCodeHint}
+          </p>
+        </div>
 
         {error && (
           <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">

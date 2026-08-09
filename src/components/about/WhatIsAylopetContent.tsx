@@ -7,8 +7,8 @@ import { getAbout } from "@/lib/content/about";
 import { IMAGES } from "@/lib/images";
 
 const HERO_ALT: Record<"ka" | "en", string> = {
-  ka: "ბედნიერი ძაღლი Japandi ინტერიერში · Aylopet",
-  en: "Happy dog in a Japandi interior · Aylopet",
+  ka: "ბედნიერი ძაღლი Japandi ინტერიერში, Aylopet",
+  en: "Happy dog in a Japandi interior, Aylopet",
 };
 
 export function WhatIsAylopetContent() {

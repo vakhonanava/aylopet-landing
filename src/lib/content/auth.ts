@@ -59,6 +59,14 @@ export interface AuthCopy {
   signIn: string;
   nameLabel: string;
   namePlaceholder: string;
+  firstNameLabel: string;
+  firstNamePlaceholder: string;
+  lastNameLabel: string;
+  lastNamePlaceholder: string;
+  referralCodeLabel: string;
+  referralCodePlaceholder: string;
+  referralCodeHint: string;
+  referralCodeInvalid: string;
   minSixChars: string;
   createAccount: string;
 
@@ -135,6 +143,14 @@ export const AUTH_KA: AuthCopy = {
   signIn: "შესვლა",
   nameLabel: "სახელი",
   namePlaceholder: "შენი სახელი",
+  firstNameLabel: "სახელი",
+  firstNamePlaceholder: "მაგ. ნინო",
+  lastNameLabel: "გვარი",
+  lastNamePlaceholder: "მაგ. ბერიძე",
+  referralCodeLabel: "რეფერალ კოდი",
+  referralCodePlaceholder: "AYLO-XXXXXX",
+  referralCodeHint: "არასავალდებულო, თუ მეგობარმა მოგიწვია",
+  referralCodeInvalid: "კოდის ფორმატი არასწორია (მაგ. AYLO-9K2M4P)",
   minSixChars: "მინიმუმ 6 სიმბოლო",
   createAccount: "ანგარიშის შექმნა",
 
@@ -233,6 +249,14 @@ export const AUTH_EN: AuthCopy = {
   signIn: "Sign in",
   nameLabel: "Name",
   namePlaceholder: "Your name",
+  firstNameLabel: "First name",
+  firstNamePlaceholder: "e.g. Nino",
+  lastNameLabel: "Last name",
+  lastNamePlaceholder: "e.g. Beridze",
+  referralCodeLabel: "Referral code",
+  referralCodePlaceholder: "AYLO-XXXXXX",
+  referralCodeHint: "Optional, if a friend invited you",
+  referralCodeInvalid: "Invalid code format (e.g. AYLO-9K2M4P)",
   minSixChars: "At least 6 characters",
   createAccount: "Create account",
 

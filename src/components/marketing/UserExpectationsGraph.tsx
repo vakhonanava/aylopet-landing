@@ -294,7 +294,7 @@ export function UserExpectationsGraph({
                         )}
                       </span>
                       <span className="text-xs font-semibold tabular-nums text-[var(--text-secondary)]">
-                        {pct}% · {t.voteCount.replace("{count}", String(count))}
+                        {pct}%, {t.voteCount.replace("{count}", String(count))}
                       </span>
                     </div>
                     <div className="h-3 overflow-hidden rounded-full bg-[var(--brand-accent-soft)]/60">

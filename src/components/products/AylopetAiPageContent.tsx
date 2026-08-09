@@ -18,7 +18,7 @@ import { IMAGES } from "@/lib/images";
 
 const COPY = {
   ka: {
-    badge: "პერსონალური ასისტენტი · 24/7",
+    badge: "პერსონალური ასისტენტი 24/7",
     startChat: "დაიწყე საუბარი AylopetAI-თან",
     joinWaitlist: "შემოუერთდი waitlist-ს",
     chatEyebrow: "ინტერაქტიული ასისტენტი",
@@ -44,18 +44,18 @@ const COPY = {
     ],
   },
   en: {
-    badge: "Personal nutritionist · 24/7",
+    badge: "Personal nutritionist 24/7",
     startChat: "Start chatting with AylopetAI",
     joinWaitlist: "Join the waitlist",
     chatEyebrow: "Live chat",
-    chatTitle: "One question at a time · a personalized plan",
+    chatTitle: "One question at a time, a personalized plan",
     chatBody:
       "Answer short questions about your dog's age, weight, activity, and health. AylopetAI builds an individualized nutrition recommendation in real time.",
     benefits: [
       {
         icon: MessageCircle,
         title: "Conversational guidance",
-        body: "Not a rigid form · a living dialogue that uses your dog's real data.",
+        body: "Not a rigid form, but a living dialogue that uses your dog's real data.",
       },
       {
         icon: Clock3,
@@ -88,7 +88,7 @@ export function AylopetAiPageContent() {
             <RevealOnScroll y={20}>
               <span className="inline-flex items-center gap-2 rounded-full border border-[var(--brand-primary)]/15 bg-white/80 px-4 py-1.5 text-sm font-medium text-[var(--brand-primary)] shadow-soft backdrop-blur-md">
                 <Sparkles className="h-4 w-4" />
-                AylopetAI · {c.badge}
+                AylopetAI {c.badge}
               </span>
               <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.05] tracking-tight text-[var(--forest-deep)] sm:text-5xl">
                 {ai.title}

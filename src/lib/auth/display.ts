@@ -22,6 +22,22 @@ export function getAuthDisplayName(user: User | null | undefined): string {
   return email.split("@")[0] ?? "";
 }
 
+/**
+ * Greetings address the user by first name only. Prefers the dedicated
+ * `first_name` metadata written at signup, and falls back to the leading word
+ * of `full_name` for accounts created before the name split.
+ */
+export function getAuthFirstName(user: User | null | undefined): string {
+  if (!user) return "";
+
+  const metadata = user.user_metadata as Record<string, unknown> | undefined;
+  const firstName =
+    typeof metadata?.first_name === "string" ? metadata.first_name.trim() : "";
+  if (firstName) return firstName;
+
+  return getAuthDisplayName(user).split(" ")[0] ?? "";
+}
+
 export function getAuthEmail(user: User | null | undefined): string {
   return user?.email ?? "";
 }

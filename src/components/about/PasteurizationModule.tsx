@@ -48,12 +48,12 @@ const METHOD_DESCRIPTIONS: Record<Locale, Record<ProcessingMethod, string>> = {
   ka: {
     raw: "მაქსიმალური ნუტრიენტები, თუმცა პათოგენების მაღალი რისკი გულდასმითი დამუშავების გარეშე.",
     kibble: "მაღალტემპერატურული ექსტრუზია ანადგურებს კოლაგენს და სითბოსადმი მგრძნობიარე ვიტამინებს.",
-    aylopet: "75-80°C, 1-6 საათი · პათოგენების განადგურება სტრუქტურის შენარჩუნებით.",
+    aylopet: "75-80°C, 1-6 საათი, პათოგენების განადგურება სტრუქტურის შენარჩუნებით.",
   },
   en: {
     raw: "Maximum nutrients, significant pathogen risk without careful handling.",
     kibble: "High-heat extrusion destroys collagen and heat-sensitive vitamins.",
-    aylopet: "75 to 80°C for 1 to 6 hours · eliminates pathogens while preserving structure.",
+    aylopet: "75 to 80°C for 1 to 6 hours, eliminating pathogens while preserving structure.",
   },
 };
 
@@ -69,7 +69,7 @@ const COPY = {
       "სალმონელას, ლისტერიისა და ე. კოლის სრული განადგურება დადასტურებული დაბალტემპერატურული თერმული მრუდებით.",
     highlight2Title: "სტრუქტურული ნუტრიენტების შენარჩუნება",
     highlight2Body:
-      "სასიცოცხლო ამინომჟავების, კოლაგენის, მინერალებისა და ბიოაქტიური ვიტამინების სრული შენარჩუნება · არ ინადგურება ექსტრუზიით.",
+      "სასიცოცხლო ამინომჟავების, კოლაგენის, მინერალებისა და ბიოაქტიური ვიტამინების სრული შენარჩუნება, არ ინადგურება ექსტრუზიით.",
   },
   en: {
     heading: "Pasteurization transparency",
@@ -82,7 +82,7 @@ const COPY = {
       "Complete elimination of Salmonella, Listeria, and E. coli through validated low-temperature thermal curves.",
     highlight2Title: "Structural nutrient retention",
     highlight2Body:
-      "Complete preservation of vital amino acids, collagen, minerals, and bioactive vitamins · not denatured by extrusion.",
+      "Complete preservation of vital amino acids, collagen, minerals, and bioactive vitamins, not denatured by extrusion.",
   },
 } as const satisfies Record<Locale, Record<string, string>>;
 

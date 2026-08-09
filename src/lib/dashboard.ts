@@ -1,4 +1,5 @@
 import type { MedicalRecord, Medication, SymptomLog } from "@/lib/medical";
+import type { AppetiteLevel, PetHistory } from "@/lib/pet-history/types";
 
 export type ActivityLevel = "low" | "moderate" | "high";
 
@@ -25,19 +26,6 @@ export const ACTIVITY_OPTIONS: ActivityOption[] = [
     description: "ინტენსიური ყოველდღიური ვარჯიში",
   },
 ];
-
-export const TEMPERAMENT_OPTIONS = [
-  "ენერგიული",
-  "მორცხვი",
-  "აგრესიული კვებისას",
-  "მშვიდი",
-  "სოციალური",
-  "ჯიუტი",
-  "მგრძნობიარე",
-  "მოთამაშე",
-] as const;
-
-export type Temperament = (typeof TEMPERAMENT_OPTIONS)[number];
 
 export {
   BREED_LABELS as BREEDS,
@@ -92,6 +80,8 @@ export interface FoodEntry {
   isAylopet: boolean;
   portionGrams: number;
   digestiveResponse?: string;
+  /** Optional — entries logged before appetite tracking existed omit it. */
+  appetite?: AppetiteLevel;
 }
 
 export interface MoodEntry {
@@ -123,7 +113,6 @@ export interface PetProfileSnapshot {
   breed: string;
   weightKg: number;
   activity: ActivityLevel;
-  temperament: Temperament[];
   avatarUrl?: string;
 }
 
@@ -133,7 +122,6 @@ export interface Pet {
   breed: string;
   weightKg: number;
   activity: ActivityLevel;
-  temperament: Temperament[];
   avatarUrl?: string;
   birthDate?: string;
   bcsScore?: number;
@@ -147,6 +135,12 @@ export interface Pet {
   medicalRecord: MedicalRecord | null;
   medications: Medication[];
   symptomLogs: SymptomLog[];
+  /**
+   * Owner-authored health history (identification, weight log, diet, vet,
+   * caretaker notes). Persisted as the `pets.history` JSONB column —
+   * see `supabase/migrations/008_pet_history_module.sql`.
+   */
+  history?: PetHistory;
 }
 
 export interface Account {
@@ -181,7 +175,6 @@ export function createSeedPet(): Pet {
     breed: "ვაიმარანერი",
     weightKg: 28,
     activity: "high",
-    temperament: ["ენერგიული", "სოციალური", "მოთამაშე"],
     vaccines: [
       {
         id: "v1",

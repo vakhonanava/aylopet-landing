@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Dog,
+  HeartPulse,
   LayoutDashboard,
   LogOut,
   PawPrint,
@@ -17,13 +18,19 @@ import { useDashboard } from "@/components/dashboard/DashboardStore";
 const navItems = [
   { label: "მთავარი", href: "/dashboard", icon: LayoutDashboard, exact: true },
   { label: "შინაური ცხოველები", href: "/dashboard", icon: PawPrint },
+  {
+    label: "ჯანმრთელობის ისტორია",
+    href: "/dashboard/pet-profile",
+    icon: HeartPulse,
+    exact: true,
+  },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { pets, account, ready } = useDashboard();
-  const { signOut, displayName, email } = useAuth();
+  const { signOut, firstName, displayName, email } = useAuth();
 
   return (
     <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-[var(--border-light)] bg-white px-4 py-6 lg:flex print:hidden">
@@ -100,11 +107,11 @@ export function Sidebar() {
       <div className="mt-auto border-t border-[var(--border-light)] pt-4">
         <div className="flex items-center gap-3 px-3 py-2">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--brand-primary)]/[0.08] text-sm font-semibold text-[var(--brand-primary)]">
-            {(account?.name ?? displayName).charAt(0).toUpperCase()}
+            {(firstName || account?.name || displayName).charAt(0).toUpperCase()}
           </span>
           <div className="min-w-0">
             <p className="truncate text-sm font-medium text-[var(--brand-primary)]">
-              {account?.name ?? displayName}
+              {firstName || account?.name || displayName}
             </p>
             <p className="truncate text-xs text-slate-400">
               {account?.email ?? email}

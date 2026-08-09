@@ -7,7 +7,7 @@ import { ChangePasswordForm } from "@/components/auth/AuthForm";
 import { useAuth } from "@/components/auth/AuthProvider";
 
 function SettingsContent() {
-  const { displayName, email } = useAuth();
+  const { firstName, displayName, email } = useAuth();
   const params = useSearchParams();
   const passwordUpdated = params.get("password") === "updated";
 
@@ -34,7 +34,7 @@ function SettingsContent() {
             ანგარიში
           </p>
           <p className="mt-2 text-lg font-semibold text-[var(--brand-primary)]">
-            {displayName}
+            {firstName || displayName}
           </p>
           <p className="text-sm text-slate-500">{email}</p>
         </div>

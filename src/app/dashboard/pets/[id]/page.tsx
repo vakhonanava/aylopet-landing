@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { PawPrint } from "lucide-react";
+import { HeartPulse, PawPrint } from "lucide-react";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
 import { LabResultsUpload } from "@/components/dashboard/LabResultsUpload";
 import { PetProfileCard } from "@/components/dashboard/PetProfileCard";
@@ -39,12 +39,18 @@ export default function PetProfilePage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <Link
           href="/dashboard"
           className="text-sm font-medium text-slate-400 transition-colors hover:text-[var(--brand-primary)]"
         >
           ← პანელი
+        </Link>
+        <Link
+          href={`/dashboard/pet-profile?pet=${pet.id}`}
+          className="inline-flex items-center gap-2 rounded-full border border-[#e5e7eb] bg-white px-4 py-2 text-sm font-medium text-[var(--brand-primary)] transition-colors hover:border-[var(--brand-primary)]/30"
+        >
+          <HeartPulse className="h-4 w-4" /> სრული ჯანმრთელობის ისტორია
         </Link>
       </div>
       <PetProfileCard pet={pet} />

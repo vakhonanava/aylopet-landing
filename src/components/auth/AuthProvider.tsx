@@ -15,11 +15,13 @@ import {
   formatAuthError,
   getAuthDisplayName,
   getAuthEmail,
+  getAuthFirstName,
 } from "@/lib/auth/display";
 import {
   establishSessionAfterSignUp,
   isEmailVerified,
 } from "@/lib/auth/session";
+import { generateReferralCode } from "@/lib/referral/codes";
 import { createClient } from "@/utils/supabase/client";
 
 export interface AuthResult {
@@ -32,13 +34,17 @@ interface AuthContextValue {
   user: User | null;
   ready: boolean;
   displayName: string;
+  /** First name only, for greetings. */
+  firstName: string;
   email: string;
   emailVerified: boolean;
   signInWithPassword: (email: string, password: string) => Promise<AuthResult>;
   signUpWithPassword: (
-    name: string,
+    firstName: string,
+    lastName: string,
     email: string,
     password: string,
+    referralCode?: string,
   ) => Promise<AuthResult>;
   signInWithGoogle: (nextPath?: string) => Promise<AuthResult>;
   sendVerificationEmail: () => Promise<AuthResult>;
@@ -121,9 +127,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signUpWithPassword = useCallback(
     async (
-      name: string,
+      firstName: string,
+      lastName: string,
       email: string,
       password: string,
+      referralCode?: string,
     ): Promise<AuthResult> => {
       const supabase = getBrowserClient();
       if (!supabase) {
@@ -134,7 +142,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email: email.trim().toLowerCase(),
         password,
         options: {
-          data: { full_name: name.trim() },
+          data: {
+            first_name: firstName.trim(),
+            last_name: lastName.trim(),
+            // full_name is kept in sync so anything still reading it (older
+            // rows, Supabase dashboards, email templates) keeps working.
+            full_name: `${firstName.trim()} ${lastName.trim()}`.trim(),
+            referral_code: generateReferralCode(),
+            ...(referralCode ? { referred_by_code: referralCode } : {}),
+          },
           emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
         },
       });
@@ -304,6 +320,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user,
       ready,
       displayName: getAuthDisplayName(user),
+      firstName: getAuthFirstName(user),
       email: getAuthEmail(user),
       emailVerified: isEmailVerified(user),
       hasPasswordLogin: userHasPasswordLogin(user),

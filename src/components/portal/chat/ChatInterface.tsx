@@ -134,8 +134,8 @@ export function ChatInterface() {
           <p className="text-sm font-semibold">AylopetAI</p>
           <p className="text-xs text-white/60">
             {chatLocale === "ka"
-              ? "პირადი ნუტრიციოლოგი · ერთი კითხვა ერთდროულად"
-              : "Personal nutritionist · one question at a time"}
+              ? "პირადი ნუტრიციოლოგი, ერთი კითხვა ერთდროულად"
+              : "Personal nutritionist, one question at a time"}
           </p>
         </div>
         {isTyping ? (

@@ -319,7 +319,7 @@ export function AyliopetOnboarding() {
             შექმენი პერსონალური პლატფორმა
           </h1>
           <p className="mt-3 text-sm text-white/55">
-            ნაბიჯი {step} / 3 · მონაცემები privateა და დაცულია RLS-ით
+            ნაბიჯი {step} / 3, მონაცემები privateა და დაცულია RLS-ით
           </p>
         </div>
 
@@ -469,7 +469,7 @@ export function AyliopetOnboarding() {
                 <div>
                   <h2 className="text-xl font-semibold">პირადი & ძაღლის პროფილი</h2>
                   <p className="mt-1 text-sm text-white/50">
-                    მფლობელი: {owner.fullName || displayName} · {owner.email}
+                    მფლობელი: {owner.fullName || displayName}, {owner.email}
                   </p>
                 </div>
 
@@ -649,7 +649,7 @@ export function AyliopetOnboarding() {
                   />
                   <UploadCloud className="h-8 w-8 text-cyan-200" />
                   <p className="mt-3 text-sm font-medium">ჩააგდე ფაილები ან დააჭირე</p>
-                  <p className="mt-1 text-xs text-white/40">PDF/JPEG/PNG · 10MB</p>
+                  <p className="mt-1 text-xs text-white/40">PDF/JPEG/PNG, 10MB</p>
                 </label>
 
                 {pendingUpload && (
@@ -703,8 +703,8 @@ export function AyliopetOnboarding() {
                   className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-cyan-300 px-6 py-3.5 text-sm font-semibold text-[#0B0F17]"
                 >
                   {petId
-                    ? "დასრულება · პროფილის რედაქტირება"
-                    : "დასრულება · პანელში გადასვლა"}
+                    ? "დასრულება, პროფილის რედაქტირება"
+                    : "დასრულება, პანელში გადასვლა"}
                 </button>
               </div>
             )}

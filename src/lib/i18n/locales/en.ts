@@ -41,21 +41,21 @@ export const en: Dictionary = {
       {
         label: "Ambassador",
         title: "Join the waitlist",
-        description: "Register · free consultation.",
+        description: "Register and get a free consultation.",
         open: "Open",
         status: "waitlist",
       },
       {
         label: "AylopetAI",
         title: "Interactive consultation",
-        description: "Dynamic Q&A · personalized nutrition advice.",
+        description: "Dynamic Q&A with personalized nutrition advice.",
         open: "Open",
         status: "waitlist",
       },
       {
         label: "DNA Platform",
         title: "Ultimate end product",
-        description: "Genomic pipeline · health records, labs, and AI.",
+        description: "Genomic pipeline for health records, labs, and AI.",
         open: "Open",
         status: "soon",
       },
@@ -74,7 +74,7 @@ export const en: Dictionary = {
     portalCta: "DNA Platform",
     phases: [
       {
-        eyebrow: "Phase 3 · Coming soon",
+        eyebrow: "Phase 3, coming soon",
         title: "Your dog's genetics",
         body: "One simple cheek swab, Aylopet AI reads 230,000+ genetic markers for your companion.",
         stat: "230,000+",
@@ -103,11 +103,11 @@ export const en: Dictionary = {
       titleLine2: "",
       emotionalLine:
         "Help your dog live a longer, healthier life with AylopetAI's personal assistant.",
-      identityTag: "For pet parents who expect more",
+      identityTag: "Pet Health Tech for pet parents who expect more",
       subtitle:
-        "Aylopet unites AI nutrition, genomic insights, and fresh food — data-driven care, not just a ration.",
+        "AylopetAI and DNA analysis build the full picture of your dog's health. Fresh food is one part of that plan, not the headline product.",
       techPlatform: "Tech platform",
-      ctaNote: "Reserve your spot · no payment required now",
+      ctaNote: "Reserve your spot, no payment required now",
       metrics: [
         { value: "230K+", label: "genetic markers" },
         { value: "AI", label: "personal insights" },
@@ -116,7 +116,7 @@ export const en: Dictionary = {
       ],
     },
     waitlist: {
-      badge: "Waitlist · Reserve your spot",
+      badge: "Waitlist, reserve your spot",
       title: "Join the Ambassador waitlist",
       description:
         "Help shape the product, get an exclusive offer and first access to the tech platform.",
@@ -172,20 +172,20 @@ export const en: Dictionary = {
     },
     dnaUnified: {
       badge: "Ultimate End Product",
-      title: "DNA Platform · Journey & Portal, Unified",
+      title: "DNA Platform, Journey and Portal unified",
       intro:
         "This is the ultimate end product we are building toward.\n\nIt will help prevent health problems by catching them early, through daily behaviour, nutrition, and the right veterinary guidance.\n\nWe are gathering the information to launch it step by step. You can join us in this and share your dog's health history: vet records, lab results, X-rays, MRI scans, and prescriptions.",
       details: [
         "Aylopet DNA Lab is our most ambitious project. Its purpose is to prevent disease and to help treat problems that already exist.",
         "A DNA test alone is not enough for prevention. That is why we are building a system that analyses your dog's genetics, veterinary records, lab results, X-rays and MRI scans together. By combining that data with everyday behaviour, we aim to surface hidden risks early and help you avoid them.",
-        "Become part of this work · share your companion's medical history and help us set a new standard for canine health and longevity.",
+        "Become part of this work. Share your companion's medical history and help us set a new standard for canine health and longevity.",
       ],
       stepLabel: "Step",
       backendNote:
         "Backend process validated for clinical grade traceability and transparency.",
       readyTitle: "Ready to start?",
       readyBody:
-        "Join the waitlist to be first in line · Ambassadors get access first.",
+        "Join the waitlist to be first in line. Ambassadors get access first.",
       joinWaitlist: "Join Waitlist",
       tryAssistant: "Try AylopetAI",
       steps: [
@@ -216,7 +216,7 @@ export const en: Dictionary = {
     eyebrow: "For Business",
     title: "B2B Partnerships",
     subtitle:
-      "Let's join forces for a better future for our four-legged friends. Become part of the Aylopet ecosystem · join us, share your idea, and let's create value together.",
+      "Let's join forces for a better future for our four-legged friends. Become part of the Aylopet ecosystem, share your idea, and let's create value together.",
     backLabel: "Home",
   },
   b2bForm: {
@@ -299,9 +299,9 @@ export const en: Dictionary = {
   },
   valueComparison: {
     eyebrow: "Monthly value",
-    title: "₾10 a month · same price, completely different impact",
+    title: "₾15 a month, a completely different impact",
     description:
-      "One cup of coffee is ₾10 a day, one month of AylopetAI costs the same. The difference is what it gives your dog.",
+      "Two cups of coffee cost more than a full month of AylopetAI. The difference is what it gives your dog.",
     perDay: "per day",
     perMonth: "per month",
     coffee: {
@@ -312,7 +312,7 @@ export const en: Dictionary = {
     },
     product: {
       label: "AylopetAI",
-      detail: "Personal nutritionist · personalized plan 24/7",
+      detail: "Personal nutritionist with a personalized plan 24/7",
       badge: "Health",
       bullets: [
         "Personal MER/RER and portions",
@@ -323,7 +323,7 @@ export const en: Dictionary = {
     punchline: "Your dog's health matters more than a cup of coffee.",
     cta: "Register and get an exclusive offer",
     priceNote:
-      "Coffee ₾10/day · AylopetAI ₾10/month, full access for your dog.",
+      "Coffee ₾10 a day, AylopetAI ₾15 a month with full access for your dog.",
     lossTitle: "What you lose by waiting",
     lossItems: [
       "An exclusive offer on food",
@@ -360,7 +360,7 @@ export const en: Dictionary = {
     eyebrow: "Reviews",
     title: "Pet parents who trust Aylopet",
     description:
-      "Share your experience · every story helps us build better care.",
+      "Share your experience. Every story helps us build better care.",
     stats: [
       { value: "230K+", label: "genetic markers (DNA)" },
       { value: "AI", label: "AylopetAI" },
@@ -369,21 +369,21 @@ export const en: Dictionary = {
     testimonials: [
       {
         name: "Nino K.",
-        dog: "Bella · Golden Retriever",
+        dog: "Bella, Golden Retriever",
         quote:
           "Rex's energy and coat quality really changed. Portions are exactly matched to his weight.",
         imageKey: "storyPekingese",
       },
       {
         name: "Giorgi M.",
-        dog: "Luka · French Bulldog",
+        dog: "Luka, French Bulldog",
         quote:
           "I love that everything is in one app, food, vaccines, and AI advice.",
         imageKey: "storyCaneCorso",
       },
       {
         name: "Mariam T.",
-        dog: "Chipi · Mixed breed",
+        dog: "Chipi, Mixed breed",
         quote:
           "Ambassador gave us a midday consultation. The first week already shows results.",
         imageKey: "healthDog3D",
@@ -437,8 +437,8 @@ export const en: Dictionary = {
   },
   projectStatus: {
     title: "Project status",
-    subtitle: "Platform development stages · an emotional snapshot",
-    phaseSoon: " · Soon",
+    subtitle: "Platform development stages and an emotional snapshot",
+    phaseSoon: ", soon",
     statusLive: "Live",
     statusActive: "Waitlist",
     statusSoon: "Soon",
@@ -447,7 +447,7 @@ export const en: Dictionary = {
       {
         label: "Phase 1",
         title: "Gently Cooked fresh food",
-        description: "Human grade meals · in production and Ambassador delivery.",
+        description: "Human grade meals in production and Ambassador delivery.",
         reaction: "Joy",
         reactionNote: "\"Finally, real food!\"",
         status: "live",
@@ -455,7 +455,7 @@ export const en: Dictionary = {
       {
         label: "Phase 2",
         title: "AylopetAI & digital profile",
-        description: "AI nutrition assistant and personal profile · on the waitlist.",
+        description: "AI nutrition assistant and personal profile on the waitlist.",
         reaction: "Excitement",
         reactionNote: "\"Can't wait for the first consultation!\"",
         status: "active",
@@ -463,15 +463,15 @@ export const en: Dictionary = {
       {
         label: "Phase 3",
         title: "Aylopet Smart Collar",
-        description: "GPS and health signals · integrated with Aylopet.",
+        description: "GPS and health signals integrated with Aylopet.",
         reaction: "Heartwarming delight",
         reactionNote: "\"I'd know where and how my dog is, every day.\"",
         status: "soon",
       },
       {
-        label: "Phase 4 · Long term goal",
+        label: "Phase 4, long term goal",
         title: "DNA Platform",
-        description: "Genomic insights and health profile · the ultimate end product.",
+        description: "Genomic insights and health profile, the ultimate end product.",
         reaction: "Deep anticipation",
         reactionNote: "\"This will truly change everything.\"",
         status: "soon",
@@ -484,7 +484,7 @@ export const en: Dictionary = {
     waitlistTotal: "people on the waitlist",
     waitlistEmpty: "Be the first on the waitlist",
     waitlistNote:
-      "Updates in real time · every signup helps us move the roadmap faster.",
+      "Updates in real time. Every signup helps us move the roadmap faster.",
     whatsappTitle: "Join the WhatsApp community",
     whatsappBody:
       "Talk to the team directly, get updates first, and swap notes with other dog parents.",
