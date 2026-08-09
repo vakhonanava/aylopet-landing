@@ -15,12 +15,20 @@ alter table public.profiles
   add column if not exists referred_by_code text;
 
 -- Backfill: everything before the first space is the first name.
+--
+-- The `position(...) > 0` guard matters: position() returns 0 for a name with
+-- no space, and substring(name from 1) would then copy the whole single-word
+-- name into last_name as well.
 update public.profiles
 set
   first_name = coalesce(first_name, nullif(split_part(coalesce(full_name, ''), ' ', 1), '')),
   last_name  = coalesce(
     last_name,
-    nullif(trim(substring(coalesce(full_name, '') from position(' ' in coalesce(full_name, '')) + 1)), '')
+    case
+      when position(' ' in coalesce(full_name, '')) > 0
+        then nullif(trim(substring(full_name from position(' ' in full_name) + 1)), '')
+      else null
+    end
   )
 where first_name is null or last_name is null;
 
