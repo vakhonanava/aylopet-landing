@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#3a5a40"/>
+  <circle cx="1090" cy="96" r="300" fill="#6b8f71" opacity="0.18"/>
+  <circle cx="120" cy="600" r="220" fill="#6b8f71" opacity="0.14"/>
+
+  <g transform="translate(88 72)">
+    <rect width="88" height="88" rx="24" fill="#FBF9F6"/>
+    <g transform="translate(44 44) scale(2.444) translate(-18 -18)">
+      <path d="M18 9.5c-5.2 6.8-5.2 12.2 0 17.5M18 9.5c5.2 6.8 5.2 12.2 0 17.5"
+        stroke="#3a5a40" stroke-width="1.75" stroke-linecap="round" fill="none"/>
+      <path d="M18 11v14.5" stroke="#3a5a40" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="18" cy="9" r="1.25" fill="#3a5a40"/>
+    </g>
+    <text x="118" y="60" font-family="Helvetica Neue, Helvetica, Arial" font-size="46"
+      font-weight="600" letter-spacing="1" fill="#FBF9F6">Aylopet</text>
+  </g>
+
+  <text x="88" y="300" font-family="Helvetica Neue, Helvetica, Arial" font-size="76"
+    font-weight="700" fill="#FBF9F6">AI &amp; DNA</text>
+  <text x="88" y="388" font-family="Helvetica Neue, Helvetica, Arial" font-size="76"
+    font-weight="700" fill="#FBF9F6">Pet Health Tech</text>
+
+  <text x="88" y="466" font-family="Helvetica Neue, Helvetica, Arial" font-size="38"
+    fill="#cdd9cf">ეილოფეთი · ჯანმრთელობა და ხანგრძლივი სიცოცხლე</text>
+
+  <rect x="88" y="524" width="64" height="4" rx="2" fill="#6b8f71"/>
+  <text x="88" y="580" font-family="Helvetica Neue, Helvetica, Arial" font-size="30"
+    letter-spacing="2" fill="#a8c0ad">AYLOPET.COM</text>
+</svg>

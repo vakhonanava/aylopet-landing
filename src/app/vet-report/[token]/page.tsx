@@ -7,6 +7,10 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+// Share-link expiry and revocation have to be evaluated on every request, so
+// this route can never be served from the full route cache.
+export const dynamic = "force-dynamic";
+
 const REASON_MESSAGES: Record<VetReportShareFailureReason, string> = {
   not_found: "ეს ბმული არასწორია ან აღარ არსებობს.",
   expired: "ბმულს ვადა გაუვიდა.",
