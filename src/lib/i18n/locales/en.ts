@@ -216,7 +216,7 @@ export const en: Dictionary = {
     eyebrow: "For Business",
     title: "B2B Partnerships",
     subtitle:
-      "Collaborate with Aylopet to bring AI nutrition, DNA insights, and fresh food to your customers.",
+      "Let's join forces for a better future for our four-legged friends. Become part of the Aylopet ecosystem · join us, share your idea, and let's create value together.",
     backLabel: "Home",
   },
   b2bForm: {
