@@ -36,7 +36,7 @@ export function Phase2Teaser() {
               <div className="relative overflow-hidden rounded-[1.5rem]">
                 <Image
                   src={IMAGES.healthDog3D}
-                  alt="Aylopet · DNA & AI"
+                  alt="Aylopet DNA & AI"
                   width={819}
                   height={546}
                   className="aspect-[4/5] w-full object-cover object-[center_25%]"

@@ -30,7 +30,7 @@ export function EcosystemGrid() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[var(--brand-primary)]/15 to-transparent" />
                 <span className="absolute left-5 top-5 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-[var(--brand-primary)] backdrop-blur-sm">
                   <Leaf className="h-3.5 w-3.5" />
-                  ეტაპი 1 · აქტიური
+                  ეტაპი 1, აქტიური
                 </span>
               </div>
               <div className="flex flex-1 flex-col p-8">

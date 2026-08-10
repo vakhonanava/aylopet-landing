@@ -20,9 +20,9 @@ const HELIX_STEPS = 3;
 
 /** Overlay badge pinned to the visual for each journey step. */
 const STEP_BADGES = [
-  "60s · cheek swab",
+  "60s, cheek swab",
   "230,000+ markers",
-  "risk map · prevention",
+  "risk map, prevention",
   "tailored fresh ration",
   "24/7 AI monitoring",
 ] as const;
@@ -191,7 +191,7 @@ export function Journey() {
                       <Icon className="h-5 w-5" aria-hidden />
                     </span>
                     <span className="text-xs font-medium uppercase tracking-[0.18em] text-[var(--brand-primary)]">
-                      {step.index} · {step.tag}
+                      {step.index}, {step.tag}
                     </span>
                   </div>
                   <h3 className="mb-3 font-display text-2xl font-semibold tracking-tight text-[var(--forest-deep)]">

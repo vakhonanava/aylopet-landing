@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AyliopetOnboarding } from "@/components/onboarding/AyliopetOnboarding";
+import { OnboardingRedirectGuard } from "@/components/onboarding/OnboardingRedirectGuard";
 
 export const metadata: Metadata = {
   title: "Aylopet · Platform Onboarding",
@@ -8,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function PlatformOnboardingPage() {
-  return <AyliopetOnboarding />;
+  return (
+    <OnboardingRedirectGuard>
+      <AyliopetOnboarding />
+    </OnboardingRedirectGuard>
+  );
 }

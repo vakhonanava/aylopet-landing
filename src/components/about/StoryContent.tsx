@@ -10,13 +10,13 @@ import { getAbout } from "@/lib/content/about";
 import { IMAGES } from "@/lib/images";
 
 const KOKO_ALT: Record<"ka" | "en", string> = {
-  ka: "პეკინესი · კოკო, Aylopet-ის შთაგონება",
-  en: "Pekingese · Koko, Aylopet's inspiration",
+  ka: "პეკინესი კოკო, Aylopet-ის შთაგონება",
+  en: "Pekingese Koko, Aylopet's inspiration",
 };
 
 const DANTE_ALT: Record<"ka" | "en", string> = {
-  ka: "კანე კორსო · დანტე",
-  en: "Cane Corso · Dante",
+  ka: "კანე კორსო დანტე",
+  en: "Cane Corso Dante",
 };
 
 const KOKO_NAME: Record<"ka" | "en", string> = { ka: "კოკო", en: "Koko" };

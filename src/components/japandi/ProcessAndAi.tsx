@@ -24,8 +24,8 @@ const STEPS: Record<"ka" | "en", { label: string; short: string; tooltip?: boole
 };
 
 const PASTEURIZATION_TOOLTIP: Record<"ka" | "en", string> = {
-  ka: "75 to 80°C · 1 to 6 სთ · სალმონელა, ლისტერია, ე. კოლი",
-  en: "75 to 80°C · 1 to 6 hrs · Salmonella, Listeria, E. coli",
+  ka: "75 to 80°C, 1 to 6 სთ, სალმონელა, ლისტერია, ე. კოლი",
+  en: "75 to 80°C, 1 to 6 hrs, Salmonella, Listeria, E. coli",
 };
 
 export function ProcessTimeline({ locale = "ka" }: { locale?: "ka" | "en" }) {
@@ -112,8 +112,8 @@ export function GlassTeamPlaceholder({ status, body }: { status: string; body: s
 }
 
 const DASHBOARD_ROWS: Record<"ka" | "en", string[]> = {
-  ka: ["წონა · 12 kg", "აქტივობა · მაღალი", "ალერგია · არა"],
-  en: ["Weight · 12 kg", "Activity · High", "Allergies · None"],
+  ka: ["წონა, 12 kg", "აქტივობა, მაღალი", "ალერგია, არა"],
+  en: ["Weight, 12 kg", "Activity, High", "Allergies, None"],
 };
 
 const DASHBOARD_PLAN_LABEL: Record<"ka" | "en", string> = {

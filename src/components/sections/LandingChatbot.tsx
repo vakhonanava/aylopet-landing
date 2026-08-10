@@ -27,13 +27,13 @@ function liveReply(text: string, locale: "ka" | "en"): string {
       return "როკისთვის ~12 კგ და აქტიური ცხოვრების წესით, დღიური ენერგოსაჭიროება დაახლოებით 700 to 850 კკალ-ია. გსურთ დეტალური რაციონის შედგენა AylopetAI-ში?";
     if (lower.includes("ალერგ") || lower.includes("ქათამ"))
       return "თუ როკის აქვს მგრძნობელობა, ვიწყებთ ნოველ პროტეინით და ვაკონტროლებთ 10 to 14 დღეს. გახსენით სრული ჩატი პერსონალური გეგმისთვის.";
-    return "როკის პროფილი და კვების რეკომენდაცია უკვე ჩაიწერა სიმულაციიდან. დასვით კითხვა კვებაზე · ან გახსენით სრული AylopetAI ჩატი დეტალური კითხვარისთვის.";
+    return "როკის პროფილი და კვების რეკომენდაცია უკვე ჩაიწერა სიმულაციიდან. დასვით კითხვა კვებაზე ან გახსენით სრული AylopetAI ჩატი დეტალური კითხვარისთვის.";
   }
   if (lower.includes("weight") || lower.includes("calor"))
     return "For Rocky at ~12 kg with an active lifestyle, daily energy needs are roughly 700 to 850 kcal. Want a full ration plan in AylopetAI?";
   if (lower.includes("allerg") || lower.includes("chicken"))
     return "If Rocky has sensitivities, we start with a novel protein and monitor for 10 to 14 days. Open the full chat for a personalized plan.";
-  return "Rocky's demo profile and nutrition recommendation are ready. Ask about nutrition · or open the full AylopetAI chat for the complete questionnaire.";
+  return "Rocky's demo profile and nutrition recommendation are ready. Ask about nutrition, or open the full AylopetAI chat for the complete questionnaire.";
 }
 
 export function LandingChatbot() {
@@ -140,8 +140,8 @@ export function LandingChatbot() {
 
   const unlockedHint =
     chatLocale === "ka"
-      ? "ჩატი ღიაა · დასვით კითხვა როკის შესახებ"
-      : "Chat unlocked · ask anything about Rocky";
+      ? "ჩატი ღიაა, დასვით კითხვა როკის შესახებ"
+      : "Chat unlocked, ask anything about Rocky";
 
   return (
     <section

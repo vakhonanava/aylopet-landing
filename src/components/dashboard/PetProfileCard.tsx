@@ -14,10 +14,10 @@ import {
   Trash2,
 } from "lucide-react";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
+import { ImageLightbox } from "@/components/dashboard/ImageLightbox";
 import {
   ActivityRadioCards,
   BreedCombobox,
-  TemperamentTags,
   fieldLabel,
   textInput,
 } from "@/components/dashboard/FormControls";
@@ -27,7 +27,6 @@ import {
   type ActivityLevel,
   type Pet,
   type PetProfileSnapshot,
-  type Temperament,
 } from "@/lib/dashboard";
 import { petToPayload, profilesEqual } from "@/lib/platform/pet-persistence";
 
@@ -37,7 +36,6 @@ function snapshotPayload(snapshot: PetProfileSnapshot) {
     breed: snapshot.breed,
     weightKg: snapshot.weightKg,
     activity: snapshot.activity,
-    temperament: snapshot.temperament,
     avatarUrl: snapshot.avatarUrl,
   };
 }
@@ -85,7 +83,7 @@ function ProfileHistoryPanel({
       <div className="mb-4 flex items-center gap-2">
         <History className="h-4 w-4 text-[var(--brand-primary)]" />
         <h3 className="text-sm font-bold text-[var(--brand-primary)]">
-          წინა მონაცემები · {pet.profileHistory.length}
+          წინა მონაცემები, {pet.profileHistory.length}
         </h3>
       </div>
       <div className="flex flex-col gap-3">
@@ -101,7 +99,7 @@ function ProfileHistoryPanel({
                 <div>
                   <p className="font-semibold text-[var(--brand-primary)]">{snapshot.name}</p>
                   <p className="text-xs text-slate-400">
-                    შენახულია · {formatDate(snapshot.savedAt.slice(0, 10))}
+                    შენახულია, {formatDate(snapshot.savedAt.slice(0, 10))}
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -155,11 +153,6 @@ function ProfileHistoryPanel({
                     before={ACTIVITY_OPTIONS.find((o) => o.value === snap.activity)?.label ?? snap.activity}
                     after={ACTIVITY_OPTIONS.find((o) => o.value === current.activity)?.label ?? current.activity}
                   />
-                  <CompareRow
-                    label="ხასიათი"
-                    before={snap.temperament.join(", ") || "—"}
-                    after={current.temperament.join(", ") || "—"}
-                  />
                 </div>
               )}
             </article>
@@ -177,10 +170,11 @@ export function PetProfileCard({ pet }: { pet: Pet }) {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [savedNotice, setSavedNotice] = useState(false);
+  const [zoomOpen, setZoomOpen] = useState(false);
 
   useEffect(() => {
     setDraft(petToPayload(pet));
-  }, [pet.id, pet.name, pet.breed, pet.weightKg, pet.activity, pet.temperament, pet.avatarUrl]);
+  }, [pet.id, pet.name, pet.breed, pet.weightKg, pet.activity, pet.avatarUrl]);
 
   const saved = useMemo(() => petToPayload(pet), [pet]);
   const isDirty = useMemo(() => !profilesEqual(saved, draft), [saved, draft]);
@@ -213,6 +207,7 @@ export function PetProfileCard({ pet }: { pet: Pet }) {
   };
 
   return (
+    <>
     <section className="overflow-hidden rounded-[2rem] border border-[#e5e7eb] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
       <div className="relative h-28 bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-primary-hover)]">
         <div className="pointer-events-none absolute inset-0 opacity-40">
@@ -223,8 +218,13 @@ export function PetProfileCard({ pet }: { pet: Pet }) {
       <div className="px-6 pb-8 sm:px-8">
         <div className="-mt-12 mb-6 flex items-end justify-between gap-4">
           <div className="relative">
-            <div className="size-24 overflow-hidden rounded-full border-4 border-white bg-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
-              {draft.avatarUrl ? (
+            {draft.avatarUrl ? (
+              <button
+                type="button"
+                onClick={() => setZoomOpen(true)}
+                aria-label={`${draft.name || "ძაღლის"} ფოტოს გადიდება`}
+                className="group size-24 cursor-zoom-in overflow-hidden rounded-full border-4 border-white bg-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-transform duration-200 hover:scale-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-primary)]"
+              >
                 <Image
                   src={draft.avatarUrl}
                   alt={draft.name}
@@ -233,12 +233,14 @@ export function PetProfileCard({ pet }: { pet: Pet }) {
                   unoptimized
                   className="h-full w-full object-cover"
                 />
-              ) : (
+              </button>
+            ) : (
+              <div className="size-24 overflow-hidden rounded-full border-4 border-white bg-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
                 <span className="flex h-full w-full items-center justify-center text-slate-400">
                   <Dog className="h-10 w-10" />
                 </span>
-              )}
-            </div>
+              </div>
+            )}
             <button
               type="button"
               onClick={() => fileRef.current?.click()}
@@ -342,16 +344,6 @@ export function PetProfileCard({ pet }: { pet: Pet }) {
           />
         </div>
 
-        <div className="mt-6 flex flex-col gap-2">
-          <label className={fieldLabel}>ხასიათი & ტემპერამენტი</label>
-          <TemperamentTags
-            value={draft.temperament}
-            onChange={(temperament) =>
-              patchDraft({ temperament: temperament as Temperament[] })
-            }
-          />
-        </div>
-
         <ProfileHistoryPanel
           pet={pet}
           current={draft}
@@ -362,5 +354,13 @@ export function PetProfileCard({ pet }: { pet: Pet }) {
         />
       </div>
     </section>
+
+    <ImageLightbox
+      open={zoomOpen}
+      src={draft.avatarUrl ?? null}
+      alt={draft.name || "ძაღლის ფოტო"}
+      onClose={() => setZoomOpen(false)}
+    />
+    </>
   );
 }

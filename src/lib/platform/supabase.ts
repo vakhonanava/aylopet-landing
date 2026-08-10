@@ -83,23 +83,60 @@ export async function registerWaitlistUser(
   return { userId, error: null };
 }
 
+/** Everything before the first space is the first name. */
+function splitName(fullName: string): { first: string; last: string } {
+  const trimmed = fullName.trim().replace(/\s+/g, " ");
+  if (!trimmed) return { first: "", last: "" };
+  const index = trimmed.indexOf(" ");
+  if (index === -1) return { first: trimmed, last: "" };
+  return { first: trimmed.slice(0, index), last: trimmed.slice(index + 1) };
+}
+
+/**
+ * PostgREST rejects the whole payload when it contains a column the schema
+ * cache doesn't know about (PGRST204). Detecting that lets a deploy that lands
+ * before migration 009 keep working instead of failing every profile save.
+ */
+function isUnknownColumnError(error: { code?: string; message?: string } | null) {
+  if (!error) return false;
+  if (error.code === "PGRST204") return true;
+  const message = error.message?.toLowerCase() ?? "";
+  return message.includes("could not find") && message.includes("column");
+}
+
 export async function upsertOwnerProfile(
   supabase: SupabaseClient,
   userId: string,
   profile: OwnerProfile,
 ): Promise<{ error: string | null }> {
-  const { error } = await supabase.from("profiles").upsert(
-    {
-      id: userId,
-      full_name: profile.fullName.trim(),
-      email: profile.email.trim().toLowerCase(),
-      phone: profile.phone.trim() || null,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: "id" },
-  );
+  const base = {
+    id: userId,
+    full_name: profile.fullName.trim(),
+    email: profile.email.trim().toLowerCase(),
+    phone: profile.phone.trim() || null,
+    updated_at: new Date().toISOString(),
+  };
 
-  return { error: error?.message ?? null };
+  const { first, last } = splitName(profile.fullName);
+
+  // Greetings use the first name only; keep both parts queryable rather than
+  // re-splitting full_name at every read site (migration 009).
+  const { error } = await supabase
+    .from("profiles")
+    .upsert({ ...base, first_name: first, last_name: last }, { onConflict: "id" });
+
+  if (!error) return { error: null };
+
+  if (isUnknownColumnError(error)) {
+    // Migration 009 has not run yet — persist what the schema does support so
+    // onboarding still completes. full_name keeps the whole name either way.
+    const retry = await supabase
+      .from("profiles")
+      .upsert(base, { onConflict: "id" });
+    return { error: retry.error?.message ?? null };
+  }
+
+  return { error: error.message };
 }
 
 export async function createPetProfile(

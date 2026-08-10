@@ -9,7 +9,7 @@ import { SiteFooter } from "@/components/marketing/SiteFooter";
 import { WHY_FRESH } from "@/lib/content/why-fresh";
 
 export const metadata: Metadata = {
-  title: "Aylopet · რატომ ცოცხალი საკვები?",
+  title: "Aylopet, რატომ ცოცხალი საკვები?",
   description: WHY_FRESH.philosophy,
 };
 

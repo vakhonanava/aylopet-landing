@@ -89,7 +89,7 @@ export function Hero() {
           <div className="relative overflow-hidden rounded-[2rem] border border-[#e5e7eb] shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
             <Image
               src={IMAGES.healthDog3D}
-              alt="Aylopet · შენი საუკეთესო მეგობარი"
+              alt="Aylopet, შენი საუკეთესო მეგობარი"
               width={819}
               height={546}
               priority

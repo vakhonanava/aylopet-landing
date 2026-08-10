@@ -9,6 +9,10 @@ export const metadata: Metadata = {
   description: "მართე შენი ძაღლის პროფილი, ჯანმრთელობა და კვება.",
 };
 
+// Every route under /dashboard is per-user and auth-gated — keep the whole
+// subtree off the prerender/full route cache.
+export const dynamic = "force-dynamic";
+
 export default function DashboardLayout({
   children,
 }: {

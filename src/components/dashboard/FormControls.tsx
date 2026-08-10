@@ -4,10 +4,8 @@ import { useMemo, useState } from "react";
 import { Check, ChevronDown, Search, X } from "lucide-react";
 import {
   ACTIVITY_OPTIONS,
-  TEMPERAMENT_OPTIONS,
   searchDogBreeds,
   type ActivityLevel,
-  type Temperament,
 } from "@/lib/dashboard";
 
 export const fieldLabel = "block text-sm font-medium text-[var(--brand-primary)]";
@@ -173,45 +171,6 @@ export function ActivityRadioCards({
             <span className="text-xs leading-snug text-slate-500">
               {opt.description}
             </span>
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-/* --------------------------- Temperament Tags ---------------------------- */
-
-export function TemperamentTags({
-  value,
-  onChange,
-}: {
-  value: Temperament[];
-  onChange: (value: Temperament[]) => void;
-}) {
-  const toggle = (tag: Temperament) => {
-    onChange(
-      value.includes(tag) ? value.filter((t) => t !== tag) : [...value, tag],
-    );
-  };
-
-  return (
-    <div className="flex flex-wrap gap-2">
-      {TEMPERAMENT_OPTIONS.map((tag) => {
-        const active = value.includes(tag);
-        return (
-          <button
-            key={tag}
-            type="button"
-            onClick={() => toggle(tag)}
-            className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-all duration-200 ${
-              active
-                ? "border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white"
-                : "border-[#e5e7eb] bg-white text-slate-600 hover:border-[var(--brand-primary)]/30 hover:text-[var(--brand-primary)]"
-            }`}
-          >
-            {active && <Check className="h-3.5 w-3.5" />}
-            {tag}
           </button>
         );
       })}

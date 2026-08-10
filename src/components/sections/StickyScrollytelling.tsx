@@ -47,7 +47,7 @@ const SECTIONS: ScrollSection[] = [
     text: "აკონტროლე ვაქცინები, საკვების მიღება, ხასიათი და დანამატები ერთ ინტელექტუალურ სივრცეში. მიიღე AI რეკომენდაციები.",
     cta: { label: "შექმენი პროფილი", href: "/onboarding/platform", variant: "primary" },
     image: IMAGES.healthDog3D,
-    imageAlt: "Aylopet · ძაღლის ციფრული ჯანმრთელობის პროფილი",
+    imageAlt: "Aylopet ძაღლის ციფრული ჯანმრთელობის პროფილი",
     overlay: "health",
   },
 ];

@@ -47,6 +47,8 @@ import {
   type MedicalRecordPayload,
   type PetIdentityPayload,
 } from "@/lib/platform/medical-persistence";
+import { savePetHistoryInSupabase } from "@/lib/platform/history-persistence";
+import { emptyPetHistory, type PetHistory } from "@/lib/pet-history/types";
 import { createClient } from "@/utils/supabase/client";
 
 interface DashboardState {
@@ -128,6 +130,11 @@ interface DashboardContextValue extends DashboardState {
   removeMedication: (
     petId: string,
     medicationId: string,
+  ) => Promise<{ ok: boolean; error?: string }>;
+  /** Merges a partial patch into `pet.history` and persists the whole blob. */
+  updatePetHistory: (
+    petId: string,
+    patch: Partial<PetHistory>,
   ) => Promise<{ ok: boolean; error?: string }>;
 }
 
@@ -333,7 +340,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
           breed: payload.breed,
           weightKg: payload.weightKg,
           activity: payload.activity,
-          temperament: payload.temperament,
           avatarUrl: payload.avatarUrl,
           profileHistory: snapshot
             ? [snapshot, ...p.profileHistory]
@@ -582,6 +588,33 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
           ...p,
           medications: p.medications.filter((m) => m.id !== medicationId),
         }));
+        return { ok: true };
+      },
+      updatePetHistory: async (petId, patch) => {
+        const pet = state.pets.find((p) => p.id === petId);
+        if (!pet) return { ok: false, error: "ძაღლი ვერ მოიძებნა." };
+
+        const next: PetHistory = {
+          ...emptyPetHistory(),
+          ...pet.history,
+          ...patch,
+        };
+
+        if (user && isPlatformPetId(petId)) {
+          const supabase = getSupabaseClient();
+          if (!supabase) {
+            return { ok: false, error: "Supabase არ არის კონფიგურირებული." };
+          }
+          const result = await savePetHistoryInSupabase(
+            supabase,
+            user.id,
+            petId,
+            next,
+          );
+          if (result.error) return { ok: false, error: result.error };
+        }
+
+        updatePetState(petId, (p) => ({ ...p, history: next }));
         return { ok: true };
       },
     }),

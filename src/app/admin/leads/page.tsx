@@ -10,6 +10,10 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow",
 };
 
+// Reads live signups through the service-role client on every request — must
+// never be prerendered or cached.
+export const dynamic = "force-dynamic";
+
 export default async function LeadsAdminPage() {
   const leads = await getAllPlatformSignups();
   const storageMode = getLeadStorageMode();

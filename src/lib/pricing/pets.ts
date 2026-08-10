@@ -6,7 +6,7 @@
  * the first profile is paid for.
  */
 
-export const FIRST_PET_PRICE_GEL = 10;
+export const FIRST_PET_PRICE_GEL = 15;
 export const ADDITIONAL_PET_PRICE_GEL = 5;
 
 /** Hard cap for now · family sharing (more profiles) is not shipped yet. */

@@ -11,11 +11,10 @@ import { useDashboard } from "@/components/dashboard/DashboardStore";
 import {
   ActivityRadioCards,
   BreedCombobox,
-  TemperamentTags,
   fieldLabel,
   textInput,
 } from "@/components/dashboard/FormControls";
-import type { ActivityLevel, Temperament } from "@/lib/dashboard";
+import type { ActivityLevel } from "@/lib/dashboard";
 import { createPetProfileInSupabase } from "@/lib/platform/pet-persistence";
 import { createClient } from "@/utils/supabase/client";
 
@@ -29,7 +28,6 @@ const petSchema = z.object({
   activity: z.enum(["low", "moderate", "high"], {
     message: "აირჩიე აქტივობის ტიპი",
   }),
-  temperament: z.array(z.string()),
 });
 
 const guestSchema = z
@@ -78,7 +76,6 @@ export function OnboardingForm() {
       breed: "",
       weightKg: undefined as unknown as number,
       activity: undefined as unknown as ActivityLevel,
-      temperament: [],
     },
     mode: "onTouched",
   });
@@ -101,7 +98,6 @@ export function OnboardingForm() {
         breed: data.breed,
         weightKg: data.weightKg,
         activity: data.activity,
-        temperament: data.temperament as Temperament[],
       },
       undefined,
     );
@@ -120,7 +116,6 @@ export function OnboardingForm() {
           breed: petData.breed,
           weightKg: petData.weightKg,
           activity: petData.activity,
-          temperament: petData.temperament as Temperament[],
         });
 
         if (petResult.error || !petResult.petId) {
@@ -135,7 +130,6 @@ export function OnboardingForm() {
             breed: petData.breed,
             weightKg: petData.weightKg,
             activity: petData.activity,
-            temperament: petData.temperament as Temperament[],
           },
           { id: petResult.petId },
         );
@@ -226,19 +220,6 @@ export function OnboardingForm() {
         )}
       </div>
 
-      <div className="flex flex-col gap-2">
-        <label className={fieldLabel}>ხასიათი</label>
-        <Controller
-          control={control}
-          name="temperament"
-          render={({ field }) => (
-            <TemperamentTags
-              value={field.value as Temperament[]}
-              onChange={field.onChange}
-            />
-          )}
-        />
-      </div>
     </>
   );
 

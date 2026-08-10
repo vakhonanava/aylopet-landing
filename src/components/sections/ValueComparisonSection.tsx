@@ -10,6 +10,9 @@ import { fadeUp, staggerContainer } from "@/lib/motion";
 import { scrollToWaitlist } from "@/lib/navigation";
 import { FIRST_PET_PRICE_GEL } from "@/lib/pricing/pets";
 
+/** Typical Tbilisi coffee, used only as the comparison anchor. */
+const COFFEE_PRICE_GEL = 10;
+const COFFEE_PRICE = `${COFFEE_PRICE_GEL} ₾`;
 const PRICE = `${FIRST_PET_PRICE_GEL} ₾`;
 
 export function ValueComparisonSection() {
@@ -61,7 +64,7 @@ export function ValueComparisonSection() {
                   </h3>
                   <div className="rounded-2xl bg-white/95 px-4 py-2 text-right shadow-lg backdrop-blur-sm">
                     <p className="font-display text-2xl font-bold text-[var(--text-tertiary)]">
-                      {PRICE}
+                      {COFFEE_PRICE}
                     </p>
                     <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
                       {v.perDay}

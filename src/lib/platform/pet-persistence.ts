@@ -3,7 +3,6 @@ import type {
   ActivityLevel,
   Pet,
   PetProfileSnapshot,
-  Temperament,
   VaccineEntry,
 } from "@/lib/dashboard";
 
@@ -12,7 +11,6 @@ export interface PetProfilePayload {
   breed: string;
   weightKg: number;
   activity: ActivityLevel;
-  temperament: Temperament[];
   avatarUrl?: string;
 }
 
@@ -22,7 +20,6 @@ function snapshotFromPet(pet: PetProfilePayload): Omit<PetProfileSnapshot, "id" 
     breed: pet.breed,
     weightKg: pet.weightKg,
     activity: pet.activity,
-    temperament: [...pet.temperament],
     avatarUrl: pet.avatarUrl,
   };
 }
@@ -33,7 +30,6 @@ export function petToPayload(pet: Pet): PetProfilePayload {
     breed: pet.breed,
     weightKg: pet.weightKg,
     activity: pet.activity,
-    temperament: pet.temperament,
     avatarUrl: pet.avatarUrl,
   };
 }
@@ -44,8 +40,7 @@ export function profilesEqual(a: PetProfilePayload, b: PetProfilePayload): boole
     a.breed === b.breed &&
     a.weightKg === b.weightKg &&
     a.activity === b.activity &&
-    a.avatarUrl === b.avatarUrl &&
-    a.temperament.join("|") === b.temperament.join("|")
+    a.avatarUrl === b.avatarUrl
   );
 }
 
@@ -63,7 +58,6 @@ export async function updatePetProfileInSupabase(
       weight: payload.weightKg,
       weight_unit: "kg",
       activity: payload.activity,
-      temperament: payload.temperament,
       avatar_url: payload.avatarUrl ?? null,
       updated_at: new Date().toISOString(),
     })
@@ -108,7 +102,6 @@ export async function createPetProfileSnapshotInSupabase(
       breed: snap.breed,
       weightKg: snap.weightKg,
       activity: snap.activity,
-      temperament: snap.temperament ?? [],
       avatarUrl: snap.avatarUrl,
     },
     error: null,
@@ -193,7 +186,6 @@ export async function createPetProfileInSupabase(
       weight: payload.weightKg,
       weight_unit: "kg",
       activity: payload.activity,
-      temperament: payload.temperament,
       avatar_url: payload.avatarUrl ?? null,
       gender: "male",
       is_neutered: false,

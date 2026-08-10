@@ -59,20 +59,20 @@ export function DigestibilityInfographic() {
   return (
     <div className="my-8 rounded-2xl border border-[var(--border-light)] bg-[var(--background-main)] p-6">
       <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-tertiary)]">
-        Algya et al., 2018 · University of Illinois
+        Algya et al., 2018, University of Illinois
       </p>
       <div className="mt-4 flex items-end gap-4">
         <div className="flex-1">
           <div className="h-16 rounded-lg bg-[var(--background-muted)]" style={{ width: "62%" }} />
-          <p className="mt-2 text-xs text-[var(--text-secondary)]">Extruded · ~62%</p>
+          <p className="mt-2 text-xs text-[var(--text-secondary)]">Extruded, ~62%</p>
         </div>
         <div className="flex-1">
           <div className="h-24 rounded-lg bg-[var(--brand-primary)]" style={{ width: "92%" }} />
-          <p className="mt-2 text-xs font-semibold text-[var(--brand-primary)]">Fresh · 90%+</p>
+          <p className="mt-2 text-xs font-semibold text-[var(--brand-primary)]">Fresh, 90%+</p>
         </div>
       </div>
       <p className="mt-4 text-xs text-[var(--text-secondary)]">
-        Cold-chain · -18°C · FDA
+        Cold-chain, -18°C, FDA
       </p>
     </div>
   );

@@ -337,7 +337,7 @@ export function LabResultsUpload({ pet }: LabResultsUploadProps) {
             ჩააგდე ფაილები აქ ან დააჭირე ასარჩევად
           </p>
           <p id="lab-upload-help" className="mt-1.5 text-xs text-white/42">
-            PDF, JPEG ან PNG · მაქსიმუმ 10MB თითო ფაილზე
+            PDF, JPEG ან PNG, მაქსიმუმ 10MB თითო ფაილზე
           </p>
         </label>
 
@@ -402,7 +402,7 @@ export function LabResultsUpload({ pet }: LabResultsUploadProps) {
         {reports.length > 0 && (
           <div className="relative mt-5 space-y-2">
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-white/40">
-              ატვირთული ანალიზები · {reports.length}
+              ატვირთული ანალიზები, {reports.length}
             </p>
             <AnimatePresence initial={false}>
               {reports.map((report) => {

@@ -52,7 +52,7 @@ export function TechDashboardPreview() {
             <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
             <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
           </div>
-          <span className="text-xs font-medium text-white/50">Aylopet OS · Live</span>
+          <span className="text-xs font-medium text-white/50">Aylopet OS Live</span>
         </div>
 
         <div className="grid gap-3 p-4 sm:grid-cols-2 sm:p-5">

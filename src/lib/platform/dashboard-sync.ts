@@ -6,7 +6,6 @@ import type {
   LabReportEntry,
   Pet,
   PetProfileSnapshot,
-  Temperament,
   VaccineEntry,
 } from "@/lib/dashboard";
 import type {
@@ -17,6 +16,7 @@ import type {
   SymptomLog,
 } from "@/lib/medical";
 import { PET_DOCUMENTS_BUCKET, PET_MEDICAL_DOCS_BUCKET } from "@/lib/platform/types";
+import { parsePetHistory } from "@/lib/platform/history-persistence";
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -56,11 +56,6 @@ function parseSeverity(value: unknown): SeverityLevel {
   return "low";
 }
 
-function parseTemperament(value: unknown): Temperament[] {
-  if (!Array.isArray(value)) return [];
-  return value.filter((item): item is Temperament => typeof item === "string");
-}
-
 function parseSnapshot(row: {
   id: string;
   created_at: string;
@@ -75,7 +70,6 @@ function parseSnapshot(row: {
     breed: String(snap.breed ?? ""),
     weightKg: Number(snap.weightKg ?? 0),
     activity: parseActivity(snap.activity),
-    temperament: parseTemperament(snap.temperament),
     avatarUrl: typeof snap.avatarUrl === "string" ? snap.avatarUrl : undefined,
   };
 }
@@ -231,7 +225,6 @@ export async function fetchUserDashboardFromSupabase(
       breed: row.breed as string,
       weightKg,
       activity: parseActivity(row.activity),
-      temperament: parseTemperament(row.temperament),
       avatarUrl: (row.avatar_url as string | null) ?? undefined,
       birthDate: (row.birth_date as string | null) ?? undefined,
       bcsScore: (row.bcs_score as number | null) ?? undefined,
@@ -245,6 +238,7 @@ export async function fetchUserDashboardFromSupabase(
       medicalRecord,
       medications,
       symptomLogs,
+      history: parsePetHistory(row.history),
     });
   }
 

@@ -124,7 +124,7 @@ export function HeroEcosystemMedia() {
           <div>
             <p className="text-xs font-bold text-[var(--forest-deep)]">Aylopet Smart Collar</p>
             <p className="text-[9px] text-[var(--text-secondary)]">
-              GPS · {ka ? "აქტივობა" : "activity"}
+              GPS, {ka ? "აქტივობა" : "activity"}
             </p>
           </div>
         </div>

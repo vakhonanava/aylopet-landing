@@ -25,6 +25,8 @@ import {
   type MealType,
   type Pet,
 } from "@/lib/dashboard";
+import { APPETITE_LABELS } from "@/lib/pet-history/labels";
+import type { AppetiteLevel } from "@/lib/pet-history/types";
 
 const tabTrigger =
   "flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-slate-500 transition-colors data-[state=active]:bg-[var(--brand-primary)] data-[state=active]:text-white";
@@ -268,9 +270,9 @@ function VaccinesTab({ pet }: { pet: Pet }) {
                           <CalendarClock className="h-3.5 w-3.5" />
                         )}
                         {overdue
-                          ? `ვადაგადაცილებული · ${formatDate(v.nextDue)}`
+                          ? `ვადაგადაცილებული, ${formatDate(v.nextDue)}`
                           : soon
-                            ? `მალე (${due} დღე) · ${formatDate(v.nextDue)}`
+                            ? `მალე (${due} დღე), ${formatDate(v.nextDue)}`
                             : `შემდეგი: ${formatDate(v.nextDue)}`}
                       </span>
                     )}
@@ -385,7 +387,7 @@ function SupplementsTab({ pet }: { pet: Pet }) {
                 {s.name}
               </span>
               <span className="block text-xs text-slate-400">
-                {s.dosage} · {s.frequency}
+                {s.dosage}, {s.frequency}
               </span>
             </span>
             <span
@@ -410,6 +412,7 @@ function FoodTab({ pet }: { pet: Pet }) {
   const [isAylopet, setIsAylopet] = useState(true);
   const [portion, setPortion] = useState("");
   const [response, setResponse] = useState("");
+  const [appetite, setAppetite] = useState<AppetiteLevel>("normal");
 
   const submit = () => {
     if (!portion) return;
@@ -420,9 +423,11 @@ function FoodTab({ pet }: { pet: Pet }) {
       isAylopet,
       portionGrams: Number(portion),
       digestiveResponse: response || undefined,
+      appetite,
     });
     setPortion("");
     setResponse("");
+    setAppetite("normal");
     setOpen(false);
   };
 
@@ -503,6 +508,26 @@ function FoodTab({ pet }: { pet: Pet }) {
                 placeholder="ბრენდის სახელი"
               />
             )}
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className={fieldLabel}>მადა</label>
+            <div className="flex flex-wrap gap-2">
+              {(Object.keys(APPETITE_LABELS) as AppetiteLevel[]).map((level) => (
+                <button
+                  key={level}
+                  type="button"
+                  onClick={() => setAppetite(level)}
+                  className={`flex-1 rounded-2xl border px-3 py-2.5 text-xs font-medium transition-colors ${
+                    appetite === level
+                      ? "border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white"
+                      : "border-[#e5e7eb] bg-white text-slate-600"
+                  }`}
+                >
+                  {APPETITE_LABELS[level]}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="flex flex-col gap-1.5">

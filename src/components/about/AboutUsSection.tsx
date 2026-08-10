@@ -23,7 +23,7 @@ const COPY = {
     danteStory:
       "დანტემ, ჩვენმა კანე კორსომ, მუდმივად მოითხოვა ნამდვილი ხორცი და უარი თქვა დამუშავებულ საკვებზე. მისმა აგრესიული სიმსივნის დიაგნოზმა საბოლოოდ დაგვანახა, რომ კვება, გენეტიკა და ადრეული პრევენცია ერთმანეთისგან განუყოფელია — და გახდა Aylopet-ის ეკოსისტემის შექმნის მთავარი მიზეზი.",
     partnerLabel: "პარტნიორი საწარმო",
-    partnerTitle: "Natural Selection · ისრაელი",
+    partnerTitle: "Natural Selection, ისრაელი",
     partnerBody:
       "ჩვენი სპეციალიზირებული საწარმოო პარტნიორი ისრაელში მუშაობს კლინიკური დონის სამზარეულოებში, დადასტურებული დაბალტემპერატურული პასტერიზაციის პროტოკოლებით. ყოველი პარტია სრულად თვალსაჩინოა წყაროდან თეფშამდე — შეესაბამება ევროკავშირისა და ისრაელის სურსათის უსაფრთხოების სტანდარტებს.",
   },
@@ -37,9 +37,9 @@ const COPY = {
     danteStory:
       "Dante, our Cane Corso, constantly demanded real meat and refused processed food. His diagnosis with an aggressive tumor ultimately showed us that nutrition, genetics, and early prevention can't be separated — and became the reason the Aylopet ecosystem exists.",
     partnerLabel: "Partner facility",
-    partnerTitle: "Natural Selection · Israel",
+    partnerTitle: "Natural Selection, Israel",
     partnerBody:
-      "Our specialized production partner in Israel operates clinical-grade kitchens with validated low-temperature pasteurization protocols. Every batch is traceable from source to bowl · meeting EU and Israeli food safety standards.",
+      "Our specialized production partner in Israel operates clinical-grade kitchens with validated low-temperature pasteurization protocols. Every batch is traceable from source to bowl, meeting EU and Israeli food safety standards.",
   },
 } as const satisfies Record<Locale, Record<string, string>>;
 
@@ -175,7 +175,7 @@ function StoryCard({
       <div className="p-4 pb-0">
         <Scene3D
           src={image}
-          alt={`${name} · ${breed}`}
+          alt={`${name}, ${breed}`}
           aspect="landscape"
           glow="sage"
           fit={fit}
