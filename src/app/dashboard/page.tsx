@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import { ArrowRight, Dog, Lock, PawPrint, Plus, Users } from "lucide-react";
+import { Lock, PawPrint, Pencil, Plus, Users } from "lucide-react";
+import { DashboardPetCard } from "@/components/dashboard/DashboardPetCard";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
 import { AmbassadorProgram } from "@/components/early-access/AmbassadorProgram";
 import { ADDITIONAL_PET_PRICE_GEL, canAddPet } from "@/lib/pricing/pets";
@@ -19,42 +19,14 @@ export default function DashboardHome() {
         </h1>
         <p className="mt-1.5 text-slate-600">
           მართე შენი ძაღლების პროფილები, ჯანმრთელობა და კვება ერთ სივრცეში.
-          დააჭირე ძაღლის ბარათს პროფილის რედაქტირების, ანალიზების ატვირთვისა და
-          ისტორიის სანახავად.
+          სახელის, ჯიშის, წონისა და აქტივობის შესაცვლელად დააჭირე{" "}
+          <Pencil className="inline h-3.5 w-3.5 -translate-y-px" /> ხატულას, ხოლო
+          ანალიზების ატვირთვისა და სრული ისტორიისთვის გახსენი ძაღლის ბარათი.
         </p>
       </header>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        {ready &&
-          pets.map((pet) => (
-            <Link
-              key={pet.id}
-              href={`/dashboard/pets/${pet.id}`}
-              className="group flex items-center gap-4 rounded-[2rem] border border-[#e5e7eb] bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgb(0,0,0,0.06)]"
-            >
-              <span className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-slate-400">
-                {pet.avatarUrl ? (
-                  <Image
-                    src={pet.avatarUrl}
-                    alt={pet.name}
-                    width={64}
-                    height={64}
-                    unoptimized
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <Dog className="h-7 w-7" />
-                )}
-              </span>
-              <div className="min-w-0 flex-1">
-                <h3 className="font-bold text-[var(--brand-primary)]">{pet.name}</h3>
-                <p className="truncate text-sm text-slate-500">
-                  {pet.breed} · {pet.weightKg}kg
-                </p>
-              </div>
-              <ArrowRight className="h-5 w-5 text-slate-300 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-[var(--brand-primary)]" />
-            </Link>
-          ))}
+        {ready && pets.map((pet) => <DashboardPetCard key={pet.id} pet={pet} />)}
 
         {addPet.allowed ? (
           <Link
