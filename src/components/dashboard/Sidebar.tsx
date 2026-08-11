@@ -7,7 +7,6 @@ import {
   HeartPulse,
   LayoutDashboard,
   LogOut,
-  PawPrint,
   Plus,
   Settings,
 } from "lucide-react";
@@ -17,7 +16,6 @@ import { useDashboard } from "@/components/dashboard/DashboardStore";
 
 const navItems = [
   { label: "მთავარი", href: "/dashboard", icon: LayoutDashboard, exact: true },
-  { label: "შინაური ცხოველები", href: "/dashboard", icon: PawPrint },
   {
     label: "ჯანმრთელობის ისტორია",
     href: "/dashboard/pet-profile",
