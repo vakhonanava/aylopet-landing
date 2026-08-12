@@ -180,7 +180,7 @@ export const AUTH_KA: AuthCopy = {
 
   verifyPrompt: "გსურს ელ. ფოსტის დამატებითი დაცვა?",
   verifyBody:
-    "რეგისტრაცია უკვე დასრულებულია. სურვილის შემთხვევაში დაადასტურე ელ. ფოსტა უსაფრთხოებისთვის — ეს არ არის სავალდებულო.",
+    "რეგისტრაცია უკვე დასრულებულია. სურვილის შემთხვევაში დაადასტურე ელ. ფოსტა უსაფრთხოებისთვის. ეს არ არის სავალდებულო.",
   verifySend: "გაგზავნე დადასტურების ბმული",
   verifyLater: "ახლა არა",
   verifySent: "დამატებითი დაცვისთვის დადასტურების ბმული გამოგიგზავნეთ.",
@@ -286,7 +286,7 @@ export const AUTH_EN: AuthCopy = {
 
   verifyPrompt: "Want extra protection for your email?",
   verifyBody:
-    "Your registration is already complete. If you'd like, confirm your email for extra security — it is not required.",
+    "Your registration is already complete. If you'd like, confirm your email for extra security. It is not required.",
   verifySend: "Send confirmation link",
   verifyLater: "Not now",
   verifySent: "We've sent a confirmation link for extra protection.",

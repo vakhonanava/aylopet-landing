@@ -37,8 +37,8 @@ export function WaitlistSectionContent() {
             </p>
             <p className="mt-3 text-sm leading-relaxed text-[var(--text-body)]">
               {ka
-                ? "ერთი უსაფრთხო რეგისტრაცია — waitlist, ანგარიში, ძაღლის პროფილი და სამედიცინო დოკუმენტების ატვირთვა."
-                : "One secure signup — waitlist, account, dog profile, and medical document uploads."}
+                ? "ერთი უსაფრთხო რეგისტრაცია: Waitlist, ანგარიში, ძაღლის პროფილი და სამედიცინო დოკუმენტების ატვირთვა."
+                : "One secure signup: waitlist, account, dog profile, and medical document uploads."}
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
               <Button href="/onboarding/platform" showArrow>

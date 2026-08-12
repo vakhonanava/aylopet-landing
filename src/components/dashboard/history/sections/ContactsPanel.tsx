@@ -78,7 +78,7 @@ function VetCard({ pet }: { pet: Pet }) {
       {vet ? (
         <div className="rounded-2xl border border-[#eceae5] bg-gradient-to-br from-[var(--brand-primary)]/[0.05] to-transparent p-5">
           <p className="text-lg font-bold tracking-tight text-[var(--brand-primary)]">
-            {vet.clinicName || "—"}
+            {vet.clinicName || "·"}
           </p>
           {vet.vetName ? (
             <p className="mt-0.5 text-sm text-slate-500">{vet.vetName}</p>
@@ -127,7 +127,7 @@ function VetCard({ pet }: { pet: Pet }) {
         <EmptyState
           icon={Stethoscope}
           title="ვეტერინარი დამატებული არ არის"
-          body="დაამატე კლინიკის კონტაქტი — ის გამოჩნდება SOS QR კოდზეც."
+          body="დაამატე კლინიკის კონტაქტი. ის გამოჩნდება SOS QR კოდზეც."
         />
       )}
 

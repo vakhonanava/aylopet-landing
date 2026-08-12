@@ -128,7 +128,7 @@ export function AiInsightsPanel({
         <EmptyState
           icon={MessagesSquare}
           title="კონსულტაციები ჯერ არ არის"
-          body="დაუსვი შეკითხვა AylopetAI-ს — ყველა საუბარი და რეკომენდაცია აქ შეინახება."
+          body="დაუსვი შეკითხვა AylopetAI-ს. ყველა საუბარი და რეკომენდაცია აქ შეინახება."
           action={
             <Link
               href="/products/aylopet-ai#chat"

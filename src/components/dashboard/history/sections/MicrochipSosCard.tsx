@@ -123,7 +123,7 @@ export function MicrochipSosCard({ pet }: { pet: Pet }) {
               ჩიპის ნომერი
             </p>
             <p className="mt-1 font-mono text-lg font-semibold tracking-tight text-[var(--brand-primary)]">
-              {chip ?? "—"}
+              {chip ?? "·"}
             </p>
           </div>
 

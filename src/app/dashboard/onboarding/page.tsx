@@ -32,7 +32,7 @@ export default function OnboardingPage() {
         {isAuthenticated && (
           <p className="mx-auto mt-2 flex items-center justify-center gap-1.5 text-sm text-slate-500">
             <PawPrint className="h-4 w-4 text-[var(--brand-primary)]" />
-            უკვე შესული ხარ — ანგარიშის შექმნა არ სჭირდება.
+            უკვე შესული ხარ. ანგარიშის შექმნა არ სჭირდება.
           </p>
         )}
       </header>
@@ -48,7 +48,7 @@ export default function OnboardingPage() {
           </p>
           <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[var(--brand-primary)]/[0.08] px-4 py-1.5 text-xs font-semibold text-[var(--brand-primary)]">
             <Users className="h-3.5 w-3.5" />
-            Family Sharing — Coming Soon
+            Family Sharing (Coming Soon)
           </span>
           <Link
             href="/dashboard"

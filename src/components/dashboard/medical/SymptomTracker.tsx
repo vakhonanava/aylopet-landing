@@ -138,7 +138,7 @@ export function SymptomTracker({ pet }: { pet: Pet }) {
   return (
     <div>
       <p className="mb-4 text-sm text-slate-500">
-        აირჩიე სიმპტომი და სიმძიმის დონე — ჩაიწერება ავტომატურად.
+        აირჩიე სიმპტომი და სიმძიმის დონე. დანარჩენი ავტომატურად ჩაიწერება.
       </p>
 
       {error && (
@@ -222,7 +222,7 @@ export function SymptomTracker({ pet }: { pet: Pet }) {
                 className={`${textInput} mt-1.5 min-h-20 resize-none`}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="დეტალები — რამ გამოიწვია, რა ჭამა..."
+                placeholder="დეტალები: რამ გამოიწვია, რა ჭამა..."
               />
             </div>
 

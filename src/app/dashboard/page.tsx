@@ -57,7 +57,7 @@ export default function DashboardHome() {
               </p>
               <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[var(--brand-primary)]/[0.08] px-3 py-1 text-xs font-semibold text-[var(--brand-primary)]">
                 <Users className="h-3.5 w-3.5" />
-                Family Sharing — Coming Soon
+                Family Sharing (Coming Soon)
               </span>
             </div>
           </div>

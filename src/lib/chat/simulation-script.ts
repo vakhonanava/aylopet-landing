@@ -81,7 +81,7 @@ Nutritionist recommendation: The recipe fully meets FEDIAF standards. To maintai
 const FLOW_KA: SimulationStep[] = [
   ai(
     "ka-1",
-    "მოგესალმებით, მე ვარ AylopetAI - თქვენი ძაღლის პერსონალური ნუტრიციოლოგი. სანამ დავიწყებდეთ, როგორ მოგმართოთ?",
+    "მოგესალმებით, მე ვარ AylopetAI, თქვენი ძაღლის პერსონალური ნუტრიციოლოგი. სანამ დავიწყებდეთ, როგორ მოგმართოთ?",
     2200,
     400,
   ),

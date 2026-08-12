@@ -104,7 +104,7 @@ export const KNOWLEDGE = {
         blocks: [
           {
             label: "განმარტება",
-            text: 'გადის "რეტორტულ სტერილიზაციას" (Retort Processing) ავტოკლავში 121°C - 135°C-ზე.',
+            text: 'გადის "რეტორტულ სტერილიზაციას" (Retort Processing) ავტოკლავში 121-135°C-ზე.',
           },
         ],
         pros: [

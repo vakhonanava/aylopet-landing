@@ -143,7 +143,7 @@ function LabResults({ dna }: { dna: DnaProfile }) {
         <MetricTile
           icon={Dna}
           label="ინბრიდინგი (COI)"
-          value={dna.coiPercent !== undefined ? `${dna.coiPercent}` : "—"}
+          value={dna.coiPercent !== undefined ? `${dna.coiPercent}` : "·"}
           unit={dna.coiPercent !== undefined ? "%" : undefined}
         />
       </div>
@@ -253,7 +253,7 @@ export function DnaPanel({ pet, dna }: DnaPanelProps) {
         <EmptyState
           icon={FlaskConical}
           title="Aylopet DNA ტესტი მალე"
-          body="ჩვენი ლაბორატორია ჯერ არ ამოქმედებულა. თუ სხვა ლაბორატორიის დნმ ტესტი უკვე გაქვთ, შეიყვანეთ შედეგები — AylopetAI მათ პრევენციულ რჩევებში გამოიყენებს."
+          body="ჩვენი ლაბორატორია ჯერ არ ამოქმედებულა. თუ სხვა ლაბორატორიის დნმ ტესტი უკვე გაქვთ, შეიყვანეთ შედეგები. AylopetAI მათ პრევენციულ რჩევებში გამოიყენებს."
           action={
             <button
               type="button"

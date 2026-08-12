@@ -141,7 +141,7 @@ export function WeightBcsPanel({ pet }: { pet: Pet }) {
           label="ცვლილება"
           value={
             summary.deltaKg === null ? (
-              "—"
+              "·"
             ) : (
               <span className="inline-flex items-center gap-1.5">
                 <TrendIcon className="h-4 w-4" />
@@ -158,7 +158,7 @@ export function WeightBcsPanel({ pet }: { pet: Pet }) {
         />
         <DataField
           label="BCS"
-          value={latestBcs ? `${latestBcs} / 9` : "—"}
+          value={latestBcs ? `${latestBcs} / 9` : "·"}
           hint={
             latestBcs
               ? BCS_SCALE.find((item) => item.score === latestBcs)?.label

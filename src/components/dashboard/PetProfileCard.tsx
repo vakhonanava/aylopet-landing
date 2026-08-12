@@ -54,10 +54,10 @@ function CompareRow({
     <div className="grid gap-1 rounded-xl bg-[#FAFAF8] px-3 py-2 sm:grid-cols-[120px_1fr_1fr] sm:items-center sm:gap-3">
       <span className="text-xs font-medium text-slate-500">{label}</span>
       <span className={`text-sm ${changed ? "text-slate-400 line-through" : "text-[var(--brand-primary)]"}`}>
-        {before || "—"}
+        {before || "·"}
       </span>
       <span className={`text-sm font-medium ${changed ? "text-[var(--brand-primary)]" : "text-slate-600"}`}>
-        {after || "—"}
+        {after || "·"}
       </span>
     </div>
   );

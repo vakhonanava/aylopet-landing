@@ -105,19 +105,19 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
       </div>
 
       <dl className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <DataField label="ჯიში" value={pet.breed || "—"} />
+        <DataField label="ჯიში" value={pet.breed || "·"} />
         <DataField
           label="დაბადების თარიღი"
-          value={pet.birthDate ? formatDate(pet.birthDate) : "—"}
+          value={pet.birthDate ? formatDate(pet.birthDate) : "·"}
           hint={age?.label}
         />
         <DataField
           label="სქესი"
-          value={reproductive ? SEX_LABELS[reproductive.sex] : "—"}
+          value={reproductive ? SEX_LABELS[reproductive.sex] : "·"}
         />
         <DataField
           label="კასტრაცია / სტერილიზაცია"
-          value={reproductive ? NEUTER_LABELS[reproductive.status] : "—"}
+          value={reproductive ? NEUTER_LABELS[reproductive.status] : "·"}
           hint={
             reproductive?.procedureDate
               ? `ჩატარდა ${formatDate(reproductive.procedureDate)}`
@@ -127,7 +127,7 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
         <DataField label="მიმდინარე წონა" value={`${pet.weightKg} კგ`} />
         <DataField
           label="სხეულის კონდიცია (BCS)"
-          value={pet.bcsScore ? `${pet.bcsScore} / 9` : "—"}
+          value={pet.bcsScore ? `${pet.bcsScore} / 9` : "·"}
         />
       </dl>
 
