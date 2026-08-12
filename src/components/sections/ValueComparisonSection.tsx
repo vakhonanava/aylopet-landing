@@ -11,7 +11,7 @@ import { scrollToWaitlist } from "@/lib/navigation";
 import { FIRST_PET_PRICE_GEL } from "@/lib/pricing/pets";
 
 /** Typical Tbilisi coffee, used only as the comparison anchor. */
-const COFFEE_PRICE_GEL = 10;
+const COFFEE_PRICE_GEL = 15;
 const COFFEE_PRICE = `${COFFEE_PRICE_GEL} ₾`;
 const PRICE = `${FIRST_PET_PRICE_GEL} ₾`;
 

@@ -323,7 +323,7 @@ export const en: Dictionary = {
     punchline: "Your dog's health matters more than a cup of coffee.",
     cta: "Register and get an exclusive offer",
     priceNote:
-      "Coffee ₾10 a day, AylopetAI ₾15 a month with full access for your dog.",
+      "Coffee ₾15 a day, AylopetAI ₾15 a month with full access for your dog.",
     lossTitle: "What you lose by waiting",
     lossItems: [
       "An exclusive offer on food",
