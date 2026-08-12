@@ -9,9 +9,9 @@ import { useLocale } from "@/components/i18n/LocaleProvider";
 import { getAbout } from "@/lib/content/about";
 import { IMAGES } from "@/lib/images";
 
-const KOKO_ALT: Record<"ka" | "en", string> = {
-  ka: "პეკინესი კოკო, Aylopet-ის შთაგონება",
-  en: "Pekingese Koko, Aylopet's inspiration",
+const PEPI_ALT: Record<"ka" | "en", string> = {
+  ka: "ფრანგული ბულდოგი პეპი",
+  en: "French Bulldog Pepi",
 };
 
 const DANTE_ALT: Record<"ka" | "en", string> = {
@@ -19,7 +19,7 @@ const DANTE_ALT: Record<"ka" | "en", string> = {
   en: "Cane Corso Dante",
 };
 
-const KOKO_NAME: Record<"ka" | "en", string> = { ka: "კოკო", en: "Koko" };
+const PEPI_NAME: Record<"ka" | "en", string> = { ka: "პეპი", en: "Pepi" };
 const DANTE_NAME: Record<"ka" | "en", string> = { ka: "დანტე", en: "Dante" };
 const DANTE_BREED: Record<"ka" | "en", string> = {
   ka: "კანე კორსო",
@@ -61,14 +61,14 @@ export function StoryContent() {
 
                 <figure className="relative mt-4 aspect-[4/3] overflow-hidden rounded-[var(--radius-organic-lg)] shadow-soft">
                   <Image
-                    src={IMAGES.storyPekingese}
-                    alt={KOKO_ALT[locale]}
+                    src={IMAGES.storyFrenchBulldog}
+                    alt={PEPI_ALT[locale]}
                     fill
                     sizes="(max-width: 1024px) 100vw, 40vw"
                     className="object-cover"
                   />
                   <figcaption className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-[var(--text-primary)]">
-                    {KOKO_NAME[locale]}
+                    {PEPI_NAME[locale]}
                   </figcaption>
                 </figure>
               </div>
