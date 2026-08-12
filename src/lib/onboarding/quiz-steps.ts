@@ -224,7 +224,7 @@ export function getStepCopy(
       case 1:
         return {
           title:
-            "მოგესალმებით, მე ვარ AylopetAI - თქვენი ძაღლის პერსონალური ნუტრიციოლოგი. სანამ დავიწყებდეთ, როგორ მოგმართოთ?",
+            "მოგესალმებით, მე ვარ AylopetAI, თქვენი ძაღლის პერსონალური ნუტრიციოლოგი. სანამ დავიწყებდეთ, როგორ მოგმართოთ?",
         };
       case 2:
         return {
@@ -269,7 +269,7 @@ export function getStepCopy(
     case 1:
       return {
         title:
-          "Welcome! I am AylopetAI - your dog's personal nutritionist. Before we begin, how should I address you?",
+          "Welcome! I'm AylopetAI, your dog's personal nutritionist. Before we begin, how should I address you?",
       };
     case 2:
       return { title: `Nice to meet you, ${user}. Please provide your email and phone number.` };

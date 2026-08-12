@@ -495,7 +495,7 @@ export const en: Dictionary = {
     eyebrow: "Referral program",
     tierName: "Ambassadors",
     intro:
-      "One status for everyone — no complicated ladder. You get the base package the moment you join.",
+      "One status for everyone, with no complicated ladder. You get the base package the moment you join.",
     basePointsLabel: "Base package",
     pointsSuffix: "points",
     upgradeRule:

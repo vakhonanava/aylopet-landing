@@ -38,7 +38,7 @@ export function VetExportButton({ pet }: { pet: Pet }) {
   return (
     <div className="flex flex-col gap-4">
       <p className="text-sm text-slate-500">
-        გადაეცი სრული ჯანმრთელობის რეპორტი ვეტერინარს — ბეჭდვით ან ბმულის გაზიარებით.
+        გადაეცი სრული ჯანმრთელობის რეპორტი ვეტერინარს ბეჭდვით ან ბმულის გაზიარებით.
       </p>
 
       {error && (

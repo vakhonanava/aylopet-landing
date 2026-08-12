@@ -24,9 +24,9 @@ export const reviewsEn: ReviewsCopy = {
   editTitle: "Your review",
   editSubtitle: "You can update your comment anytime.",
   formTitle: "Share your story",
-  formSubtitle: "Tell us how Aylopet helps your dog — you can upload a photo too.",
+  formSubtitle: "Tell us how Aylopet helps your dog. You can upload a photo too.",
   sectionHelper:
-    "This space is yours: share your experience with Aylopet, tell us what your dog needs, suggest a feature, or simply ask a question — we read every comment and use it to shape the product.",
+    "This space is yours: share your experience with Aylopet, tell us what your dog needs, suggest a feature, or simply ask a question. We read every comment and use it to shape the product.",
   writeCta: "Write a comment",
   closeForm: "Close",
   authRequired:

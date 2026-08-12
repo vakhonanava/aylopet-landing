@@ -120,16 +120,16 @@ export function NutritionPanel({ pet }: { pet: Pet }) {
       <dl className="grid gap-3 sm:grid-cols-3">
         <DataField
           label="მიმდინარე დიეტა"
-          value={diet ? DIET_LABELS[diet.type] : "—"}
+          value={diet ? DIET_LABELS[diet.type] : "·"}
           hint={diet?.productName}
         />
         <DataField
           label="კვების სიხშირე"
-          value={diet ? `დღეში ${diet.mealsPerDay}-ჯერ` : "—"}
+          value={diet ? `დღეში ${diet.mealsPerDay}-ჯერ` : "·"}
         />
         <DataField
           label="ენერგეტიკული სიმკვრივე"
-          value={diet?.kcalPer100g ? `${diet.kcalPer100g} kcal` : "—"}
+          value={diet?.kcalPer100g ? `${diet.kcalPer100g} kcal` : "·"}
           hint={diet?.kcalPer100g ? "100 გრამზე" : "საჭიროა გრამების გამოსათვლელად"}
         />
       </dl>
@@ -162,14 +162,14 @@ export function NutritionPanel({ pet }: { pet: Pet }) {
           <MetricTile
             icon={Scale}
             label="დღიური პორცია"
-            value={target.gramsPerDay ?? "—"}
+            value={target.gramsPerDay ?? "·"}
             unit={target.gramsPerDay ? "გ" : undefined}
             sub={target.gramsPerDay ? undefined : "მიუთითე kcal/100გ"}
           />
           <MetricTile
             icon={UtensilsCrossed}
             label="ერთ კვებაზე"
-            value={target.gramsPerMeal ?? "—"}
+            value={target.gramsPerMeal ?? "·"}
             unit={target.gramsPerMeal ? "გ" : undefined}
             sub={diet ? `დღეში ${diet.mealsPerDay}-ჯერ` : "დღეში 2-ჯერ"}
           />
