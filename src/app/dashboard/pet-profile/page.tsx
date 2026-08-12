@@ -1,9 +1,11 @@
 "use client";
 
-import { Dog, PawPrint } from "lucide-react";
+import { ArrowLeft, ArrowRight, Dog, PawPrint } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+import type { Pet } from "@/lib/dashboard";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
 import { PetHistoryDashboard } from "@/components/dashboard/history/PetHistoryDashboard";
 
@@ -12,6 +14,35 @@ function Loading() {
     <div className="flex h-64 items-center justify-center text-slate-400">
       იტვირთება...
     </div>
+  );
+}
+
+function PetPickerCard({ pet }: { pet: Pet }) {
+  return (
+    <Link
+      href={`/dashboard/pet-profile?pet=${pet.id}`}
+      className="group flex items-center gap-4 rounded-[2rem] border border-[#e5e7eb] bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgb(0,0,0,0.06)]"
+    >
+      <span className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-slate-400">
+        {pet.avatarUrl ? (
+          <Image
+            src={pet.avatarUrl}
+            alt={pet.name}
+            width={64}
+            height={64}
+            unoptimized
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <Dog className="h-7 w-7" />
+        )}
+      </span>
+      <div className="min-w-0 flex-1">
+        <h3 className="font-bold text-[var(--brand-primary)]">{pet.name}</h3>
+        <p className="truncate text-sm text-slate-500">{pet.breed}</p>
+      </div>
+      <ArrowRight className="h-5 w-5 shrink-0 text-slate-300 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-[var(--brand-primary)]" />
+    </Link>
   );
 }
 
@@ -36,17 +67,48 @@ function PetProfileContent() {
     );
   }
 
-  // `?pet=<id>` keeps the selection linkable; the first pet is the default.
+  // Full history only opens once a pet is explicitly picked via `?pet=<id>` —
+  // it never auto-selects, even when there's just one dog.
   const requested = searchParams.get("pet");
-  const pet = pets.find((candidate) => candidate.id === requested) ?? pets[0];
+  const pet = requested
+    ? pets.find((candidate) => candidate.id === requested)
+    : undefined;
+
+  if (!pet) {
+    return (
+      <div className="flex flex-col gap-5">
+        <header>
+          <h1 className="text-2xl font-bold tracking-tight text-[var(--brand-primary)]">
+            ჯანმრთელობის ისტორია
+          </h1>
+          <p className="mt-1 text-sm text-slate-500">
+            აირჩიეთ ძაღლი სრული ისტორიის სანახავად.
+          </p>
+        </header>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          {pets.map((candidate) => (
+            <PetPickerCard key={candidate.id} pet={candidate} />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-5">
-      <header>
+      <header className="flex flex-col gap-2">
+        <Link
+          href="/dashboard/pet-profile"
+          className="inline-flex w-fit items-center gap-1 text-sm font-medium text-slate-500 transition-colors hover:text-[var(--brand-primary)]"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          უკან
+        </Link>
         <h1 className="text-2xl font-bold tracking-tight text-[var(--brand-primary)]">
           ჯანმრთელობის სრული ისტორია
         </h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="text-sm text-slate-500">
           {pet.name} · ბიოლოგიური, სამედიცინო, გენეტიკური და აქტივობის მონაცემები
           ერთ ადგილას.
         </p>
