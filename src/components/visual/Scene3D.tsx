@@ -20,6 +20,8 @@ interface Scene3DProps {
   glow?: "sage" | "terracotta" | "forest";
   /** "contain" for transparent cutouts that must not be cropped. */
   fit?: "cover" | "contain";
+  /** Backdrop behind the image · only visible with fit="contain". Defaults to bg-white. */
+  mediaBgClassName?: string;
 }
 
 const aspectClasses = {
@@ -49,6 +51,7 @@ export function Scene3D({
   overlay,
   glow = "sage",
   fit = "cover",
+  mediaBgClassName,
 }: Scene3DProps) {
   const imageSrc = resolveImage(src);
   const { ref, style, onMouseMove, onMouseLeave } = useTilt(10);
@@ -89,7 +92,7 @@ export function Scene3D({
         className={`relative ${aspect === "fill" ? "flex h-full min-h-[320px] w-full flex-col" : ""}`}
       >
         <div
-          className={`scene-3d-card relative overflow-hidden rounded-[var(--radius-bento)] border border-white/60 bg-white shadow-[0_24px_64px_rgba(13,46,39,0.14),0_8px_24px_rgba(13,46,39,0.08)] ${aspectClasses[aspect]} ${aspect === "fill" ? "flex-1" : ""}`}
+          className={`scene-3d-card relative overflow-hidden rounded-[var(--radius-bento)] border border-white/60 ${mediaBgClassName ?? "bg-white"} shadow-[0_24px_64px_rgba(13,46,39,0.14),0_8px_24px_rgba(13,46,39,0.08)] ${aspectClasses[aspect]} ${aspect === "fill" ? "flex-1" : ""}`}
           style={{ transform: "translateZ(24px)" }}
         >
           <Image
