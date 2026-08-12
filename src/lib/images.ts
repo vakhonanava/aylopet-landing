@@ -12,6 +12,8 @@ export const IMAGES = {
    * background, never object-cover, or the crop clips his head and legs.
    */
   storyCaneCorso: "/images/Dante.png",
+  /** Pepi · French Bulldog, shown in "Our story". */
+  storyFrenchBulldog: "/images/Pepi.jpg",
   aiDog:
     "https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=1200&q=90&auto=format&fit=crop",
   healthDog3D:

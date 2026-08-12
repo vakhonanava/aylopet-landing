@@ -16,12 +16,12 @@ const COPY = {
   ka: {
     eyebrow: "ჩვენი ისტორია",
     headline: "დაფუძნებული რეალურ ისტორიებზე, აგებული მეცნიერებაზე",
-    kokoBreed: "პეკინესი",
-    kokoStory:
-      "კოკოს, ჩვენი პეკინესის, ბრძოლამ მშრალი საკვების მონელებასთან, მუდმივ დისკომფორტთან და ალერგიებთან გვაჩვენა, რომ პატარა ჯიშის ძაღლებისთვის ინდივიდუალური მიდგომა თითქმის არსად მოიძებნება. სწორედ ეს გახდა Aylopet-ის იდეის პირველი ბიძგი.",
     danteBreed: "კანე კორსო",
     danteStory:
       "დანტემ, ჩვენმა კანე კორსომ, მუდმივად მოითხოვა ნამდვილი ხორცი და უარი თქვა დამუშავებულ საკვებზე. მისმა აგრესიული სიმსივნის დიაგნოზმა საბოლოოდ დაგვანახა, რომ კვება, გენეტიკა და ადრეული პრევენცია ერთმანეთისგან განუყოფელია — და გახდა Aylopet-ის ეკოსისტემის შექმნის მთავარი მიზეზი.",
+    pepiBreed: "ფრანგული ბულდოგი",
+    pepiStory:
+      "როცა ვახო თოთხმეტი წლის იყო, ოჯახმა პეპი, პატარა ფრანგული ბულდოგი, აჩუქა. მას შემდეგ თორმეტი წლის განმავლობაში პეპი მისი ყოველდღიურობის, საუკეთესო მოგონებებისა და ყველაზე უპირობო ერთგულების სიმბოლო იყო. ათი წლის ასაკში მას მკერდის სიმსივნე დაუდგინდა, თუმცა ოპერაციისა და მკურნალობის შემდეგ პეპიმ კიდევ ორი წელი მამაცურად იბრძოლა. მისი მოგონება დღემდე უპირობო სიყვარულისა და ერთგულების სიმბოლოდ რჩება.",
     partnerLabel: "პარტნიორი საწარმო",
     partnerTitle: "Natural Selection, ისრაელი",
     partnerBody:
@@ -30,12 +30,12 @@ const COPY = {
   en: {
     eyebrow: "Our story",
     headline: "Built on real stories, grounded in science",
-    kokoBreed: "Pekingese",
-    kokoStory:
-      "Koko, our Pekingese, struggled with digesting dry food, constant discomfort, and allergies. Watching her showed us how hard it is to find truly individual care for small-breed dogs — and planted the first seed of the Aylopet idea.",
     danteBreed: "Cane Corso",
     danteStory:
       "Dante, our Cane Corso, constantly demanded real meat and refused processed food. His diagnosis with an aggressive tumor ultimately showed us that nutrition, genetics, and early prevention can't be separated — and became the reason the Aylopet ecosystem exists.",
+    pepiBreed: "French Bulldog",
+    pepiStory:
+      "Pepi, a French Bulldog, joined the family when Vakho was fourteen. For the next twelve years she was the thread through his everyday life, his best memories, and the most unconditional loyalty he'd known. At ten, she was diagnosed with a mammary tumor, but after surgery Pepi fought on bravely for two more years. Her memory remains a lasting symbol of unconditional love and loyalty.",
     partnerLabel: "Partner facility",
     partnerTitle: "Natural Selection, Israel",
     partnerBody:
@@ -79,17 +79,18 @@ export function AboutUsSection() {
           className="mt-14 grid gap-8 lg:grid-cols-2"
         >
           <StoryCard
-            name={locale === "ka" ? "კოკო" : "Koko"}
-            breed={c.kokoBreed}
-            image={IMAGES.storyPekingese}
-            story={c.kokoStory}
-          />
-          <StoryCard
             name={locale === "ka" ? "დანტე" : "Dante"}
             breed={c.danteBreed}
             image={IMAGES.storyCaneCorso}
             story={c.danteStory}
             fit="contain"
+            mediaBg="bg-gradient-to-b from-[var(--bone-alabaster)] to-[var(--brand-accent-soft)]"
+          />
+          <StoryCard
+            name={locale === "ka" ? "პეპი" : "Pepi"}
+            breed={c.pepiBreed}
+            image={IMAGES.storyFrenchBulldog}
+            story={c.pepiStory}
           />
         </motion.div>
 
@@ -159,6 +160,7 @@ function StoryCard({
   image,
   story,
   fit,
+  mediaBg,
 }: {
   name: string;
   breed: string;
@@ -166,6 +168,8 @@ function StoryCard({
   story: string;
   /** "contain" for transparent cutouts · keeps the whole dog in frame. */
   fit?: "cover" | "contain";
+  /** Backdrop behind a "contain" image · only visible for transparent cutouts. */
+  mediaBg?: string;
 }) {
   return (
     <motion.article
@@ -179,6 +183,7 @@ function StoryCard({
           aspect="landscape"
           glow="sage"
           fit={fit}
+          mediaBgClassName={mediaBg}
           tilt
           overlay={
             <div className="absolute bottom-3 left-3 rounded-xl bg-[var(--forest-deep)]/75 px-3 py-2 backdrop-blur-sm">
