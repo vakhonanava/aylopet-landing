@@ -2,26 +2,13 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  Dog,
-  HeartPulse,
-  LayoutDashboard,
-  LogOut,
-  Plus,
-  Settings,
-} from "lucide-react";
+import { Dog, LayoutDashboard, LogOut, Plus, Settings } from "lucide-react";
 import { AylopetLogo } from "@/components/brand/AylopetLogo";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
 
 const navItems = [
   { label: "მთავარი", href: "/dashboard", icon: LayoutDashboard, exact: true },
-  {
-    label: "ჯანმრთელობის ისტორია",
-    href: "/dashboard/pet-profile",
-    icon: HeartPulse,
-    exact: true,
-  },
 ];
 
 export function Sidebar() {
