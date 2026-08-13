@@ -26,7 +26,6 @@ import { IdentityPassport } from "@/components/dashboard/history/sections/Identi
 import { MedicalHistoryPanel } from "@/components/dashboard/history/sections/MedicalHistoryPanel";
 import { MicrochipSosCard } from "@/components/dashboard/history/sections/MicrochipSosCard";
 import { NutritionPanel } from "@/components/dashboard/history/sections/NutritionPanel";
-import { WeightBcsPanel } from "@/components/dashboard/history/sections/WeightBcsPanel";
 import { sectionMotion } from "@/components/dashboard/history/ui";
 import type { Pet } from "@/lib/dashboard";
 import { PRIVACY_NOTICE } from "@/lib/pet-history/labels";
@@ -82,7 +81,6 @@ export function PetHistoryDashboard({ pet }: { pet: Pet }) {
       <div className="flex flex-col gap-5">
         <IdentityPassport pet={pet} />
         <MicrochipSosCard pet={pet} />
-        <WeightBcsPanel pet={pet} />
 
         <MedicalHistoryPanel pet={pet} />
 

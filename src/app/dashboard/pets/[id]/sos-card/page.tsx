@@ -1,0 +1,38 @@
+"use client";
+
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { PawPrint } from "lucide-react";
+import { useDashboard } from "@/components/dashboard/DashboardStore";
+import { SosCardView } from "@/components/dashboard/history/SosCardView";
+
+export default function SosCardPage() {
+  const params = useParams<{ id: string }>();
+  const { getPet, ready } = useDashboard();
+  const pet = getPet(params.id);
+
+  if (!ready) {
+    return (
+      <div className="flex h-64 items-center justify-center text-slate-400">
+        იტვირთება...
+      </div>
+    );
+  }
+
+  if (!pet) {
+    return (
+      <div className="flex flex-col items-center gap-4 rounded-[2rem] border border-[#e5e7eb] bg-white p-12 text-center">
+        <PawPrint className="h-9 w-9 text-slate-300" />
+        <p className="text-slate-500">ეს ძაღლი ვერ მოიძებნა.</p>
+        <Link
+          href="/dashboard"
+          className="rounded-full bg-[var(--brand-primary)] px-6 py-2.5 text-sm font-medium text-white"
+        >
+          დაბრუნება პანელზე
+        </Link>
+      </div>
+    );
+  }
+
+  return <SosCardView pet={pet} />;
+}
