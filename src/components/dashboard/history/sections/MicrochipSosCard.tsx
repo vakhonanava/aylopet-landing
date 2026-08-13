@@ -4,12 +4,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   BadgeCheck,
   Download,
+  FileText,
   Loader2,
   Pencil,
   ScanLine,
   ShieldAlert,
   X,
 } from "lucide-react";
+import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import { addButton, fieldLabel, textInput } from "@/components/dashboard/FormControls";
 import { QrCode } from "@/components/dashboard/history/QrCode";
@@ -17,31 +19,11 @@ import { SectionCard, StatusPill } from "@/components/dashboard/history/ui";
 import { useHistorySave } from "@/components/dashboard/history/useHistorySave";
 import { formatDate, type Pet } from "@/lib/dashboard";
 import { MICROCHIP_STATUS } from "@/lib/pet-history/labels";
+import { buildSosPayload } from "@/lib/pet-history/sos";
 import type {
   MicrochipRegistration,
   MicrochipRegistryStatus,
 } from "@/lib/pet-history/types";
-
-/** Keeps a Georgian name from pushing the payload past QR version 6. */
-const MAX_NAME_LENGTH = 20;
-
-/**
- * The SOS code carries the contact details as plain text rather than a URL.
- * A finder gets the chip number and a callback number straight from the scan —
- * no network, no public profile endpoint, and nothing exposed beyond what the
- * owner already put in the profile.
- */
-function buildSosPayload(pet: Pet, chip: string | null): string {
-  const lines = ["AYLOPET SOS", `Dog: ${pet.name.slice(0, MAX_NAME_LENGTH)}`];
-  if (chip) lines.push(`Chip: ${chip}`);
-
-  const vet = pet.history?.vet;
-  if (vet?.phone) lines.push(`Vet: ${vet.phone}`);
-  if (vet?.emergencyPhone) lines.push(`SOS: ${vet.emergencyPhone}`);
-
-  lines.push("aylopet.com");
-  return lines.join("\n");
-}
 
 export function MicrochipSosCard({ pet }: { pet: Pet }) {
   const [editing, setEditing] = useState(false);
@@ -166,6 +148,13 @@ export function MicrochipSosCard({ pet }: { pet: Pet }) {
           >
             <Download className="h-3.5 w-3.5" /> QR-ის ჩამოტვირთვა
           </button>
+          <Link
+            href={`/dashboard/pets/${pet.id}/sos-card`}
+            target="_blank"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 transition-colors hover:text-[var(--brand-primary)]"
+          >
+            <FileText className="h-3.5 w-3.5" /> სრული ბარათი (PDF)
+          </Link>
         </div>
       </div>
 
