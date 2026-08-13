@@ -7,11 +7,8 @@ import { TextChipInput, addButton, fieldLabel, textInput } from "@/components/da
 import type { Pet } from "@/lib/dashboard";
 
 export function MedicalRecordForm({ pet }: { pet: Pet }) {
-  const { updatePetIdentity, saveMedicalRecord } = useDashboard();
+  const { saveMedicalRecord } = useDashboard();
 
-  const [birthDate, setBirthDate] = useState(pet.birthDate ?? "");
-  const [bcsScore, setBcsScore] = useState(pet.bcsScore ? String(pet.bcsScore) : "");
-  const [microchipId, setMicrochipId] = useState(pet.microchipId ?? "");
   const [chronicConditions, setChronicConditions] = useState<string[]>(
     pet.medicalRecord?.chronicConditions ?? [],
   );
@@ -30,17 +27,6 @@ export function MedicalRecordForm({ pet }: { pet: Pet }) {
     setBusy(true);
     setError(null);
     setSaved(false);
-
-    const identityResult = await updatePetIdentity(pet.id, {
-      birthDate: birthDate || null,
-      bcsScore: bcsScore ? Number(bcsScore) : null,
-      microchipId: microchipId || null,
-    });
-    if (!identityResult.ok) {
-      setBusy(false);
-      setError(identityResult.error ?? "ვერ შეინახა.");
-      return;
-    }
 
     const recordResult = await saveMedicalRecord(pet.id, {
       chronicConditions,
@@ -64,44 +50,6 @@ export function MedicalRecordForm({ pet }: { pet: Pet }) {
           {error}
         </p>
       )}
-
-      <div>
-        <h3 className="mb-3 text-sm font-semibold text-[var(--brand-primary)]">
-          იდენტიფიკაცია & სხეულის მდგომარეობა
-        </h3>
-        <div className="grid gap-3 sm:grid-cols-3">
-          <div className="flex flex-col gap-1.5">
-            <label className={fieldLabel}>დაბადების თარიღი</label>
-            <input
-              type="date"
-              className={textInput}
-              value={birthDate}
-              onChange={(e) => setBirthDate(e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className={fieldLabel}>BCS ქულა (1-9)</label>
-            <input
-              type="number"
-              min={1}
-              max={9}
-              className={textInput}
-              value={bcsScore}
-              onChange={(e) => setBcsScore(e.target.value)}
-              placeholder="მაგ. 5"
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className={fieldLabel}>მიკროჩიპის ნომერი</label>
-            <input
-              className={textInput}
-              value={microchipId}
-              onChange={(e) => setMicrochipId(e.target.value)}
-              placeholder="15-ნიშნა კოდი"
-            />
-          </div>
-        </div>
-      </div>
 
       <div className="flex flex-col gap-1.5">
         <label className={fieldLabel}>ქრონიკული დაავადებები</label>

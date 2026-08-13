@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { CareType } from "@/lib/dashboard";
 import type { MedicalRecord, Medication, SeverityLevel, SymptomLog } from "@/lib/medical";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
+import { parsePetHistory } from "@/lib/platform/history-persistence";
 import { PET_MEDICAL_DOCS_BUCKET } from "@/lib/platform/types";
 
 export interface VetReportPet {
@@ -156,14 +157,21 @@ export async function buildVetReportData(
 
   const preventativeCare = latestByCareType(vaccinesData ?? []);
 
+  // Sex/neuter status is only ever set at onboarding on the flat columns; any
+  // later edit goes through `history.reproductive` instead, so that's the
+  // source of truth whenever it's present.
+  const reproductive = parsePetHistory(petRow.history).reproductive;
+
   return {
     pet: {
       id: petId,
       name: petRow.pet_name as string,
       breed: petRow.breed as string,
       weightKg: Number(petRow.weight ?? 0),
-      gender: (petRow.gender as string | null) ?? null,
-      isNeutered: Boolean(petRow.is_neutered),
+      gender: reproductive?.sex ?? (petRow.gender as string | null) ?? null,
+      isNeutered: reproductive
+        ? reproductive.status === "neutered"
+        : Boolean(petRow.is_neutered),
       birthDate: (petRow.birth_date as string | null) ?? null,
       bcsScore: (petRow.bcs_score as number | null) ?? null,
       microchipId: (petRow.microchip_id as string | null) ?? null,
