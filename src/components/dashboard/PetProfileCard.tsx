@@ -313,27 +313,6 @@ export function PetProfileCard({ pet }: { pet: Pet }) {
               onChange={(breed) => patchDraft({ breed })}
             />
           </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label className={fieldLabel} htmlFor="pet-weight">
-              წონა
-            </label>
-            <div className="relative">
-              <input
-                id="pet-weight"
-                type="number"
-                step="0.1"
-                className={`${textInput} pr-12`}
-                value={Number.isFinite(draft.weightKg) ? draft.weightKg : ""}
-                onChange={(e) =>
-                  patchDraft({ weightKg: Number(e.target.value) })
-                }
-              />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-slate-400">
-                kg
-              </span>
-            </div>
-          </div>
         </div>
 
         <div className="mt-6 flex flex-col gap-2">
