@@ -1,10 +1,11 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { BadgeCheck, Dog, IdCard, Loader2, Pencil, Plus, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { BadgeCheck, Dog, IdCard, Loader2, Pencil, Plus } from "lucide-react";
+import { useMemo, useState, type ReactNode } from "react";
 import { addButton, fieldLabel, textInput } from "@/components/dashboard/FormControls";
 import { ImageLightbox } from "@/components/dashboard/ImageLightbox";
+import { useDashboard } from "@/components/dashboard/DashboardStore";
 import { DataField, SectionCard } from "@/components/dashboard/history/ui";
 import { useHistorySave } from "@/components/dashboard/history/useHistorySave";
 import { formatDate, type Pet } from "@/lib/dashboard";
@@ -16,10 +17,52 @@ import type {
   Sex,
 } from "@/lib/pet-history/types";
 
+function today(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+/** A DataField that opens its own editor in place when clicked, instead of a separate panel. */
+function ClickableField({
+  label,
+  value,
+  hint,
+  active,
+  onClick,
+}: {
+  label: string;
+  value: ReactNode;
+  hint?: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`group cursor-pointer rounded-2xl px-4 py-3 text-left transition-colors ${
+        active
+          ? "bg-[var(--brand-primary)]/[0.08] ring-1 ring-[var(--brand-primary)]/30"
+          : "bg-[#FAFAF8] hover:bg-[var(--brand-primary)]/[0.05]"
+      }`}
+    >
+      <dt className="flex items-center justify-between gap-2 text-xs font-medium uppercase tracking-wide text-slate-400">
+        {label}
+        <Pencil className="h-3 w-3 shrink-0 text-slate-300 opacity-0 transition-opacity group-hover:opacity-100" />
+      </dt>
+      <dd className="mt-1 text-sm font-semibold text-[var(--brand-primary)]">
+        {value}
+      </dd>
+      {hint ? <p className="mt-0.5 text-xs text-slate-400">{hint}</p> : null}
+    </button>
+  );
+}
+
 export function IdentityPassport({ pet }: { pet: Pet }) {
-  const [editing, setEditing] = useState(false);
+  const { updatePetIdentity } = useDashboard();
   const [zoomOpen, setZoomOpen] = useState(false);
-  const { save, saving, error } = useHistorySave(pet.id);
+  const [editingField, setEditingField] = useState<
+    "birthDate" | "reproductive" | null
+  >(null);
 
   const reproductive = pet.history?.reproductive ?? null;
   const age = calculateAge(pet.birthDate);
@@ -33,6 +76,36 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
   const latestWeight = weightSummary.latest?.weightKg ?? pet.weightKg;
   const latestBcs = weightSummary.latest?.bcs ?? pet.bcsScore;
 
+  // Birth date · saved via the flat `pets.birth_date` column, so bcsScore and
+  // microchipId are passed through untouched rather than cleared.
+  const [birthDateInput, setBirthDateInput] = useState(pet.birthDate ?? "");
+  const [savingBirthDate, setSavingBirthDate] = useState(false);
+  const [birthDateError, setBirthDateError] = useState<string | null>(null);
+
+  const openBirthDateEditor = () => {
+    setBirthDateInput(pet.birthDate ?? "");
+    setBirthDateError(null);
+    setEditingField("birthDate");
+  };
+
+  const submitBirthDate = async () => {
+    setSavingBirthDate(true);
+    setBirthDateError(null);
+    const result = await updatePetIdentity(pet.id, {
+      birthDate: birthDateInput || null,
+      bcsScore: pet.bcsScore ?? null,
+      microchipId: pet.microchipId ?? null,
+    });
+    setSavingBirthDate(false);
+    if (!result.ok) {
+      setBirthDateError(result.error ?? "შენახვა ვერ მოხერხდა.");
+      return;
+    }
+    setEditingField(null);
+  };
+
+  // Reproductive status · saved via `pet.history` (sex + castration + procedure date).
+  const { save, saving, error } = useHistorySave(pet.id);
   const [sex, setSex] = useState<Sex>(reproductive?.sex ?? "male");
   const [status, setStatus] = useState<NeuterStatus>(
     reproductive?.status ?? "intact",
@@ -41,14 +114,14 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
     reproductive?.procedureDate ?? "",
   );
 
-  const openEditor = () => {
+  const openReproductiveEditor = () => {
     setSex(reproductive?.sex ?? "male");
     setStatus(reproductive?.status ?? "intact");
     setProcedureDate(reproductive?.procedureDate ?? "");
-    setEditing(true);
+    setEditingField("reproductive");
   };
 
-  const submit = async () => {
+  const submitReproductive = async () => {
     const next: ReproductiveStatus = {
       sex,
       status,
@@ -58,7 +131,7 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
         ? { procedureDate }
         : {}),
     };
-    if (await save({ reproductive: next })) setEditing(false);
+    if (await save({ reproductive: next })) setEditingField(null);
   };
 
   return (
@@ -67,23 +140,6 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
       icon={IdCard}
       title="პასპორტი და იდენტიფიკაცია"
       description="ძაღლის ძირითადი ბიოლოგიური მონაცემები."
-      action={
-        <button
-          type="button"
-          onClick={editing ? () => setEditing(false) : openEditor}
-          className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[#e5e7eb] px-3.5 py-2 text-xs font-medium text-slate-500 transition-colors hover:border-[var(--brand-primary)]/30 hover:text-[var(--brand-primary)]"
-        >
-          {editing ? (
-            <>
-              <X className="h-3.5 w-3.5" /> გაუქმება
-            </>
-          ) : (
-            <>
-              <Pencil className="h-3.5 w-3.5" /> რედაქტირება
-            </>
-          )}
-        </button>
-      }
     >
       <div className="flex items-center gap-4 rounded-2xl bg-gradient-to-br from-[var(--brand-primary)]/[0.06] to-transparent px-5 py-4">
         {pet.avatarUrl ? (
@@ -114,24 +170,179 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
       </div>
 
       <dl className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <DataField
+        <ClickableField
           label="დაბადების თარიღი"
-          value={pet.birthDate ? formatDate(pet.birthDate) : "·"}
+          value={pet.birthDate ? formatDate(pet.birthDate) : "დაამატე"}
           hint={age?.label}
+          active={editingField === "birthDate"}
+          onClick={
+            editingField === "birthDate"
+              ? () => setEditingField(null)
+              : openBirthDateEditor
+          }
         />
-        <DataField
+
+        <AnimatePresence initial={false}>
+          {editingField === "birthDate" ? (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              className="overflow-hidden sm:col-span-2 lg:col-span-3"
+            >
+              <div className="flex flex-wrap items-end gap-3 rounded-2xl border border-[#e5e7eb] bg-[#FAFAF8] p-4">
+                <div className="min-w-[10rem] flex-1">
+                  <label className={fieldLabel} htmlFor="birth-date">
+                    დაბადების თარიღი
+                  </label>
+                  <input
+                    id="birth-date"
+                    type="date"
+                    value={birthDateInput}
+                    max={today()}
+                    onChange={(event) => setBirthDateInput(event.target.value)}
+                    className={`${textInput} mt-2`}
+                  />
+                </div>
+                {birthDateError ? (
+                  <p className="w-full text-sm text-red-600">{birthDateError}</p>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={() => void submitBirthDate()}
+                  disabled={savingBirthDate}
+                  className={`${addButton} cursor-pointer disabled:opacity-60`}
+                >
+                  {savingBirthDate ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <BadgeCheck className="h-4 w-4" />
+                  )}
+                  შენახვა
+                </button>
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+
+        <ClickableField
           label="სქესი"
-          value={reproductive ? SEX_LABELS[reproductive.sex] : "·"}
+          value={reproductive ? SEX_LABELS[reproductive.sex] : "დაამატე"}
+          active={editingField === "reproductive"}
+          onClick={
+            editingField === "reproductive"
+              ? () => setEditingField(null)
+              : openReproductiveEditor
+          }
         />
-        <DataField
+        <ClickableField
           label="კასტრაცია / სტერილიზაცია"
-          value={reproductive ? NEUTER_LABELS[reproductive.status] : "·"}
+          value={reproductive ? NEUTER_LABELS[reproductive.status] : "დაამატე"}
           hint={
             reproductive?.procedureDate
               ? `ჩატარდა ${formatDate(reproductive.procedureDate)}`
               : undefined
           }
+          active={editingField === "reproductive"}
+          onClick={
+            editingField === "reproductive"
+              ? () => setEditingField(null)
+              : openReproductiveEditor
+          }
         />
+
+        <AnimatePresence initial={false}>
+          {editingField === "reproductive" ? (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              className="overflow-hidden sm:col-span-2 lg:col-span-3"
+            >
+              <div className="space-y-4 rounded-2xl border border-[#e5e7eb] bg-[#FAFAF8] p-4">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <span className={fieldLabel}>სქესი</span>
+                    <div className="mt-2 flex gap-2">
+                      {(["male", "female"] as Sex[]).map((option) => (
+                        <button
+                          key={option}
+                          type="button"
+                          onClick={() => setSex(option)}
+                          className={`flex-1 cursor-pointer rounded-2xl border px-4 py-2.5 text-sm font-medium transition-colors ${
+                            sex === option
+                              ? "border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white"
+                              : "border-[#e5e7eb] bg-white text-slate-500 hover:border-[var(--brand-primary)]/30"
+                          }`}
+                        >
+                          {SEX_LABELS[option]}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className={fieldLabel}>რეპროდუქციული სტატუსი</span>
+                    <div className="mt-2 flex gap-2">
+                      {(["intact", "neutered"] as NeuterStatus[]).map(
+                        (option) => (
+                          <button
+                            key={option}
+                            type="button"
+                            onClick={() => setStatus(option)}
+                            className={`flex-1 cursor-pointer rounded-2xl border px-4 py-2.5 text-xs font-medium transition-colors ${
+                              status === option
+                                ? "border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white"
+                                : "border-[#e5e7eb] bg-white text-slate-500 hover:border-[var(--brand-primary)]/30"
+                            }`}
+                          >
+                            {option === "intact"
+                              ? "არაკასტრირებული"
+                              : "კასტრირებული"}
+                          </button>
+                        ),
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {status === "neutered" ? (
+                  <div>
+                    <label className={fieldLabel} htmlFor="procedure-date">
+                      ოპერაციის თარიღი
+                    </label>
+                    <input
+                      id="procedure-date"
+                      type="date"
+                      value={procedureDate}
+                      onChange={(event) => setProcedureDate(event.target.value)}
+                      className={`${textInput} mt-2`}
+                    />
+                  </div>
+                ) : null}
+
+                {error ? <p className="text-sm text-red-600">{error}</p> : null}
+
+                <button
+                  type="button"
+                  onClick={() => void submitReproductive()}
+                  disabled={saving}
+                  className={`${addButton} cursor-pointer disabled:opacity-60`}
+                >
+                  {saving ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <BadgeCheck className="h-4 w-4" />
+                  )}
+                  შენახვა
+                </button>
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+
         <DataField
           label="წონა"
           value={
@@ -159,95 +370,6 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
         <Plus className="h-3.5 w-3.5" />
         წონის განახლება
       </a>
-
-      <AnimatePresence initial={false}>
-        {editing ? (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden"
-          >
-            <div className="mt-5 space-y-4 rounded-2xl border border-[#e5e7eb] bg-[#FAFAF8] p-5">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <span className={fieldLabel}>სქესი</span>
-                  <div className="mt-2 flex gap-2">
-                    {(["male", "female"] as Sex[]).map((option) => (
-                      <button
-                        key={option}
-                        type="button"
-                        onClick={() => setSex(option)}
-                        className={`flex-1 cursor-pointer rounded-2xl border px-4 py-2.5 text-sm font-medium transition-colors ${
-                          sex === option
-                            ? "border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white"
-                            : "border-[#e5e7eb] bg-white text-slate-500 hover:border-[var(--brand-primary)]/30"
-                        }`}
-                      >
-                        {SEX_LABELS[option]}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <span className={fieldLabel}>რეპროდუქციული სტატუსი</span>
-                  <div className="mt-2 flex gap-2">
-                    {(["intact", "neutered"] as NeuterStatus[]).map((option) => (
-                      <button
-                        key={option}
-                        type="button"
-                        onClick={() => setStatus(option)}
-                        className={`flex-1 cursor-pointer rounded-2xl border px-4 py-2.5 text-xs font-medium transition-colors ${
-                          status === option
-                            ? "border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white"
-                            : "border-[#e5e7eb] bg-white text-slate-500 hover:border-[var(--brand-primary)]/30"
-                        }`}
-                      >
-                        {option === "intact" ? "არაკასტრირებული" : "კასტრირებული"}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {status === "neutered" ? (
-                <div>
-                  <label className={fieldLabel} htmlFor="procedure-date">
-                    ოპერაციის თარიღი
-                  </label>
-                  <input
-                    id="procedure-date"
-                    type="date"
-                    value={procedureDate}
-                    onChange={(event) => setProcedureDate(event.target.value)}
-                    className={`${textInput} mt-2`}
-                  />
-                </div>
-              ) : null}
-
-              {error ? (
-                <p className="text-sm text-red-600">{error}</p>
-              ) : null}
-
-              <button
-                type="button"
-                onClick={() => void submit()}
-                disabled={saving}
-                className={`${addButton} cursor-pointer disabled:opacity-60`}
-              >
-                {saving ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <BadgeCheck className="h-4 w-4" />
-                )}
-                შენახვა
-              </button>
-            </div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
 
       <ImageLightbox
         open={zoomOpen}
