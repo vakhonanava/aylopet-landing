@@ -1,14 +1,14 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { BadgeCheck, Dog, IdCard, Loader2, Pencil, X } from "lucide-react";
-import { useState } from "react";
+import { BadgeCheck, Dog, IdCard, Loader2, Pencil, Plus, X } from "lucide-react";
+import { useMemo, useState } from "react";
 import { addButton, fieldLabel, textInput } from "@/components/dashboard/FormControls";
 import { ImageLightbox } from "@/components/dashboard/ImageLightbox";
 import { DataField, SectionCard } from "@/components/dashboard/history/ui";
 import { useHistorySave } from "@/components/dashboard/history/useHistorySave";
 import { formatDate, type Pet } from "@/lib/dashboard";
-import { calculateAge } from "@/lib/pet-history/calculations";
+import { calculateAge, summariseWeight } from "@/lib/pet-history/calculations";
 import { NEUTER_LABELS, SEX_LABELS } from "@/lib/pet-history/labels";
 import type {
   NeuterStatus,
@@ -23,6 +23,15 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
 
   const reproductive = pet.history?.reproductive ?? null;
   const age = calculateAge(pet.birthDate);
+
+  // Same source the weight & BCS log uses, so this card never shows a number
+  // that disagrees with it — a plain `pet.weightKg` redisplay would.
+  const weightSummary = useMemo(
+    () => summariseWeight(pet.history?.weightLogs ?? []),
+    [pet.history?.weightLogs],
+  );
+  const latestWeight = weightSummary.latest?.weightKg ?? pet.weightKg;
+  const latestBcs = weightSummary.latest?.bcs ?? pet.bcsScore;
 
   const [sex, setSex] = useState<Sex>(reproductive?.sex ?? "male");
   const [status, setStatus] = useState<NeuterStatus>(
@@ -105,7 +114,6 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
       </div>
 
       <dl className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <DataField label="ჯიში" value={pet.breed || "·"} />
         <DataField
           label="დაბადების თარიღი"
           value={pet.birthDate ? formatDate(pet.birthDate) : "·"}
@@ -124,12 +132,33 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
               : undefined
           }
         />
-        <DataField label="მიმდინარე წონა" value={`${pet.weightKg} კგ`} />
         <DataField
-          label="სხეულის კონდიცია (BCS)"
-          value={pet.bcsScore ? `${pet.bcsScore} / 9` : "·"}
+          label="წონა"
+          value={
+            <span className="inline-flex flex-wrap items-baseline gap-x-2">
+              {latestWeight} კგ
+              {latestBcs ? (
+                <span className="text-xs font-normal text-slate-400">
+                  BCS {latestBcs}/9
+                </span>
+              ) : null}
+            </span>
+          }
+          hint={
+            weightSummary.latest
+              ? `ბოლო აწონვა ${formatDate(weightSummary.latest.recordedAt)}`
+              : "პროფილის მონაცემი"
+          }
         />
       </dl>
+
+      <a
+        href="#weight"
+        className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-[var(--brand-primary)] transition-colors hover:text-[var(--brand-primary-hover)]"
+      >
+        <Plus className="h-3.5 w-3.5" />
+        წონის განახლება
+      </a>
 
       <AnimatePresence initial={false}>
         {editing ? (
