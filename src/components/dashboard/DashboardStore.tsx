@@ -97,10 +97,22 @@ interface DashboardContextValue extends DashboardState {
     petId: string,
     vaccineId: string,
   ) => Promise<{ ok: boolean; error?: string }>;
-  addSupplement: (petId: string, entry: Omit<SupplementEntry, "id">) => void;
-  toggleSupplement: (petId: string, supplementId: string) => void;
-  addFood: (petId: string, entry: Omit<FoodEntry, "id">) => void;
-  addMood: (petId: string, entry: Omit<MoodEntry, "id">) => void;
+  addSupplement: (
+    petId: string,
+    entry: Omit<SupplementEntry, "id">,
+  ) => Promise<{ ok: boolean; error?: string }>;
+  toggleSupplement: (
+    petId: string,
+    supplementId: string,
+  ) => Promise<{ ok: boolean; error?: string }>;
+  addFood: (
+    petId: string,
+    entry: Omit<FoodEntry, "id">,
+  ) => Promise<{ ok: boolean; error?: string }>;
+  addMood: (
+    petId: string,
+    entry: Omit<MoodEntry, "id">,
+  ) => Promise<{ ok: boolean; error?: string }>;
   addLabReport: (petId: string, entry: LabReportEntry) => void;
   removeLabReport: (petId: string, reportId: string) => void;
   updatePetIdentity: (
@@ -280,6 +292,48 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  /**
+   * Shared by `updatePetHistory` and every Logbook add/toggle (supplements,
+   * food, mood) — they all merge a patch into `pet.history` and persist the
+   * whole blob. `petPatch` additionally mirrors the result onto flat `Pet`
+   * fields in the same state update, so `pet.supplements`/`food`/`moods`
+   * (what the Logbook tabs actually read) stay in sync with what got saved.
+   */
+  const persistHistoryPatch = useCallback(
+    async (
+      petId: string,
+      historyPatch: Partial<PetHistory>,
+      petPatch?: Partial<Pick<Pet, "supplements" | "food" | "moods">>,
+    ): Promise<{ ok: boolean; error?: string }> => {
+      const pet = state.pets.find((p) => p.id === petId);
+      if (!pet) return { ok: false, error: "ძაღლი ვერ მოიძებნა." };
+
+      const next: PetHistory = {
+        ...emptyPetHistory(),
+        ...pet.history,
+        ...historyPatch,
+      };
+
+      if (user && isPlatformPetId(petId)) {
+        const supabase = getSupabaseClient();
+        if (!supabase) {
+          return { ok: false, error: "Supabase არ არის კონფიგურირებული." };
+        }
+        const result = await savePetHistoryInSupabase(
+          supabase,
+          user.id,
+          petId,
+          next,
+        );
+        if (result.error) return { ok: false, error: result.error };
+      }
+
+      updatePetState(petId, (p) => ({ ...p, history: next, ...petPatch }));
+      return { ok: true };
+    },
+    [state.pets, user, getSupabaseClient, updatePetState],
+  );
+
   const value = useMemo<DashboardContextValue>(
     () => ({
       ...state,
@@ -444,28 +498,32 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         }));
         return { ok: true };
       },
-      addSupplement: (petId, entry) =>
-        updatePetState(petId, (p) => ({
-          ...p,
-          supplements: [{ ...entry, id: uid("s") }, ...p.supplements],
-        })),
-      toggleSupplement: (petId, supplementId) =>
-        updatePetState(petId, (p) => ({
-          ...p,
-          supplements: p.supplements.map((s) =>
-            s.id === supplementId ? { ...s, givenToday: !s.givenToday } : s,
-          ),
-        })),
-      addFood: (petId, entry) =>
-        updatePetState(petId, (p) => ({
-          ...p,
-          food: [{ ...entry, id: uid("f") }, ...p.food],
-        })),
-      addMood: (petId, entry) =>
-        updatePetState(petId, (p) => ({
-          ...p,
-          moods: [{ ...entry, id: uid("m") }, ...p.moods],
-        })),
+      addSupplement: (petId, entry) => {
+        const pet = state.pets.find((p) => p.id === petId);
+        if (!pet) return Promise.resolve({ ok: false, error: "ძაღლი ვერ მოიძებნა." });
+        const supplements = [{ ...entry, id: uid("s") }, ...pet.supplements];
+        return persistHistoryPatch(petId, { supplements }, { supplements });
+      },
+      toggleSupplement: (petId, supplementId) => {
+        const pet = state.pets.find((p) => p.id === petId);
+        if (!pet) return Promise.resolve({ ok: false, error: "ძაღლი ვერ მოიძებნა." });
+        const supplements = pet.supplements.map((s) =>
+          s.id === supplementId ? { ...s, givenToday: !s.givenToday } : s,
+        );
+        return persistHistoryPatch(petId, { supplements }, { supplements });
+      },
+      addFood: (petId, entry) => {
+        const pet = state.pets.find((p) => p.id === petId);
+        if (!pet) return Promise.resolve({ ok: false, error: "ძაღლი ვერ მოიძებნა." });
+        const food = [{ ...entry, id: uid("f") }, ...pet.food];
+        return persistHistoryPatch(petId, { foodLogs: food }, { food });
+      },
+      addMood: (petId, entry) => {
+        const pet = state.pets.find((p) => p.id === petId);
+        if (!pet) return Promise.resolve({ ok: false, error: "ძაღლი ვერ მოიძებნა." });
+        const moods = [{ ...entry, id: uid("m") }, ...pet.moods];
+        return persistHistoryPatch(petId, { moodLogs: moods }, { moods });
+      },
       addLabReport: (petId, entry) =>
         updatePetState(petId, (pet) => ({
           ...pet,
@@ -590,35 +648,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         }));
         return { ok: true };
       },
-      updatePetHistory: async (petId, patch) => {
-        const pet = state.pets.find((p) => p.id === petId);
-        if (!pet) return { ok: false, error: "ძაღლი ვერ მოიძებნა." };
-
-        const next: PetHistory = {
-          ...emptyPetHistory(),
-          ...pet.history,
-          ...patch,
-        };
-
-        if (user && isPlatformPetId(petId)) {
-          const supabase = getSupabaseClient();
-          if (!supabase) {
-            return { ok: false, error: "Supabase არ არის კონფიგურირებული." };
-          }
-          const result = await savePetHistoryInSupabase(
-            supabase,
-            user.id,
-            petId,
-            next,
-          );
-          if (result.error) return { ok: false, error: result.error };
-        }
-
-        updatePetState(petId, (p) => ({ ...p, history: next }));
-        return { ok: true };
-      },
+      updatePetHistory: (petId, patch) => persistHistoryPatch(petId, patch),
     }),
-    [state, ready, user, updatePetState, getSupabaseClient],
+    [state, ready, user, updatePetState, getSupabaseClient, persistHistoryPatch],
   );
 
   return (

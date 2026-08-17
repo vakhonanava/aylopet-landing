@@ -311,14 +311,33 @@ function SupplementsTab({ pet }: { pet: Pet }) {
   const [name, setName] = useState("");
   const [dosage, setDosage] = useState("");
   const [frequency, setFrequency] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const submit = () => {
+  const submit = async () => {
     if (!name) return;
-    addSupplement(pet.id, { name, dosage, frequency, givenToday: false });
+    setBusy(true);
+    setError(null);
+    const result = await addSupplement(pet.id, {
+      name,
+      dosage,
+      frequency,
+      givenToday: false,
+    });
+    setBusy(false);
+    if (!result.ok) {
+      setError(result.error ?? "ვერ შეინახა.");
+      return;
+    }
     setName("");
     setDosage("");
     setFrequency("");
     setOpen(false);
+  };
+
+  const handleToggle = async (supplementId: string) => {
+    const result = await toggleSupplement(pet.id, supplementId);
+    if (!result.ok) setError(result.error ?? "ვერ განახლდა.");
   };
 
   return (
@@ -329,6 +348,12 @@ function SupplementsTab({ pet }: { pet: Pet }) {
           <Plus className="h-4 w-4" /> დამატება
         </button>
       </div>
+
+      {error && (
+        <p className="mb-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          {error}
+        </p>
+      )}
 
       {open && (
         <div className="mb-6 grid gap-3 rounded-2xl border border-[#e5e7eb] bg-[#FAFAF8] p-4 sm:grid-cols-3">
@@ -351,7 +376,7 @@ function SupplementsTab({ pet }: { pet: Pet }) {
             placeholder="სიხშირე"
           />
           <div className="sm:col-span-3">
-            <button className={addButton} onClick={submit}>
+            <button className={addButton} disabled={busy} onClick={() => void submit()}>
               <Check className="h-4 w-4" /> შენახვა
             </button>
           </div>
@@ -366,7 +391,7 @@ function SupplementsTab({ pet }: { pet: Pet }) {
           <button
             key={s.id}
             type="button"
-            onClick={() => toggleSupplement(pet.id, s.id)}
+            onClick={() => void handleToggle(s.id)}
             className={`flex items-center gap-4 rounded-2xl border p-4 text-left transition-all duration-200 ${
               s.givenToday
                 ? "border-[var(--brand-accent)]/40 bg-[var(--brand-accent)]/[0.06]"
@@ -413,10 +438,14 @@ function FoodTab({ pet }: { pet: Pet }) {
   const [portion, setPortion] = useState("");
   const [response, setResponse] = useState("");
   const [appetite, setAppetite] = useState<AppetiteLevel>("normal");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const submit = () => {
+  const submit = async () => {
     if (!portion) return;
-    addFood(pet.id, {
+    setBusy(true);
+    setError(null);
+    const result = await addFood(pet.id, {
       date: new Date().toISOString().slice(0, 10),
       mealType,
       brand: isAylopet ? "Aylopet" : brand || "სხვა",
@@ -425,6 +454,11 @@ function FoodTab({ pet }: { pet: Pet }) {
       digestiveResponse: response || undefined,
       appetite,
     });
+    setBusy(false);
+    if (!result.ok) {
+      setError(result.error ?? "ვერ შეინახა.");
+      return;
+    }
     setPortion("");
     setResponse("");
     setAppetite("normal");
@@ -439,6 +473,12 @@ function FoodTab({ pet }: { pet: Pet }) {
           <Plus className="h-4 w-4" /> დამატება
         </button>
       </div>
+
+      {error && (
+        <p className="mb-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          {error}
+        </p>
+      )}
 
       {open && (
         <div className="mb-6 flex flex-col gap-4 rounded-2xl border border-[#e5e7eb] bg-[#FAFAF8] p-4">
@@ -542,7 +582,7 @@ function FoodTab({ pet }: { pet: Pet }) {
             />
           </div>
 
-          <button className={addButton} onClick={submit}>
+          <button className={addButton} disabled={busy} onClick={() => void submit()}>
             <Check className="h-4 w-4" /> შენახვა
           </button>
         </div>
@@ -604,14 +644,23 @@ function MoodTab({ pet }: { pet: Pet }) {
   const [mood, setMood] = useState(3);
   const [energy, setEnergy] = useState(50);
   const [notes, setNotes] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const submit = () => {
-    addMood(pet.id, {
+  const submit = async () => {
+    setBusy(true);
+    setError(null);
+    const result = await addMood(pet.id, {
       date: new Date().toISOString().slice(0, 10),
       mood,
       energy,
       notes: notes || undefined,
     });
+    setBusy(false);
+    if (!result.ok) {
+      setError(result.error ?? "ვერ შეინახა.");
+      return;
+    }
     setMood(3);
     setEnergy(50);
     setNotes("");
@@ -684,7 +733,17 @@ function MoodTab({ pet }: { pet: Pet }) {
           />
         </div>
 
-        <button className={`${addButton} mt-4`} onClick={submit}>
+        {error && (
+          <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+            {error}
+          </p>
+        )}
+
+        <button
+          className={`${addButton} mt-4`}
+          disabled={busy}
+          onClick={() => void submit()}
+        >
           <Check className="h-4 w-4" /> ჩექ-ინის შენახვა
         </button>
       </div>
