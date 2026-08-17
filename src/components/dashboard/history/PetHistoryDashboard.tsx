@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import {
   AlertTriangle,
   Dna,
+  Droplets,
+  FlaskConical,
   FolderLock,
   IdCard,
   NotebookPen,
@@ -22,7 +24,9 @@ import { AiInsightsPanel } from "@/components/dashboard/history/sections/AiInsig
 import { CollarPanel } from "@/components/dashboard/history/sections/CollarPanel";
 import { ContactsPanel } from "@/components/dashboard/history/sections/ContactsPanel";
 import { DnaPanel } from "@/components/dashboard/history/sections/DnaPanel";
+import { HydrationPanel } from "@/components/dashboard/history/sections/HydrationPanel";
 import { IdentityPassport } from "@/components/dashboard/history/sections/IdentityPassport";
+import { LabMetricsPanel } from "@/components/dashboard/history/sections/LabMetricsPanel";
 import { MedicalHistoryPanel } from "@/components/dashboard/history/sections/MedicalHistoryPanel";
 import { MicrochipSosCard } from "@/components/dashboard/history/sections/MicrochipSosCard";
 import { NutritionPanel } from "@/components/dashboard/history/sections/NutritionPanel";
@@ -37,6 +41,8 @@ const NAV = [
   { id: "weight", label: "წონა", icon: Scale },
   { id: "vaccines", label: "ვაქცინაცია", icon: Syringe },
   { id: "allergies", label: "ალერგიები", icon: AlertTriangle },
+  { id: "hydration", label: "წყალი/ტუალეტი", icon: Droplets },
+  { id: "lab-metrics", label: "ლაბ. მაჩვენებლები", icon: FlaskConical },
   { id: "vault", label: "დოკუმენტები", icon: FolderLock },
   { id: "dna", label: "დნმ", icon: Dna },
   { id: "nutrition", label: "კვება", icon: UtensilsCrossed },
@@ -83,6 +89,8 @@ export function PetHistoryDashboard({ pet }: { pet: Pet }) {
         <MicrochipSosCard pet={pet} />
 
         <MedicalHistoryPanel pet={pet} />
+        <HydrationPanel pet={pet} />
+        <LabMetricsPanel pet={pet} />
 
         {/* The vault is the existing upload surface — drag & drop, PDF/JPEG/PNG,
             10MB cap, progress and preview cards all already live there. */}

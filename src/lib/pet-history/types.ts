@@ -13,8 +13,13 @@
  * Existing shapes are reused, not redefined: `VaccineEntry` (vaccines +
  * antiparasitic, discriminated by `careType`), `MedicalRecord` (allergies,
  * chronic conditions), and `LabReportEntry` (medical vault) all come from
- * `@/lib/dashboard` and `@/lib/medical`.
+ * `@/lib/dashboard` and `@/lib/medical`. `SupplementEntry`, `FoodEntry`, and
+ * `MoodEntry` are reused the same way — they're Logbook concepts, not new
+ * ones, and living here just gives them a real persistence path (see
+ * `supplements`/`foodLogs`/`moodLogs` below).
  */
+
+import type { FoodEntry, MoodEntry, SupplementEntry } from "@/lib/dashboard";
 
 // ---------------------------------------------------------------------------
 // 1 · Identification & biometrics
@@ -63,6 +68,66 @@ export interface WeightLogEntry {
 export interface WeightTargetRange {
   minKg: number;
   maxKg: number;
+}
+
+// ---------------------------------------------------------------------------
+// 2b · Laboratory metrics (structured panel results, not the raw file vault)
+// ---------------------------------------------------------------------------
+
+export type LabMetricKey =
+  | "wbc"
+  | "rbc"
+  | "hemoglobin"
+  | "hematocrit"
+  | "platelets"
+  | "bun"
+  | "creatinine"
+  | "alt"
+  | "ast"
+  | "alp"
+  | "totalBilirubin"
+  | "glucose"
+  | "totalProtein"
+  | "albumin"
+  | "calcium"
+  | "phosphorus"
+  | "cholesterol"
+  | "urineSpecificGravity"
+  | "urineProtein";
+
+export interface LabMetricEntry {
+  id: string;
+  /** ISO date the sample was drawn. */
+  recordedAt: string;
+  labName?: string;
+  note?: string;
+  /** Only the parameters this particular panel actually tested. */
+  values: Partial<Record<LabMetricKey, number>>;
+}
+
+// ---------------------------------------------------------------------------
+// 2c · Hydration & elimination (early-warning daily log)
+// ---------------------------------------------------------------------------
+
+export type WaterChange = "increased" | "normal" | "decreased";
+
+export type StoolConsistency = "normal" | "soft" | "diarrhea" | "hard";
+
+export interface HydrationLogEntry {
+  id: string;
+  /** ISO date. */
+  recordedAt: string;
+  /** Approximate daily water intake, only when the owner actually measured it. */
+  waterMl?: number;
+  /** Relative change is what owners can reliably judge day to day. */
+  waterChange?: WaterChange;
+  urinationCount?: number;
+  urinationBlood?: boolean;
+  urinationStraining?: boolean;
+  stoolCount?: number;
+  stoolConsistency?: StoolConsistency;
+  stoolBlood?: boolean;
+  note?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -317,6 +382,12 @@ export interface PetHistory {
   microchip: MicrochipRegistration | null;
   weightLogs: WeightLogEntry[];
   weightTarget: WeightTargetRange | null;
+  labMetrics: LabMetricEntry[];
+  hydrationLogs: HydrationLogEntry[];
+  /** Logbook tabs — Supabase-backed here; the flat `Pet.supplements` field mirrors this for reads. */
+  supplements: SupplementEntry[];
+  foodLogs: FoodEntry[];
+  moodLogs: MoodEntry[];
   diet: DietProfile | null;
   vet: VetContact | null;
   caretaker: CaretakerNotes | null;
@@ -338,6 +409,11 @@ export function emptyPetHistory(): PetHistory {
     microchip: null,
     weightLogs: [],
     weightTarget: null,
+    labMetrics: [],
+    hydrationLogs: [],
+    supplements: [],
+    foodLogs: [],
+    moodLogs: [],
     diet: null,
     vet: null,
     caretaker: null,

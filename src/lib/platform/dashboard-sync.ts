@@ -219,6 +219,8 @@ export async function fetchUserDashboardFromSupabase(
         ? Math.round(rawWeight * 0.453592 * 10) / 10
         : rawWeight;
 
+    const history = parsePetHistory(row.history);
+
     pets.push({
       id: petId,
       name: row.pet_name as string,
@@ -230,15 +232,17 @@ export async function fetchUserDashboardFromSupabase(
       bcsScore: (row.bcs_score as number | null) ?? undefined,
       microchipId: (row.microchip_id as string | null) ?? undefined,
       vaccines,
-      supplements: [],
-      food: [],
-      moods: [],
+      // Logbook tabs — real source of truth is `history`, mirrored onto the
+      // flat fields so existing reads (LogbookTabs, NutritionPanel) don't change.
+      supplements: history.supplements,
+      food: history.foodLogs,
+      moods: history.moodLogs,
       labReports,
       profileHistory,
       medicalRecord,
       medications,
       symptomLogs,
-      history: parsePetHistory(row.history),
+      history,
     });
   }
 
