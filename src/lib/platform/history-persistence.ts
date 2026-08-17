@@ -43,6 +43,7 @@ export function parsePetHistory(raw: unknown): PetHistory {
     weightTarget: value.weightTarget ?? base.weightTarget,
     labMetrics: Array.isArray(value.labMetrics) ? value.labMetrics : [],
     hydrationLogs: Array.isArray(value.hydrationLogs) ? value.hydrationLogs : [],
+    vetVisits: Array.isArray(value.vetVisits) ? value.vetVisits : [],
     supplements: Array.isArray(value.supplements) ? value.supplements : [],
     foodLogs: Array.isArray(value.foodLogs) ? value.foodLogs : [],
     moodLogs: Array.isArray(value.moodLogs) ? value.moodLogs : [],

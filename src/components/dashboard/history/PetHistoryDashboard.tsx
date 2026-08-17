@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import {
   AlertTriangle,
+  ClipboardList,
   Dna,
   Droplets,
   FlaskConical,
@@ -30,6 +31,7 @@ import { LabMetricsPanel } from "@/components/dashboard/history/sections/LabMetr
 import { MedicalHistoryPanel } from "@/components/dashboard/history/sections/MedicalHistoryPanel";
 import { MicrochipSosCard } from "@/components/dashboard/history/sections/MicrochipSosCard";
 import { NutritionPanel } from "@/components/dashboard/history/sections/NutritionPanel";
+import { VetVisitsPanel } from "@/components/dashboard/history/sections/VetVisitsPanel";
 import { sectionMotion } from "@/components/dashboard/history/ui";
 import type { Pet } from "@/lib/dashboard";
 import { PRIVACY_NOTICE } from "@/lib/pet-history/labels";
@@ -43,6 +45,7 @@ const NAV = [
   { id: "allergies", label: "ალერგიები", icon: AlertTriangle },
   { id: "hydration", label: "წყალი/ტუალეტი", icon: Droplets },
   { id: "lab-metrics", label: "ლაბ. მაჩვენებლები", icon: FlaskConical },
+  { id: "vet-visits", label: "ვიზიტები", icon: ClipboardList },
   { id: "vault", label: "დოკუმენტები", icon: FolderLock },
   { id: "dna", label: "დნმ", icon: Dna },
   { id: "nutrition", label: "კვება", icon: UtensilsCrossed },
@@ -91,6 +94,7 @@ export function PetHistoryDashboard({ pet }: { pet: Pet }) {
         <MedicalHistoryPanel pet={pet} />
         <HydrationPanel pet={pet} />
         <LabMetricsPanel pet={pet} />
+        <VetVisitsPanel pet={pet} />
 
         {/* The vault is the existing upload surface — drag & drop, PDF/JPEG/PNG,
             10MB cap, progress and preview cards all already live there. */}
