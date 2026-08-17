@@ -131,6 +131,40 @@ export interface HydrationLogEntry {
 }
 
 // ---------------------------------------------------------------------------
+// 2d · Vet visits (the outcome record — what actually happened after a
+// symptom, a lab panel, or a routine checkup)
+// ---------------------------------------------------------------------------
+
+export type VetVisitOutcome = "resolved" | "ongoing" | "follow_up_needed";
+
+export type VetVisitReason =
+  | "checkup"
+  | "vaccination"
+  | "illness"
+  | "injury"
+  | "surgery"
+  | "follow_up"
+  | "other";
+
+export interface VetVisitEntry {
+  id: string;
+  /** ISO date. */
+  visitedAt: string;
+  reason: VetVisitReason;
+  clinicName?: string;
+  vetName?: string;
+  /** What the owner brought the dog in for, in their own words. */
+  complaint?: string;
+  diagnosis?: string;
+  treatment?: string;
+  outcome: VetVisitOutcome;
+  /** ISO date. Only meaningful when `outcome` is "follow_up_needed". */
+  followUpDate?: string;
+  costAmount?: number;
+  note?: string;
+}
+
+// ---------------------------------------------------------------------------
 // 4 · Nutrition
 // ---------------------------------------------------------------------------
 
@@ -384,6 +418,7 @@ export interface PetHistory {
   weightTarget: WeightTargetRange | null;
   labMetrics: LabMetricEntry[];
   hydrationLogs: HydrationLogEntry[];
+  vetVisits: VetVisitEntry[];
   /** Logbook tabs — Supabase-backed here; the flat `Pet.supplements` field mirrors this for reads. */
   supplements: SupplementEntry[];
   foodLogs: FoodEntry[];
@@ -411,6 +446,7 @@ export function emptyPetHistory(): PetHistory {
     weightTarget: null,
     labMetrics: [],
     hydrationLogs: [],
+    vetVisits: [],
     supplements: [],
     foodLogs: [],
     moodLogs: [],
