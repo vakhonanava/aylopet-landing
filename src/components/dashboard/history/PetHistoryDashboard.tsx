@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import {
+  Activity,
   AlertTriangle,
   ClipboardList,
   Dna,
@@ -32,27 +33,75 @@ import { MedicalHistoryPanel } from "@/components/dashboard/history/sections/Med
 import { MicrochipSosCard } from "@/components/dashboard/history/sections/MicrochipSosCard";
 import { NutritionPanel } from "@/components/dashboard/history/sections/NutritionPanel";
 import { VetVisitsPanel } from "@/components/dashboard/history/sections/VetVisitsPanel";
-import { sectionMotion } from "@/components/dashboard/history/ui";
+import { GroupHeader, sectionMotion } from "@/components/dashboard/history/ui";
 import type { Pet } from "@/lib/dashboard";
 import { PRIVACY_NOTICE } from "@/lib/pet-history/labels";
 import { getPetTelemetry } from "@/lib/pet-history/telemetry";
 
-const NAV = [
-  { id: "passport", label: "პასპორტი", icon: IdCard },
-  { id: "microchip", label: "მიკროჩიპი", icon: ScanLine },
-  { id: "weight", label: "წონა", icon: Scale },
-  { id: "vaccines", label: "ვაქცინაცია", icon: Syringe },
-  { id: "allergies", label: "ალერგიები", icon: AlertTriangle },
-  { id: "hydration", label: "წყალი/ტუალეტი", icon: Droplets },
-  { id: "lab-metrics", label: "ლაბ. მაჩვენებლები", icon: FlaskConical },
-  { id: "vet-visits", label: "ვიზიტები", icon: ClipboardList },
-  { id: "vault", label: "დოკუმენტები", icon: FolderLock },
-  { id: "dna", label: "დნმ", icon: Dna },
-  { id: "nutrition", label: "კვება", icon: UtensilsCrossed },
-  { id: "collar", label: "საყელო", icon: Radio },
-  { id: "ai", label: "AylopetAI", icon: Sparkles },
-  { id: "vet", label: "ვეტერინარი", icon: Stethoscope },
-  { id: "caretaker", label: "მომვლელი", icon: NotebookPen },
+/**
+ * The 15 record types read as one flat, undifferentiated list — no sense of
+ * what matters when. Grouped here by the question an owner is actually
+ * asking: who is this dog (profile), am I covered if something goes wrong
+ * (safety — deliberately placed second, right after orientation, so the
+ * reassurance is never buried), how is he doing day to day (health
+ * monitoring, the largest and most frequently checked cluster), and how do I
+ * care for him (lifestyle, lowest-urgency, last).
+ */
+const SECTION_GROUPS = [
+  {
+    id: "group-profile",
+    icon: IdCard,
+    eyebrow: "01",
+    title: "პროფილი",
+    description:
+      "ვინ არის ის — ძირითადი მონაცემები, წონის დინამიკა და დნმ კვლევა.",
+    items: [
+      { id: "passport", label: "პასპორტი", icon: IdCard },
+      { id: "weight", label: "წონა", icon: Scale },
+      { id: "dna", label: "დნმ", icon: Dna },
+    ],
+  },
+  {
+    id: "group-safety",
+    icon: ShieldCheck,
+    eyebrow: "02",
+    title: "უსაფრთხოება",
+    description:
+      "მიკროჩიპი, SOS ბარათი და საკონტაქტო პირები — ყველაფერი ერთად, საგანგებო სიტუაციისთვის.",
+    items: [
+      { id: "microchip", label: "მიკროჩიპი და SOS", icon: ScanLine },
+      { id: "vet", label: "ვეტერინარი", icon: Stethoscope },
+      { id: "caretaker", label: "მომვლელი", icon: NotebookPen },
+    ],
+  },
+  {
+    id: "group-health",
+    icon: Activity,
+    eyebrow: "03",
+    title: "ჯანმრთელობის მონიტორინგი",
+    description:
+      "ვაქცინები, ალერგიები, ლაბორატორიული მაჩვენებლები, ვიზიტები და დოკუმენტები.",
+    items: [
+      { id: "vaccines", label: "ვაქცინაცია", icon: Syringe },
+      { id: "allergies", label: "ალერგიები", icon: AlertTriangle },
+      { id: "hydration", label: "წყალი/ტუალეტი", icon: Droplets },
+      { id: "lab-metrics", label: "ლაბ. მაჩვენებლები", icon: FlaskConical },
+      { id: "vet-visits", label: "ვიზიტები", icon: ClipboardList },
+      { id: "vault", label: "დოკუმენტები", icon: FolderLock },
+      { id: "ai", label: "AylopetAI", icon: Sparkles },
+    ],
+  },
+  {
+    id: "group-lifestyle",
+    icon: UtensilsCrossed,
+    eyebrow: "04",
+    title: "ცხოვრების წესი",
+    description: "კვება და ყოველდღიური აქტივობა.",
+    items: [
+      { id: "nutrition", label: "კვება", icon: UtensilsCrossed },
+      { id: "collar", label: "საყელო", icon: Radio },
+    ],
+  },
 ] as const;
 
 function SectionNav() {
@@ -61,55 +110,110 @@ function SectionNav() {
     // scroll, so any fixed offset here would either overlap it or leave a gap.
     <nav
       aria-label="სექციები"
-      className="-mx-5 mb-6 border-b border-[#eceae5] px-5 pb-4 sm:-mx-8 sm:px-8"
+      className="-mx-5 mb-6 border-b border-[#eceae5] px-5 pb-5 sm:-mx-8 sm:px-8"
     >
-      <ul className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {NAV.map((item) => (
-          <li key={item.id}>
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        {SECTION_GROUPS.map((group) => (
+          <div
+            key={group.id}
+            className="rounded-2xl border border-[#eceae5] bg-[#FAFAF8]/70 p-3.5"
+          >
             <a
-              href={`#${item.id}`}
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#e5e7eb] bg-white px-3.5 py-2 text-xs font-medium whitespace-nowrap text-slate-500 transition-colors hover:border-[var(--brand-primary)]/30 hover:text-[var(--brand-primary)]"
+              href={`#${group.id}`}
+              className="mb-2.5 flex items-center gap-2 text-xs font-semibold text-slate-500 transition-colors hover:text-[var(--brand-primary)]"
             >
-              <item.icon className="h-3.5 w-3.5" />
-              {item.label}
+              <group.icon className="h-3.5 w-3.5" />
+              {group.title}
             </a>
-          </li>
+            <ul className="flex flex-wrap gap-1.5">
+              {group.items.map((item) => (
+                <li key={item.id}>
+                  <a
+                    href={`#${item.id}`}
+                    className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#e5e7eb] bg-white px-3 py-1.5 text-xs font-medium whitespace-nowrap text-slate-500 transition-colors hover:border-[var(--brand-primary)]/30 hover:text-[var(--brand-primary)]"
+                  >
+                    <item.icon className="h-3.5 w-3.5" />
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         ))}
-      </ul>
+      </div>
     </nav>
   );
 }
 
 export function PetHistoryDashboard({ pet }: { pet: Pet }) {
   const telemetry = useMemo(() => getPetTelemetry(pet), [pet]);
+  const [profileGroup, safetyGroup, healthGroup, lifestyleGroup] = SECTION_GROUPS;
 
   return (
     <div className="flex flex-col">
       <SectionNav />
 
-      <div className="flex flex-col gap-5">
-        <IdentityPassport pet={pet} />
-        <MicrochipSosCard pet={pet} />
-
-        <MedicalHistoryPanel pet={pet} />
-        <HydrationPanel pet={pet} />
-        <LabMetricsPanel pet={pet} />
-        <VetVisitsPanel pet={pet} />
-
-        {/* The vault is the existing upload surface — drag & drop, PDF/JPEG/PNG,
-            10MB cap, progress and preview cards all already live there. */}
-        <div id="vault" className="scroll-mt-28">
-          <LabResultsUpload pet={pet} />
+      <div className="flex flex-col gap-10 sm:gap-12">
+        <div className="flex flex-col gap-5">
+          <GroupHeader
+            id={profileGroup.id}
+            icon={profileGroup.icon}
+            eyebrow={profileGroup.eyebrow}
+            title={profileGroup.title}
+            description={profileGroup.description}
+          />
+          <IdentityPassport pet={pet} />
+          <DnaPanel pet={pet} dna={telemetry.dna} />
         </div>
 
-        <DnaPanel pet={pet} dna={telemetry.dna} />
-        <NutritionPanel pet={pet} />
-        <CollarPanel collar={telemetry.collar} />
-        <AiInsightsPanel
-          consultations={telemetry.consultations}
-          insights={telemetry.insights}
-        />
-        <ContactsPanel pet={pet} />
+        <div className="flex flex-col gap-5">
+          <GroupHeader
+            id={safetyGroup.id}
+            icon={safetyGroup.icon}
+            eyebrow={safetyGroup.eyebrow}
+            title={safetyGroup.title}
+            description={safetyGroup.description}
+          />
+          <MicrochipSosCard pet={pet} />
+          <ContactsPanel pet={pet} />
+        </div>
+
+        <div className="flex flex-col gap-5">
+          <GroupHeader
+            id={healthGroup.id}
+            icon={healthGroup.icon}
+            eyebrow={healthGroup.eyebrow}
+            title={healthGroup.title}
+            description={healthGroup.description}
+          />
+          <MedicalHistoryPanel pet={pet} />
+          <HydrationPanel pet={pet} />
+          <LabMetricsPanel pet={pet} />
+          <VetVisitsPanel pet={pet} />
+
+          {/* The vault is the existing upload surface — drag & drop, PDF/JPEG/PNG,
+              10MB cap, progress and preview cards all already live there. */}
+          <div id="vault" className="scroll-mt-28">
+            <LabResultsUpload pet={pet} />
+          </div>
+
+          <AiInsightsPanel
+            consultations={telemetry.consultations}
+            insights={telemetry.insights}
+          />
+        </div>
+
+        <div className="flex flex-col gap-5">
+          <GroupHeader
+            id={lifestyleGroup.id}
+            icon={lifestyleGroup.icon}
+            eyebrow={lifestyleGroup.eyebrow}
+            title={lifestyleGroup.title}
+            description={lifestyleGroup.description}
+          />
+          <NutritionPanel pet={pet} />
+          <CollarPanel collar={telemetry.collar} />
+        </div>
       </div>
 
       <motion.footer
