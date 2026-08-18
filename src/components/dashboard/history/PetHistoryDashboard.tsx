@@ -20,7 +20,7 @@ import {
   Syringe,
   UtensilsCrossed,
 } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { LabResultsUpload } from "@/components/dashboard/LabResultsUpload";
 import { AiInsightsPanel } from "@/components/dashboard/history/sections/AiInsightsPanel";
 import { CollarPanel } from "@/components/dashboard/history/sections/CollarPanel";
@@ -104,7 +104,20 @@ const SECTION_GROUPS = [
   },
 ] as const;
 
+/**
+ * A segmented control for the 4 groups, with a sliding brand-colored
+ * indicator, plus a second row of item chips scoped to whichever group is
+ * selected — so the nav surfaces 15 destinations without showing all 15 at
+ * once. Selecting a tab also opens that group's <details> if it's closed,
+ * so the nav's promise ("jump here") always lands on visible content.
+ */
 function SectionNav() {
+  const [activeId, setActiveId] = useState<(typeof SECTION_GROUPS)[number]["id"]>(
+    SECTION_GROUPS[0].id,
+  );
+  const activeGroup =
+    SECTION_GROUPS.find((group) => group.id === activeId) ?? SECTION_GROUPS[0];
+
   return (
     // Deliberately not sticky: GlobalHeader is `sticky top-0` and retracts on
     // scroll, so any fixed offset here would either overlap it or leave a gap.
@@ -112,35 +125,53 @@ function SectionNav() {
       aria-label="სექციები"
       className="-mx-5 mb-6 border-b border-[#eceae5] px-5 pb-5 sm:-mx-8 sm:px-8"
     >
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {SECTION_GROUPS.map((group) => (
-          <div
-            key={group.id}
-            className="rounded-2xl border border-[#eceae5] bg-[#FAFAF8]/70 p-3.5"
-          >
+      <div className="flex gap-1 overflow-x-auto rounded-2xl bg-[#F1EFE9] p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {SECTION_GROUPS.map((group) => {
+          const isActive = group.id === activeId;
+          return (
             <a
+              key={group.id}
               href={`#${group.id}`}
-              className="mb-2.5 flex items-center gap-2 text-xs font-semibold text-slate-500 transition-colors hover:text-[var(--brand-primary)]"
+              onClick={() => {
+                setActiveId(group.id);
+                const details = document.getElementById(group.id);
+                if (details instanceof HTMLDetailsElement) {
+                  details.open = true;
+                }
+              }}
+              className="relative flex flex-1 shrink-0 items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold whitespace-nowrap transition-colors"
             >
-              <group.icon className="h-3.5 w-3.5" />
-              {group.title}
+              {isActive ? (
+                <motion.span
+                  layoutId="section-nav-active"
+                  className="absolute inset-0 rounded-xl bg-[var(--brand-primary)] shadow-[0_6px_16px_rgba(0,0,0,0.15)]"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
+                />
+              ) : null}
+              <group.icon
+                className={`relative h-4 w-4 ${isActive ? "text-white" : "text-slate-500"}`}
+              />
+              <span className={`relative ${isActive ? "text-white" : "text-slate-600"}`}>
+                {group.title}
+              </span>
             </a>
-            <ul className="flex flex-wrap gap-1.5">
-              {group.items.map((item) => (
-                <li key={item.id}>
-                  <a
-                    href={`#${item.id}`}
-                    className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#e5e7eb] bg-white px-3 py-1.5 text-xs font-medium whitespace-nowrap text-slate-500 transition-colors hover:border-[var(--brand-primary)]/30 hover:text-[var(--brand-primary)]"
-                  >
-                    <item.icon className="h-3.5 w-3.5" />
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+          );
+        })}
       </div>
+
+      <ul className="mt-3 flex flex-wrap gap-1.5">
+        {activeGroup.items.map((item) => (
+          <li key={item.id}>
+            <a
+              href={`#${item.id}`}
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#e5e7eb] bg-white px-3 py-1.5 text-xs font-medium whitespace-nowrap text-slate-500 transition-colors hover:border-[var(--brand-primary)]/30 hover:text-[var(--brand-primary)]"
+            >
+              <item.icon className="h-3.5 w-3.5" />
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
     </nav>
   );
 }
