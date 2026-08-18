@@ -58,6 +58,49 @@ export function SectionCard({
   );
 }
 
+/**
+ * Page-level heading for a thematic cluster of SectionCards (e.g. "Health
+ * monitoring"). One level louder than a SectionCard's own header — solid
+ * icon badge and ink-colored title, rather than the card's tinted badge and
+ * brand-colored title — so the two hierarchy levels stay visually distinct.
+ */
+export function GroupHeader({
+  id,
+  icon: Icon,
+  eyebrow,
+  title,
+  description,
+}: {
+  id: string;
+  icon: LucideIcon;
+  eyebrow: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <motion.div
+      id={id}
+      {...sectionMotion}
+      className="scroll-mt-28 border-b border-[#eceae5] px-1 pb-5"
+    >
+      <div className="flex items-start gap-3.5">
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--brand-primary)] text-white shadow-[0_10px_24px_rgba(0,0,0,0.12)]">
+          <Icon className="h-5 w-5" />
+        </span>
+        <div className="min-w-0">
+          <p className="text-[11px] font-semibold tracking-[0.14em] text-slate-400 uppercase">
+            სექცია {eyebrow}
+          </p>
+          <h2 className="mt-0.5 text-xl font-bold tracking-tight text-[#1c1c1c] sm:text-2xl">
+            {title}
+          </h2>
+          <p className="mt-1 max-w-2xl text-sm text-slate-500">{description}</p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export function StatusPill({
   tone,
   label,
