@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import type { ToneClasses } from "@/lib/pet-history/labels";
 
 /** Entrance transition shared by every section card. */
@@ -59,45 +60,79 @@ export function SectionCard({
 }
 
 /**
- * Page-level heading for a thematic cluster of SectionCards (e.g. "Health
- * monitoring"). One level louder than a SectionCard's own header — solid
- * icon badge and ink-colored title, rather than the card's tinted badge and
- * brand-colored title — so the two hierarchy levels stay visually distinct.
+ * Collapsible container for a thematic cluster of SectionCards (e.g. "Health
+ * monitoring"). Native <details>/<summary> — closed groups keep their full
+ * content out of the page's scroll length, and browsers auto-expand a closed
+ * group when a nav link targets an anchor nested inside it. Opening a group
+ * (by clicking its header, not via that auto-expand) scrolls it to the top
+ * of the viewport, so the content the owner asked for lands where they're
+ * already looking instead of wherever it happened to fall on the page.
  */
-export function GroupHeader({
+export function GroupSection({
   id,
   icon: Icon,
   eyebrow,
   title,
   description,
+  defaultOpen = false,
+  children,
 }: {
   id: string;
   icon: LucideIcon;
   eyebrow: string;
   title: string;
   description: string;
+  defaultOpen?: boolean;
+  children: ReactNode;
 }) {
+  const detailsRef = useRef<HTMLDetailsElement>(null);
+
   return (
-    <motion.div
+    <motion.details
+      ref={detailsRef}
       id={id}
       {...sectionMotion}
-      className="scroll-mt-28 border-b border-[#eceae5] px-1 pb-5"
+      open={defaultOpen}
+      className="group/acc scroll-mt-28 rounded-[2rem] border border-[#eceae5] bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] sm:p-7"
     >
-      <div className="flex items-start gap-3.5">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--brand-primary)] text-white shadow-[0_10px_24px_rgba(0,0,0,0.12)]">
-          <Icon className="h-5 w-5" />
-        </span>
-        <div className="min-w-0">
-          <p className="text-[11px] font-semibold tracking-[0.14em] text-slate-400 uppercase">
-            სექცია {eyebrow}
-          </p>
-          <h2 className="mt-0.5 text-xl font-bold tracking-tight text-[#1c1c1c] sm:text-2xl">
-            {title}
-          </h2>
-          <p className="mt-1 max-w-2xl text-sm text-slate-500">{description}</p>
+      <summary
+        className="flex cursor-pointer list-none items-start justify-between gap-3 [&::-webkit-details-marker]:hidden"
+        onClick={() => {
+          // The click fires before the browser applies the toggle, so read
+          // `open` a frame later — and only then, so collapsing never scrolls.
+          requestAnimationFrame(() => {
+            if (detailsRef.current?.open) {
+              detailsRef.current.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            }
+          });
+        }}
+      >
+        <div className="flex items-start gap-3.5">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--brand-primary)] text-white shadow-[0_10px_24px_rgba(0,0,0,0.12)]">
+            <Icon className="h-5 w-5" />
+          </span>
+          <div className="min-w-0">
+            <p className="text-[11px] font-semibold tracking-[0.14em] text-slate-400 uppercase">
+              სექცია {eyebrow}
+            </p>
+            <h2 className="mt-0.5 text-xl font-bold tracking-tight text-[#1c1c1c] sm:text-2xl">
+              {title}
+            </h2>
+            <p className="mt-1 max-w-2xl text-sm text-slate-500">
+              {description}
+            </p>
+          </div>
         </div>
+        <ChevronDown className="mt-2 h-5 w-5 shrink-0 text-slate-400 transition-transform duration-200 group-open/acc:rotate-180" />
+      </summary>
+
+      <div className="mt-6 flex flex-col gap-5 border-t border-[#eceae5] pt-6">
+        {children}
       </div>
-    </motion.div>
+    </motion.details>
   );
 }
 

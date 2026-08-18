@@ -33,7 +33,7 @@ import { MedicalHistoryPanel } from "@/components/dashboard/history/sections/Med
 import { MicrochipSosCard } from "@/components/dashboard/history/sections/MicrochipSosCard";
 import { NutritionPanel } from "@/components/dashboard/history/sections/NutritionPanel";
 import { VetVisitsPanel } from "@/components/dashboard/history/sections/VetVisitsPanel";
-import { GroupHeader, sectionMotion } from "@/components/dashboard/history/ui";
+import { GroupSection, sectionMotion } from "@/components/dashboard/history/ui";
 import type { Pet } from "@/lib/dashboard";
 import { PRIVACY_NOTICE } from "@/lib/pet-history/labels";
 import { getPetTelemetry } from "@/lib/pet-history/telemetry";
@@ -153,39 +153,37 @@ export function PetHistoryDashboard({ pet }: { pet: Pet }) {
     <div className="flex flex-col">
       <SectionNav />
 
-      <div className="flex flex-col gap-10 sm:gap-12">
-        <div className="flex flex-col gap-5">
-          <GroupHeader
-            id={profileGroup.id}
-            icon={profileGroup.icon}
-            eyebrow={profileGroup.eyebrow}
-            title={profileGroup.title}
-            description={profileGroup.description}
-          />
+      <div className="flex flex-col gap-5">
+        <GroupSection
+          id={profileGroup.id}
+          icon={profileGroup.icon}
+          eyebrow={profileGroup.eyebrow}
+          title={profileGroup.title}
+          description={profileGroup.description}
+          defaultOpen
+        >
           <IdentityPassport pet={pet} />
           <DnaPanel pet={pet} dna={telemetry.dna} />
-        </div>
+        </GroupSection>
 
-        <div className="flex flex-col gap-5">
-          <GroupHeader
-            id={safetyGroup.id}
-            icon={safetyGroup.icon}
-            eyebrow={safetyGroup.eyebrow}
-            title={safetyGroup.title}
-            description={safetyGroup.description}
-          />
+        <GroupSection
+          id={safetyGroup.id}
+          icon={safetyGroup.icon}
+          eyebrow={safetyGroup.eyebrow}
+          title={safetyGroup.title}
+          description={safetyGroup.description}
+        >
           <MicrochipSosCard pet={pet} />
           <ContactsPanel pet={pet} />
-        </div>
+        </GroupSection>
 
-        <div className="flex flex-col gap-5">
-          <GroupHeader
-            id={healthGroup.id}
-            icon={healthGroup.icon}
-            eyebrow={healthGroup.eyebrow}
-            title={healthGroup.title}
-            description={healthGroup.description}
-          />
+        <GroupSection
+          id={healthGroup.id}
+          icon={healthGroup.icon}
+          eyebrow={healthGroup.eyebrow}
+          title={healthGroup.title}
+          description={healthGroup.description}
+        >
           <MedicalHistoryPanel pet={pet} />
           <HydrationPanel pet={pet} />
           <LabMetricsPanel pet={pet} />
@@ -201,19 +199,18 @@ export function PetHistoryDashboard({ pet }: { pet: Pet }) {
             consultations={telemetry.consultations}
             insights={telemetry.insights}
           />
-        </div>
+        </GroupSection>
 
-        <div className="flex flex-col gap-5">
-          <GroupHeader
-            id={lifestyleGroup.id}
-            icon={lifestyleGroup.icon}
-            eyebrow={lifestyleGroup.eyebrow}
-            title={lifestyleGroup.title}
-            description={lifestyleGroup.description}
-          />
+        <GroupSection
+          id={lifestyleGroup.id}
+          icon={lifestyleGroup.icon}
+          eyebrow={lifestyleGroup.eyebrow}
+          title={lifestyleGroup.title}
+          description={lifestyleGroup.description}
+        >
           <NutritionPanel pet={pet} />
           <CollarPanel collar={telemetry.collar} />
-        </div>
+        </GroupSection>
       </div>
 
       <motion.footer
