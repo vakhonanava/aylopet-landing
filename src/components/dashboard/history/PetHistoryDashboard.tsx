@@ -11,6 +11,7 @@ import {
   FolderLock,
   IdCard,
   NotebookPen,
+  PawPrint,
   Radio,
   Scale,
   ScanLine,
@@ -182,66 +183,87 @@ export function PetHistoryDashboard({ pet }: { pet: Pet }) {
 
   return (
     <div className="flex flex-col">
+      {/* Static heading — not a <details>, just establishes that everything
+          below (nav + all 4 groups) belongs under one umbrella. */}
+      <div className="mb-6 flex items-center gap-3">
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--brand-primary)] text-white shadow-[0_10px_24px_rgba(0,0,0,0.15)]">
+          <PawPrint className="h-6 w-6" />
+        </span>
+        <div className="min-w-0">
+          <h1 className="text-2xl font-bold tracking-tight text-[#1c1c1c] sm:text-3xl">
+            ძაღლის ისტორია
+          </h1>
+          <p className="mt-0.5 text-sm text-slate-500">
+            ქვემოთ მოცემული ოთხივე სექცია მისი შემადგენელი ნაწილია.
+          </p>
+        </div>
+      </div>
+
       <SectionNav />
 
-      <div className="flex flex-col gap-5">
-        <GroupSection
-          id={profileGroup.id}
-          icon={profileGroup.icon}
-          eyebrow={profileGroup.eyebrow}
-          title={profileGroup.title}
-          description={profileGroup.description}
-          defaultOpen
-        >
-          <IdentityPassport pet={pet} />
-          <DnaPanel pet={pet} dna={telemetry.dna} />
-        </GroupSection>
+      {/* The brand-colored left rail visually ties all 4 groups to the
+          heading above, marking them as its sub-sections rather than
+          independent page sections. */}
+      <div className="rounded-[2.5rem] border border-[#eceae5] border-l-4 border-l-[var(--brand-primary)]/50 p-4 sm:p-7">
+        <div className="flex flex-col gap-5">
+          <GroupSection
+            id={profileGroup.id}
+            icon={profileGroup.icon}
+            eyebrow={profileGroup.eyebrow}
+            title={profileGroup.title}
+            description={profileGroup.description}
+            defaultOpen
+          >
+            <IdentityPassport pet={pet} />
+            <DnaPanel pet={pet} dna={telemetry.dna} />
+          </GroupSection>
 
-        <GroupSection
-          id={safetyGroup.id}
-          icon={safetyGroup.icon}
-          eyebrow={safetyGroup.eyebrow}
-          title={safetyGroup.title}
-          description={safetyGroup.description}
-        >
-          <MicrochipSosCard pet={pet} />
-          <ContactsPanel pet={pet} />
-        </GroupSection>
+          <GroupSection
+            id={safetyGroup.id}
+            icon={safetyGroup.icon}
+            eyebrow={safetyGroup.eyebrow}
+            title={safetyGroup.title}
+            description={safetyGroup.description}
+          >
+            <MicrochipSosCard pet={pet} />
+            <ContactsPanel pet={pet} />
+          </GroupSection>
 
-        <GroupSection
-          id={healthGroup.id}
-          icon={healthGroup.icon}
-          eyebrow={healthGroup.eyebrow}
-          title={healthGroup.title}
-          description={healthGroup.description}
-        >
-          <MedicalHistoryPanel pet={pet} />
-          <HydrationPanel pet={pet} />
-          <LabMetricsPanel pet={pet} />
-          <VetVisitsPanel pet={pet} />
+          <GroupSection
+            id={healthGroup.id}
+            icon={healthGroup.icon}
+            eyebrow={healthGroup.eyebrow}
+            title={healthGroup.title}
+            description={healthGroup.description}
+          >
+            <MedicalHistoryPanel pet={pet} />
+            <HydrationPanel pet={pet} />
+            <LabMetricsPanel pet={pet} />
+            <VetVisitsPanel pet={pet} />
 
-          {/* The vault is the existing upload surface — drag & drop, PDF/JPEG/PNG,
-              10MB cap, progress and preview cards all already live there. */}
-          <div id="vault" className="scroll-mt-28">
-            <LabResultsUpload pet={pet} />
-          </div>
+            {/* The vault is the existing upload surface — drag & drop, PDF/JPEG/PNG,
+                10MB cap, progress and preview cards all already live there. */}
+            <div id="vault" className="scroll-mt-28">
+              <LabResultsUpload pet={pet} />
+            </div>
 
-          <AiInsightsPanel
-            consultations={telemetry.consultations}
-            insights={telemetry.insights}
-          />
-        </GroupSection>
+            <AiInsightsPanel
+              consultations={telemetry.consultations}
+              insights={telemetry.insights}
+            />
+          </GroupSection>
 
-        <GroupSection
-          id={lifestyleGroup.id}
-          icon={lifestyleGroup.icon}
-          eyebrow={lifestyleGroup.eyebrow}
-          title={lifestyleGroup.title}
-          description={lifestyleGroup.description}
-        >
-          <NutritionPanel pet={pet} />
-          <CollarPanel collar={telemetry.collar} />
-        </GroupSection>
+          <GroupSection
+            id={lifestyleGroup.id}
+            icon={lifestyleGroup.icon}
+            eyebrow={lifestyleGroup.eyebrow}
+            title={lifestyleGroup.title}
+            description={lifestyleGroup.description}
+          >
+            <NutritionPanel pet={pet} />
+            <CollarPanel collar={telemetry.collar} />
+          </GroupSection>
+        </div>
       </div>
 
       <motion.footer
