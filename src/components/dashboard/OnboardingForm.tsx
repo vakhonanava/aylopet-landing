@@ -14,37 +14,38 @@ import {
   fieldLabel,
   textInput,
 } from "@/components/dashboard/FormControls";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import type { ActivityLevel } from "@/lib/dashboard";
+import type { DashboardCopy } from "@/lib/content/dashboard-copy";
 import { createPetProfileInSupabase } from "@/lib/platform/pet-persistence";
 import { createClient } from "@/utils/supabase/client";
 
-const petSchema = z.object({
-  petName: z.string().min(1, "მიუთითე ძაღლის სახელი"),
-  breed: z.string().min(1, "აირჩიე ჯიში"),
-  weightKg: z
-    .number({ message: "მიუთითე წონა" })
-    .positive("წონა უნდა იყოს დადებითი")
-    .max(120, "შეამოწმე წონა"),
-  activity: z.enum(["low", "moderate", "high"], {
-    message: "აირჩიე აქტივობის ტიპი",
-  }),
-});
+/* Built per-render from the active locale so validation messages are
+   translated too — they used to be hardcoded Georgian literals. */
+function buildPetSchema(e: DashboardCopy["onboarding"]["errors"]) {
+  return z.object({
+    petName: z.string().min(1, e.dogName),
+    breed: z.string().min(1, e.breed),
+    weightKg: z
+      .number({ message: e.weight })
+      .positive(e.weightPositive)
+      .max(120, e.weightMax),
+    activity: z.enum(["low", "moderate", "high"], { message: e.activity }),
+  });
+}
 
-const guestSchema = z
-  .object({
-    name: z.string().min(2, "მიუთითე სახელი"),
-    email: z.string().email("არასწორი ელ. ფოსტა"),
-    password: z.string().min(8, "მინიმუმ 8 სიმბოლო"),
-  })
-  .merge(petSchema);
+function buildGuestSchema(e: DashboardCopy["onboarding"]["errors"]) {
+  return z
+    .object({
+      name: z.string().min(2, e.name),
+      email: z.string().email(e.email),
+      password: z.string().min(8, e.password),
+    })
+    .merge(buildPetSchema(e));
+}
 
-type PetFormValues = z.infer<typeof petSchema>;
-type GuestFormValues = z.infer<typeof guestSchema>;
-
-const guestSteps = [
-  { id: 1, label: "ანგარიში", icon: UserPlus },
-  { id: 2, label: "შენი ძაღლი", icon: PawPrint },
-];
+type PetFormValues = z.infer<ReturnType<typeof buildPetSchema>>;
+type GuestFormValues = z.infer<ReturnType<typeof buildGuestSchema>>;
 
 export function OnboardingForm() {
   const router = useRouter();
@@ -55,9 +56,18 @@ export function OnboardingForm() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  const { d } = useDashboardCopy();
+  const guestSteps = [
+    { id: 1, label: d.onboarding.stepAccount, icon: UserPlus },
+    { id: 2, label: d.onboarding.stepDog, icon: PawPrint },
+  ];
+
   const schema = useMemo(
-    () => (isAuthenticated ? petSchema : guestSchema),
-    [isAuthenticated],
+    () =>
+      isAuthenticated
+        ? buildPetSchema(d.onboarding.errors)
+        : buildGuestSchema(d.onboarding.errors),
+    [isAuthenticated, d.onboarding.errors],
   );
 
   const {
@@ -119,7 +129,7 @@ export function OnboardingForm() {
         });
 
         if (petResult.error || !petResult.petId) {
-          setSubmitError(petResult.error ?? "ცხოველის პროფილი ვერ შეიქმნა.");
+          setSubmitError(petResult.error ?? d.onboarding.petCreateFailed);
           setSubmitting(false);
           return;
         }
@@ -135,7 +145,7 @@ export function OnboardingForm() {
         );
         router.push(`/dashboard/pets/${petResult.petId}`);
       } catch {
-        setSubmitError("Supabase არ არის კონფიგურირებული.");
+        setSubmitError(d.onboarding.supabaseMissing);
         setSubmitting(false);
       }
       return;
@@ -152,12 +162,12 @@ export function OnboardingForm() {
     <>
       <div className="flex flex-col gap-1.5">
         <label className={fieldLabel} htmlFor="petName">
-          ძაღლის სახელი
+          {d.onboarding.dogNameLabel}
         </label>
         <input
           id="petName"
           className={textInput}
-          placeholder="მაგ. რექსი"
+          placeholder={d.onboarding.dogNamePlaceholder}
           {...register("petName")}
         />
         {errors.petName && (
@@ -166,7 +176,7 @@ export function OnboardingForm() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label className={fieldLabel}>ჯიში</label>
+        <label className={fieldLabel}>{d.pet.breed}</label>
         <Controller
           control={control}
           name="breed"
@@ -183,7 +193,7 @@ export function OnboardingForm() {
 
       <div className="flex flex-col gap-1.5">
         <label className={fieldLabel} htmlFor="weightKg">
-          წონა
+          {d.pet.weightKg}
         </label>
         <div className="relative">
           <input
@@ -204,7 +214,7 @@ export function OnboardingForm() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className={fieldLabel}>ფიზიკური აქტივობის ტიპი</label>
+        <label className={fieldLabel}>{d.pet.activityType}</label>
         <Controller
           control={control}
           name="activity"
@@ -227,7 +237,7 @@ export function OnboardingForm() {
     return (
       <div className="flex h-48 items-center justify-center text-slate-400">
         <LoaderCircle className="mr-2 h-5 w-5 animate-spin" />
-        იტვირთება…
+        {d.common.loading}
       </div>
     );
   }
@@ -276,21 +286,21 @@ export function OnboardingForm() {
           <div className="flex flex-col gap-5">
             <div>
               <h2 className="text-xl font-bold tracking-tight text-[var(--brand-primary)]">
-                შექმენი ანგარიში
+                {d.onboarding.accountTitle}
               </h2>
               <p className="mt-1 text-sm text-slate-500">
-                დაიწყე Aylopet-ის მოგზაურობა.
+                {d.onboarding.accountSubtitle}
               </p>
             </div>
 
             <div className="flex flex-col gap-1.5">
               <label className={fieldLabel} htmlFor="name">
-                სახელი
+                {d.onboarding.nameLabel}
               </label>
               <input
                 id="name"
                 className={textInput}
-                placeholder="შენი სახელი"
+                placeholder={d.onboarding.namePlaceholder}
                 {...register("name")}
               />
               {"name" in errors && errors.name && (
@@ -300,7 +310,7 @@ export function OnboardingForm() {
 
             <div className="flex flex-col gap-1.5">
               <label className={fieldLabel} htmlFor="email">
-                ელ. ფოსტა
+                {d.onboarding.emailLabel}
               </label>
               <input
                 id="email"
@@ -316,13 +326,13 @@ export function OnboardingForm() {
 
             <div className="flex flex-col gap-1.5">
               <label className={fieldLabel} htmlFor="password">
-                პაროლი
+                {d.onboarding.passwordLabel}
               </label>
               <input
                 id="password"
                 type="password"
                 className={textInput}
-                placeholder="მინიმუმ 8 სიმბოლო"
+                placeholder={d.onboarding.passwordPlaceholder}
                 {...register("password")}
               />
               {"password" in errors && errors.password && (
@@ -335,7 +345,7 @@ export function OnboardingForm() {
               onClick={goNext}
               className="group mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-[var(--brand-primary)] px-7 py-3.5 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[var(--brand-primary-hover)]"
             >
-              გაგრძელება
+              {d.onboarding.continue}
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
             </button>
           </div>
@@ -345,10 +355,10 @@ export function OnboardingForm() {
           <div className="flex flex-col gap-5">
             <div>
               <h2 className="text-xl font-bold tracking-tight text-[var(--brand-primary)]">
-                {isAuthenticated ? "ახალი ძაღლის პროფილი" : "დაამატე შენი ძაღლი"}
+                {isAuthenticated ? d.onboarding.dogTitleNew : d.onboarding.dogTitleFirst}
               </h2>
               <p className="mt-1 text-sm text-slate-500">
-                ეს დაგვეხმარება პერსონალური რეკომენდაციების შექმნაში.
+                {d.onboarding.dogSubtitle}
               </p>
             </div>
 
@@ -368,7 +378,7 @@ export function OnboardingForm() {
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-[#e5e7eb] bg-white px-6 py-3.5 text-sm font-medium text-[var(--brand-primary)] transition-all duration-300 hover:-translate-y-0.5"
                 >
                   <ArrowLeft className="h-4 w-4" />
-                  უკან
+                  {d.onboarding.back}
                 </button>
               )}
               <button
@@ -380,7 +390,7 @@ export function OnboardingForm() {
                   <LoaderCircle className="h-4 w-4 animate-spin" />
                 ) : (
                   <>
-                    {isAuthenticated ? "ძაღლის დამატება" : "დასრულება და პროფილზე გადასვლა"}
+                    {isAuthenticated ? d.onboarding.submitAdd : d.onboarding.submitFinish}
                     <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
                   </>
                 )}

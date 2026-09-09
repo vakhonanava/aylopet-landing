@@ -14,6 +14,8 @@ import {
   Trash2,
 } from "lucide-react";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
+import { useToast } from "@/components/dashboard/Toast";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import { ImageLightbox } from "@/components/dashboard/ImageLightbox";
 import {
   ActivityRadioCards,
@@ -22,7 +24,7 @@ import {
   textInput,
 } from "@/components/dashboard/FormControls";
 import {
-  ACTIVITY_OPTIONS,
+  getActivityOptions,
   formatDate,
   type ActivityLevel,
   type Pet,
@@ -73,6 +75,8 @@ function ProfileHistoryPanel({
   onRestore: (snapshot: PetProfileSnapshot) => void;
 }) {
   const { removeProfileSnapshot } = useDashboard();
+  const { d, locale } = useDashboardCopy();
+  const activityOptions = getActivityOptions(locale);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
 
@@ -83,7 +87,7 @@ function ProfileHistoryPanel({
       <div className="mb-4 flex items-center gap-2">
         <History className="h-4 w-4 text-[var(--brand-primary)]" />
         <h3 className="text-sm font-bold text-[var(--brand-primary)]">
-          წინა მონაცემები, {pet.profileHistory.length}
+          {d.pet.historyTitle}, {pet.profileHistory.length}
         </h3>
       </div>
       <div className="flex flex-col gap-3">
@@ -99,7 +103,7 @@ function ProfileHistoryPanel({
                 <div>
                   <p className="font-semibold text-[var(--brand-primary)]">{snapshot.name}</p>
                   <p className="text-xs text-slate-400">
-                    შენახულია, {formatDate(snapshot.savedAt.slice(0, 10))}
+                    {d.pet.historySavedOn}, {formatDate(snapshot.savedAt.slice(0, 10))}
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -109,7 +113,7 @@ function ProfileHistoryPanel({
                     className="inline-flex items-center gap-1 rounded-full border border-[#e5e7eb] bg-white px-3 py-1.5 text-xs font-medium text-[var(--brand-primary)]"
                   >
                     {expanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
-                    შედარება
+                    {d.pet.compare}
                   </button>
                   <button
                     type="button"
@@ -117,7 +121,7 @@ function ProfileHistoryPanel({
                     className="inline-flex items-center gap-1 rounded-full border border-[#e5e7eb] bg-white px-3 py-1.5 text-xs font-medium text-[var(--brand-primary)]"
                   >
                     <RotateCcw className="h-3.5 w-3.5" />
-                    რედაქტირება
+                    {d.pet.restore}
                   </button>
                   <button
                     type="button"
@@ -130,28 +134,28 @@ function ProfileHistoryPanel({
                     className="inline-flex items-center gap-1 rounded-full border border-red-200 bg-white px-3 py-1.5 text-xs font-medium text-red-600 disabled:opacity-50"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
-                    წაშლა
+                    {d.common.remove}
                   </button>
                 </div>
               </div>
               {expanded && (
                 <div className="mt-4 space-y-2">
                   <div className="hidden text-[11px] font-semibold uppercase tracking-wide text-slate-400 sm:grid sm:grid-cols-[120px_1fr_1fr] sm:gap-3">
-                    <span>ველი</span>
-                    <span>წინა</span>
-                    <span>ამჟამინდელი</span>
+                    <span>{d.pet.fieldColumn}</span>
+                    <span>{d.pet.beforeColumn}</span>
+                    <span>{d.pet.afterColumn}</span>
                   </div>
-                  <CompareRow label="სახელი" before={snap.name} after={current.name} />
-                  <CompareRow label="ჯიში" before={snap.breed} after={current.breed} />
+                  <CompareRow label={d.pet.name} before={snap.name} after={current.name} />
+                  <CompareRow label={d.pet.breed} before={snap.breed} after={current.breed} />
                   <CompareRow
-                    label="წონა"
+                    label={d.pet.weightKg}
                     before={`${snap.weightKg} kg`}
                     after={`${current.weightKg} kg`}
                   />
                   <CompareRow
-                    label="აქტივობა"
-                    before={ACTIVITY_OPTIONS.find((o) => o.value === snap.activity)?.label ?? snap.activity}
-                    after={ACTIVITY_OPTIONS.find((o) => o.value === current.activity)?.label ?? current.activity}
+                    label={d.pet.activity}
+                    before={activityOptions.find((o) => o.value === snap.activity)?.label ?? snap.activity}
+                    after={activityOptions.find((o) => o.value === current.activity)?.label ?? current.activity}
                   />
                 </div>
               )}
@@ -165,6 +169,8 @@ function ProfileHistoryPanel({
 
 export function PetProfileCard({ pet }: { pet: Pet }) {
   const { savePetProfile } = useDashboard();
+  const { d } = useDashboardCopy();
+  const toast = useToast();
   const fileRef = useRef<HTMLInputElement>(null);
   const [draft, setDraft] = useState(() => petToPayload(pet));
   const [saving, setSaving] = useState(false);
@@ -200,10 +206,13 @@ export function PetProfileCard({ pet }: { pet: Pet }) {
     const result = await savePetProfile(pet.id, draft);
     setSaving(false);
     if (!result.ok) {
-      setSaveError(result.error ?? "შენახვა ვერ მოხერხდა.");
+      const message = result.error ?? d.toast.saveFailed;
+      setSaveError(message);
+      toast.error(message);
       return;
     }
     setSavedNotice(true);
+    toast.success(d.toast.saved);
   };
 
   return (
@@ -222,7 +231,7 @@ export function PetProfileCard({ pet }: { pet: Pet }) {
               <button
                 type="button"
                 onClick={() => setZoomOpen(true)}
-                aria-label={`${draft.name || "ძაღლის"} ფოტოს გადიდება`}
+                aria-label={`${draft.name} · ${d.pet.photoZoomAria}`.trim()}
                 className="group size-24 cursor-zoom-in overflow-hidden rounded-full border-4 border-white bg-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-transform duration-200 hover:scale-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-primary)]"
               >
                 <Image
@@ -245,7 +254,7 @@ export function PetProfileCard({ pet }: { pet: Pet }) {
               type="button"
               onClick={() => fileRef.current?.click()}
               className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-[var(--brand-primary)] text-white transition-transform hover:scale-105"
-              aria-label="ფოტოს ატვირთვა"
+              aria-label={d.pet.photoUpload}
             >
               <Camera className="h-4 w-4" />
             </button>
@@ -262,7 +271,7 @@ export function PetProfileCard({ pet }: { pet: Pet }) {
             {isDirty && (
               <>
                 <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700">
-                  შეუნახავი ცვლილებები
+                  {d.pet.unsavedChanges}
                 </span>
                 <button
                   type="button"
@@ -275,7 +284,7 @@ export function PetProfileCard({ pet }: { pet: Pet }) {
                   ) : (
                     <Save className="h-4 w-4" />
                   )}
-                  შენახვა
+                  {d.common.save}
                 </button>
               </>
             )}
@@ -289,14 +298,14 @@ export function PetProfileCard({ pet }: { pet: Pet }) {
         )}
         {savedNotice && !isDirty && (
           <p className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
-            ცვლილებები შენახულია.
+            {d.pet.changesSaved}
           </p>
         )}
 
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="flex flex-col gap-1.5">
             <label className={fieldLabel} htmlFor="pet-name">
-              სახელი
+              {d.pet.name}
             </label>
             <input
               id="pet-name"
@@ -307,7 +316,7 @@ export function PetProfileCard({ pet }: { pet: Pet }) {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className={fieldLabel}>ჯიში</label>
+            <label className={fieldLabel}>{d.pet.breed}</label>
             <BreedCombobox
               value={draft.breed}
               onChange={(breed) => patchDraft({ breed })}
@@ -316,7 +325,7 @@ export function PetProfileCard({ pet }: { pet: Pet }) {
         </div>
 
         <div className="mt-6 flex flex-col gap-2">
-          <label className={fieldLabel}>ფიზიკური აქტივობის ტიპი</label>
+          <label className={fieldLabel}>{d.pet.activityType}</label>
           <ActivityRadioCards
             value={draft.activity}
             onChange={(activity) => patchDraft({ activity: activity as ActivityLevel })}
@@ -337,7 +346,7 @@ export function PetProfileCard({ pet }: { pet: Pet }) {
     <ImageLightbox
       open={zoomOpen}
       src={draft.avatarUrl ?? null}
-      alt={draft.name || "ძაღლის ფოტო"}
+      alt={draft.name || d.pet.photoAlt}
       onClose={() => setZoomOpen(false)}
     />
     </>

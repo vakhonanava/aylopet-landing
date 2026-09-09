@@ -1,3 +1,4 @@
+import type { Locale } from "@/lib/i18n/types";
 import type {
   AppetiteLevel,
   BehaviourSignal,
@@ -70,6 +71,34 @@ export const APPETITE_LABELS: Record<AppetiteLevel, string> = {
   normal: "ნორმალური",
   eager: "მადიანი",
 };
+
+/* -------------------------- Localized label maps -------------------------- */
+
+const APPETITE_LABELS_EN: Record<AppetiteLevel, string> = {
+  refused: "Refused",
+  poor: "Poor",
+  normal: "Normal",
+  eager: "Eager",
+};
+
+export function getAppetiteLabels(
+  locale: Locale,
+): Record<AppetiteLevel, string> {
+  return locale === "ka" ? APPETITE_LABELS : APPETITE_LABELS_EN;
+}
+
+const DIET_LABELS_EN: Record<DietType, string> = {
+  aylopet_fresh: "Aylopet Fresh Food",
+  dry: "Dry food",
+  wet: "Wet / canned",
+  raw: "Raw (BARF)",
+  prescription: "Prescription diet",
+  mixed: "Mixed",
+};
+
+export function getDietLabels(locale: Locale): Record<DietType, string> {
+  return locale === "ka" ? DIET_LABELS : DIET_LABELS_EN;
+}
 
 export const DNA_STATUS: Record<DnaSampleStatus, ToneClasses> = {
   not_ordered: {

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, BadgeCheck, Dog, Loader2, Pencil, X } from "lucide-react";
 import { useState } from "react";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import {
   ActivityRadioCards,
   BreedCombobox,
@@ -22,6 +23,7 @@ import { petToPayload, type PetProfilePayload } from "@/lib/platform/pet-persist
  */
 export function DashboardPetCard({ pet }: { pet: Pet }) {
   const { savePetProfile } = useDashboard();
+  const { d } = useDashboardCopy();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState<PetProfilePayload>(() => petToPayload(pet));
   const [saving, setSaving] = useState(false);
@@ -35,7 +37,7 @@ export function DashboardPetCard({ pet }: { pet: Pet }) {
 
   const submit = async () => {
     if (!draft.name.trim() || !draft.breed.trim() || draft.weightKg <= 0) {
-      setError("შეავსე სახელი, ჯიში და წონა.");
+      setError(d.pet.missingFields);
       return;
     }
 
@@ -45,7 +47,7 @@ export function DashboardPetCard({ pet }: { pet: Pet }) {
     setSaving(false);
 
     if (!result.ok) {
-      setError(result.error ?? "შენახვა ვერ მოხერხდა.");
+      setError(result.error ?? d.toast.saveFailed);
       return;
     }
     setEditing(false);
@@ -56,12 +58,12 @@ export function DashboardPetCard({ pet }: { pet: Pet }) {
       <div className="rounded-[2rem] border border-[var(--brand-primary)]/25 bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
         <div className="flex items-center justify-between gap-3">
           <h3 className="text-sm font-semibold text-[var(--brand-primary)]">
-            {pet.name} · ინფორმაციის რედაქტირება
+            {pet.name} · {d.pet.editTitle}
           </h3>
           <button
             type="button"
             onClick={() => setEditing(false)}
-            aria-label="დახურვა"
+            aria-label={d.common.close}
             className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-50 hover:text-[var(--brand-primary)]"
           >
             <X className="h-4 w-4" />
@@ -71,7 +73,7 @@ export function DashboardPetCard({ pet }: { pet: Pet }) {
         <div className="mt-4 flex flex-col gap-3">
           <div>
             <label className={fieldLabel} htmlFor={`pet-name-${pet.id}`}>
-              სახელი
+              {d.pet.name}
             </label>
             <input
               id={`pet-name-${pet.id}`}
@@ -84,7 +86,7 @@ export function DashboardPetCard({ pet }: { pet: Pet }) {
           </div>
 
           <div>
-            <span className={fieldLabel}>ჯიში</span>
+            <span className={fieldLabel}>{d.pet.breed}</span>
             <div className="mt-1.5">
               <BreedCombobox
                 value={draft.breed}
@@ -95,7 +97,7 @@ export function DashboardPetCard({ pet }: { pet: Pet }) {
 
           <div>
             <label className={fieldLabel} htmlFor={`pet-weight-${pet.id}`}>
-              წონა (კგ)
+              {d.pet.weightKg}
             </label>
             <input
               id={`pet-weight-${pet.id}`}
@@ -115,7 +117,7 @@ export function DashboardPetCard({ pet }: { pet: Pet }) {
           </div>
 
           <div>
-            <span className={fieldLabel}>ფიზიკური აქტივობა</span>
+            <span className={fieldLabel}>{d.pet.activity}</span>
             <div className="mt-1.5">
               <ActivityRadioCards
                 value={draft.activity}
@@ -141,14 +143,14 @@ export function DashboardPetCard({ pet }: { pet: Pet }) {
             ) : (
               <BadgeCheck className="h-4 w-4" />
             )}
-            შენახვა
+            {d.common.save}
           </button>
           <button
             type="button"
             onClick={() => setEditing(false)}
             className="cursor-pointer rounded-full border border-[#e5e7eb] px-5 py-2.5 text-sm font-medium text-slate-500 transition-colors hover:text-[var(--brand-primary)]"
           >
-            გაუქმება
+            {d.common.cancel}
           </button>
         </div>
       </div>
@@ -189,7 +191,7 @@ export function DashboardPetCard({ pet }: { pet: Pet }) {
       <button
         type="button"
         onClick={openEditor}
-        aria-label={`${pet.name}, ინფორმაციის რედაქტირება`}
+        aria-label={`${pet.name}, ${d.pet.editAria}`}
         className="absolute right-3 top-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white text-slate-300 shadow-sm ring-1 ring-[#e5e7eb] transition-colors hover:text-[var(--brand-primary)]"
       >
         <Pencil className="h-3.5 w-3.5" />

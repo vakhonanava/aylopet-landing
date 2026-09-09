@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 
 interface ImageLightboxProps {
   open: boolean;
@@ -17,6 +18,7 @@ interface ImageLightboxProps {
  * `overflow-hidden` and stacking context can't clip or under-layer it.
  */
 export function ImageLightbox({ open, src, alt, onClose }: ImageLightboxProps) {
+  const { d } = useDashboardCopy();
   const closeRef = useRef<HTMLButtonElement>(null);
   const restoreFocusTo = useRef<HTMLElement | null>(null);
 
@@ -74,7 +76,7 @@ export function ImageLightbox({ open, src, alt, onClose }: ImageLightboxProps) {
             ref={closeRef}
             type="button"
             onClick={onClose}
-            aria-label="დახურვა"
+            aria-label={d.common.close}
             className="absolute right-4 top-4 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-white/12 text-white backdrop-blur-md transition-colors hover:bg-white/22 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-8 sm:top-8"
           >
             <X className="h-5 w-5" />

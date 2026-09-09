@@ -3,11 +3,13 @@
 import { useMemo, useRef, useState } from "react";
 import { FileText, Loader2, Paperclip, Trash2, X } from "lucide-react";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
+import { useToast } from "@/components/dashboard/Toast";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import { fieldLabel, textInput } from "@/components/dashboard/FormControls";
 import type { Pet } from "@/lib/dashboard";
 import {
-  SEVERITY_LEVELS,
-  SYMPTOM_TYPE_PRESETS,
+  getSeverityLevels,
+  getSymptomPresets,
   type SeverityLevel,
   type SymptomAttachment,
   type SymptomLog,
@@ -30,6 +32,10 @@ function formatDayGroup(iso: string): string {
 
 export function SymptomTracker({ pet }: { pet: Pet }) {
   const { addSymptomLog, removeSymptomLog } = useDashboard();
+  const { d, locale } = useDashboardCopy();
+  const toast = useToast();
+  const severityLevels = getSeverityLevels(locale);
+  const symptomPresets = getSymptomPresets(locale);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [symptomType, setSymptomType] = useState<string | null>(null);
@@ -57,7 +63,7 @@ export function SymptomTracker({ pet }: { pet: Pet }) {
 
   const submit = async (severityValue: SeverityLevel) => {
     if (!resolvedSymptom) {
-      setError("აირჩიე სიმპტომი.");
+      setError(d.medical.symptomRequired);
       return;
     }
     setBusy(true);
@@ -71,7 +77,10 @@ export function SymptomTracker({ pet }: { pet: Pet }) {
     });
     setBusy(false);
     if (!result.ok) {
-      setError(result.error ?? "სიმპტომი ვერ შეინახა.");
+      const message = result.error ?? d.medical.symptomSaveFailed;
+      setError(message);
+      toast.error(message);
+      return;
       return;
     }
     resetForm();
@@ -84,7 +93,7 @@ export function SymptomTracker({ pet }: { pet: Pet }) {
 
   const handleSaveDetailed = () => {
     if (!severity) {
-      setError("აირჩიე სიმძიმის დონე.");
+      setError(d.medical.severityRequired);
       return;
     }
     void submit(severity);
@@ -105,12 +114,12 @@ export function SymptomTracker({ pet }: { pet: Pet }) {
       });
       const json = await res.json();
       if (!res.ok || !json.ok) {
-        setError(json.error ?? "ატვირთვა ვერ მოხერხდა.");
+        setError(json.error ?? d.toast.uploadFailed);
       } else {
         setAttachments((prev) => [...prev, { path: json.path, url: json.url }]);
       }
     } catch {
-      setError("ატვირთვა ვერ მოხერხდა.");
+      setError(d.toast.uploadFailed);
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -121,7 +130,13 @@ export function SymptomTracker({ pet }: { pet: Pet }) {
     setBusy(true);
     const result = await removeSymptomLog(pet.id, logId);
     setBusy(false);
-    if (!result.ok) setError(result.error ?? "წაშლა ვერ მოხერხდა.");
+    if (!result.ok) {
+      const message = result.error ?? d.toast.deleteFailed;
+      setError(message);
+      toast.error(message);
+      return;
+    }
+    toast.success(d.toast.deleted);
   };
 
   const grouped = useMemo(() => {
@@ -138,7 +153,7 @@ export function SymptomTracker({ pet }: { pet: Pet }) {
   return (
     <div>
       <p className="mb-4 text-sm text-slate-500">
-        აირჩიე სიმპტომი და სიმძიმის დონე. დანარჩენი ავტომატურად ჩაიწერება.
+        {d.medical.symptomsHint}
       </p>
 
       {error && (
@@ -148,9 +163,9 @@ export function SymptomTracker({ pet }: { pet: Pet }) {
       )}
 
       <div className="rounded-2xl border border-[#e5e7eb] bg-[#FAFAF8] p-4">
-        <label className={fieldLabel}>სიმპტომი</label>
+        <label className={fieldLabel}>{d.medical.symptom}</label>
         <div className="mt-2 flex flex-wrap gap-2">
-          {SYMPTOM_TYPE_PRESETS.map((preset) => (
+          {symptomPresets.map((preset) => (
             <button
               key={preset}
               type="button"
@@ -173,7 +188,7 @@ export function SymptomTracker({ pet }: { pet: Pet }) {
                 : "border-[#e5e7eb] bg-white text-slate-600 hover:border-[var(--brand-primary)]/30"
             }`}
           >
-            სხვა
+            {d.common.other}
           </button>
         </div>
         {symptomType === "other" && (
@@ -181,22 +196,22 @@ export function SymptomTracker({ pet }: { pet: Pet }) {
             className={`${textInput} mt-3`}
             value={customSymptom}
             onChange={(e) => setCustomSymptom(e.target.value)}
-            placeholder="აღწერე სიმპტომი"
+            placeholder={d.medical.symptomPlaceholder}
           />
         )}
 
         <div className="mt-4 flex items-center justify-between">
-          <label className={fieldLabel}>სიმძიმე</label>
+          <label className={fieldLabel}>{d.medical.severity}</label>
           <button
             type="button"
             onClick={() => setDetailMode((v) => !v)}
             className="text-xs font-medium text-[var(--brand-primary)] underline underline-offset-2"
           >
-            {detailMode ? "დეტალების დამალვა" : "დეტალების დამატება"}
+            {detailMode ? d.medical.hideDetails : d.medical.showDetails}
           </button>
         </div>
         <div className="mt-2 flex flex-wrap gap-2">
-          {SEVERITY_LEVELS.map((level) => (
+          {severityLevels.map((level) => (
             <button
               key={level.value}
               type="button"
@@ -217,30 +232,30 @@ export function SymptomTracker({ pet }: { pet: Pet }) {
         {detailMode && (
           <div className="mt-4 flex flex-col gap-3">
             <div>
-              <label className={fieldLabel}>შენიშვნა</label>
+              <label className={fieldLabel}>{d.medical.note}</label>
               <textarea
                 className={`${textInput} mt-1.5 min-h-20 resize-none`}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="დეტალები: რამ გამოიწვია, რა ჭამა..."
+                placeholder={d.medical.notePlaceholder}
               />
             </div>
 
             <div>
-              <label className={fieldLabel}>ფოტო/ვიდეო</label>
+              <label className={fieldLabel}>{d.medical.attachment}</label>
               <div className="mt-1.5 flex flex-wrap items-center gap-2">
                 {attachments.map((a) => (
                   <span
                     key={a.path}
                     className="inline-flex items-center gap-1.5 rounded-full border border-[#e5e7eb] bg-white px-3 py-1 text-xs text-slate-600"
                   >
-                    <FileText className="h-3 w-3" /> ფაილი
+                    <FileText className="h-3 w-3" /> {d.medical.attachmentFile}
                     <button
                       type="button"
                       onClick={() =>
                         setAttachments((prev) => prev.filter((x) => x.path !== a.path))
                       }
-                      aria-label="ფაილის წაშლა"
+                      aria-label={d.medical.removeFile}
                     >
                       <X className="h-3 w-3" />
                     </button>
@@ -257,7 +272,7 @@ export function SymptomTracker({ pet }: { pet: Pet }) {
                   ) : (
                     <Paperclip className="h-3.5 w-3.5" />
                   )}
-                  ატვირთვა
+                  {d.common.upload}
                 </button>
                 <input
                   ref={fileInputRef}
@@ -275,7 +290,7 @@ export function SymptomTracker({ pet }: { pet: Pet }) {
               onClick={handleSaveDetailed}
               className="self-start rounded-full bg-[var(--brand-primary)] px-5 py-2.5 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[var(--brand-primary-hover)]"
             >
-              შენახვა
+              {d.common.save}
             </button>
           </div>
         )}
@@ -283,7 +298,7 @@ export function SymptomTracker({ pet }: { pet: Pet }) {
 
       <div className="mt-6 flex flex-col gap-6">
         {grouped.length === 0 && (
-          <p className="py-4 text-sm text-slate-400">ჯერ არ არის ჩანაწერი.</p>
+          <p className="py-4 text-sm text-slate-400">{d.common.noEntries}</p>
         )}
         {grouped.map(([day, logs]) => (
           <div key={day}>
@@ -292,7 +307,7 @@ export function SymptomTracker({ pet }: { pet: Pet }) {
             </p>
             <div className="flex flex-col gap-2">
               {logs.map((log) => {
-                const level = SEVERITY_LEVELS.find((l) => l.value === log.severity);
+                const level = severityLevels.find((l) => l.value === log.severity);
                 return (
                   <article
                     key={log.id}
@@ -319,7 +334,7 @@ export function SymptomTracker({ pet }: { pet: Pet }) {
                         disabled={busy}
                         onClick={() => void handleDelete(log.id)}
                         className="rounded-full border border-red-200 p-1.5 text-red-600"
-                        aria-label="სიმპტომის წაშლა"
+                        aria-label={d.medical.removeSymptom}
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
@@ -335,7 +350,7 @@ export function SymptomTracker({ pet }: { pet: Pet }) {
                             rel="noreferrer"
                             className="inline-flex items-center gap-1.5 rounded-full border border-[#e5e7eb] px-3 py-1 text-xs font-medium text-[var(--brand-primary)]"
                           >
-                            <FileText className="h-3 w-3" /> ფაილის ნახვა
+                            <FileText className="h-3 w-3" /> {d.medical.viewFile}
                           </a>
                         ))}
                       </div>

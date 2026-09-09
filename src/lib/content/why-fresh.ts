@@ -7,13 +7,19 @@ export const WHY_FRESH = {
       title: "სიცოცხლის ხანგრძლივობის ზრდა (+32%)",
       body: "2003 წელს ჩატარებულმა მასშტაბურმა კვლევამ (Lippert & Sapy), რომელიც 537 ძაღლის მონაცემებს ეყრდნობოდა, აჩვენა, რომ ძაღლები, რომლებიც ნატურალური, მინიმალურად დამუშავებული საკვებით იკვებებოდნენ, საშუალოდ 32 თვის (თითქმის 3 წლის) მეტხანს ცოცხლობდნენ, ვიდრე ისინი, ვინც ინდუსტრიულად დამუშავებულ მშრალ საკვებს იღებდნენ.",
       cta: "კვლევის ნახვა (PDF)",
-      ctaHref: "#",
+      // Study PDFs are served from `public/research/`. Both are empty because
+      // no document has been supplied yet — an empty href renders the "coming
+      // soon" state instead of the dead `#` link this used to be. Drop the file
+      // into `public/research/` and set the path here to enable the download.
+      ctaHref: "",
+      ctaPending: "კვლევა მალე გამოქვეყნდება",
     },
     {
       title: "გაუმჯობესებული იმუნიტეტი და მონელება",
       body: "The Farmer's Dog-ისა და დამოუკიდებელი მკვლევარების მიერ ჩატარებულმა კვლევებმა დაადასტურა, რომ ნატურალური ინგრედიენტებით კვება აუმჯობესებს ჰიდრატაციას, ხელს უწყობს ჯანსაღ მონელებას, აძლიერებს იმუნურ პასუხს და უზრუნველყოფს ენერგიის უფრო სტაბილურ დონეს.",
-      cta: "კვლევის ნახვა",
-      ctaHref: "#",
+      cta: "კვლევის ნახვა (PDF)",
+      ctaHref: "",
+      ctaPending: "კვლევა მალე გამოქვეყნდება",
     },
   ],
 } as const;

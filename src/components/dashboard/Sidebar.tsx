@@ -6,12 +6,13 @@ import { Dog, LayoutDashboard, LogOut, Plus, Settings } from "lucide-react";
 import { AylopetLogo } from "@/components/brand/AylopetLogo";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
-
-const navItems = [
-  { label: "მთავარი", href: "/dashboard", icon: LayoutDashboard, exact: true },
-];
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 
 export function Sidebar() {
+  const { d } = useDashboardCopy();
+  const navItems = [
+    { label: d.nav.home, href: "/dashboard", icon: LayoutDashboard, exact: true },
+  ];
   const pathname = usePathname();
   const router = useRouter();
   const { pets, account, ready } = useDashboard();
@@ -46,12 +47,12 @@ export function Sidebar() {
       <div className="mt-8">
         <div className="flex items-center justify-between px-3">
           <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-            ჩემი ძაღლები
+            {d.nav.myDogs}
           </span>
           <Link
             href="/dashboard/onboarding"
             className="flex h-6 w-6 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-100 hover:text-[var(--brand-primary)]"
-            aria-label="ახალი ძაღლის დამატება"
+            aria-label={d.nav.addDogAria}
           >
             <Plus className="h-4 w-4" />
           </Link>
@@ -109,7 +110,7 @@ export function Sidebar() {
             className="flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-[var(--brand-primary)]"
           >
             <Settings className="h-[18px] w-[18px]" />
-            პარამეტრები
+            {d.nav.settings}
           </Link>
           <button
             type="button"
@@ -119,7 +120,7 @@ export function Sidebar() {
             className="flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-[var(--brand-primary)]"
           >
             <LogOut className="h-[18px] w-[18px]" />
-            გასვლა
+            {d.nav.signOut}
           </button>
         </div>
       </div>

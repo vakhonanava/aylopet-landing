@@ -4,10 +4,12 @@ import Link from "next/link";
 import { Lock, PawPrint, Pencil, Plus, Users } from "lucide-react";
 import { DashboardPetCard } from "@/components/dashboard/DashboardPetCard";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import { AmbassadorProgram } from "@/components/early-access/AmbassadorProgram";
 import { ADDITIONAL_PET_PRICE_GEL, canAddPet } from "@/lib/pricing/pets";
 
 export default function DashboardHome() {
+  const { d } = useDashboardCopy();
   const { pets, account, ready } = useDashboard();
   const addPet = canAddPet(pets.length, account?.hasPaidPlan ?? false);
 
@@ -15,13 +17,13 @@ export default function DashboardHome() {
     <div>
       <header className="mb-8">
         <h1 className="text-2xl font-bold tracking-tight text-[var(--brand-primary)] sm:text-3xl">
-          მოგესალმებით{account?.name ? `, ${account.name}` : ""} 👋
+          {d.home.greeting}
+          {account?.name ? `, ${account.name}` : ""} 👋
         </h1>
         <p className="mt-1.5 text-slate-600">
-          მართე შენი ძაღლების პროფილები, ჯანმრთელობა და კვება ერთ სივრცეში.
-          სახელის, ჯიშის, წონისა და აქტივობის შესაცვლელად დააჭირე{" "}
-          <Pencil className="inline h-3.5 w-3.5 -translate-y-px" /> ხატულას, ხოლო
-          ანალიზების ატვირთვისა და სრული ისტორიისთვის გახსენი ძაღლის ბარათი.
+          {d.home.introLead} {d.home.introEditHint}{" "}
+          <Pencil className="inline h-3.5 w-3.5 -translate-y-px" />{" "}
+          {d.home.introOpenHint}
         </p>
       </header>
 
@@ -37,9 +39,11 @@ export default function DashboardHome() {
               <Plus className="h-7 w-7" />
             </span>
             <div>
-              <h3 className="font-bold text-[var(--brand-primary)]">ახალი ძაღლის დამატება</h3>
+              <h3 className="font-bold text-[var(--brand-primary)]">
+                {d.home.addDogTitle}
+              </h3>
               <p className="text-sm">
-                დაამატე კიდევ ერთი ოჯახის წევრი · +{ADDITIONAL_PET_PRICE_GEL} ₾
+                {d.home.addDogPrice} · +{ADDITIONAL_PET_PRICE_GEL} ₾
               </p>
             </div>
           </Link>
@@ -49,11 +53,14 @@ export default function DashboardHome() {
               <Lock className="h-6 w-6" />
             </span>
             <div className="min-w-0">
-              <h3 className="font-bold text-slate-500">ახალი ძაღლის დამატება</h3>
+              <h3 className="font-bold text-slate-500">{d.home.addDogTitle}</h3>
               <p className="text-sm">
                 {addPet.reason === "limit-reached"
-                  ? "ამჟამად ერთ ანგარიშზე მაქსიმუმ ორი პროფილია ხელმისაწვდომი."
-                  : `მეორე ძაღლის დამატება (+${ADDITIONAL_PET_PRICE_GEL} ₾) იხსნება პირველი პროფილის გადახდის შემდეგ.`}
+                  ? d.home.addDogLockedMax
+                  : d.home.addDogLockedPayment.replace(
+                      "{price}",
+                      `+${ADDITIONAL_PET_PRICE_GEL}`,
+                    )}
               </p>
               <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[var(--brand-primary)]/[0.08] px-3 py-1 text-xs font-semibold text-[var(--brand-primary)]">
                 <Users className="h-3.5 w-3.5" />
@@ -67,7 +74,7 @@ export default function DashboardHome() {
       {ready && pets.length === 0 && (
         <div className="mt-6 flex flex-col items-center gap-3 rounded-[2rem] border border-[#e5e7eb] bg-white p-10 text-center">
           <PawPrint className="h-8 w-8 text-slate-300" />
-          <p className="text-slate-500">ჯერ არ გყავს დამატებული ძაღლი.</p>
+          <p className="text-slate-500">{d.home.emptyState}</p>
         </div>
       )}
 

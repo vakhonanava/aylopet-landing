@@ -14,6 +14,7 @@ import { useMemo, useState } from "react";
 import { addButton, fieldLabel, textInput } from "@/components/dashboard/FormControls";
 import { Chip, EmptyState, SectionCard } from "@/components/dashboard/history/ui";
 import { useHistorySave } from "@/components/dashboard/history/useHistorySave";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import { formatDate, uid, type Pet } from "@/lib/dashboard";
 import {
   STOOL_CONSISTENCY_LABELS,
@@ -36,7 +37,8 @@ const WATER_CHANGE_OPTIONS: WaterChange[] = ["decreased", "normal", "increased"]
 const STOOL_OPTIONS: StoolConsistency[] = ["hard", "normal", "soft", "diarrhea"];
 
 export function HydrationPanel({ pet }: { pet: Pet }) {
-  const { save, saving, error } = useHistorySave(pet.id);
+  const { d } = useDashboardCopy();
+  const { save, saving, saved, error } = useHistorySave(pet.id);
   const [open, setOpen] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
@@ -456,7 +458,7 @@ export function HydrationPanel({ pet }: { pet: Pet }) {
                 ) : (
                   <BadgeCheck className="h-4 w-4" />
                 )}
-                ჩანაწერის შენახვა
+                {saved && !saving ? d.common.saved : "ჩანაწერის შენახვა"}
               </button>
             </div>
           </motion.div>

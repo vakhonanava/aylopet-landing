@@ -14,6 +14,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import { getPlatformOnboardingCopy } from "@/lib/content/platform-onboarding";
 import { BreedCombobox } from "@/components/dashboard/FormControls";
 import { checkWaitlistDuplicate } from "@/app/onboarding/actions";
 import {
@@ -29,10 +31,7 @@ import {
   ACCEPTED_PET_FILE_TYPES,
   MAX_PET_FILE_BYTES,
   PET_FILE_CATEGORIES,
-  PET_FILE_CATEGORY_LABELS,
-  PET_PRIMARY_GOAL_LABELS,
   PET_PRIMARY_GOALS,
-  WAITLIST_EXPECTATION_LABELS,
   WAITLIST_EXPECTATIONS,
   type PetFileCategory,
   type PetPrimaryGoal,
@@ -57,7 +56,15 @@ function formatBytes(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-function WaitlistCounterBadge({ count }: { count: number }) {
+function WaitlistCounterBadge({
+  count,
+  locale,
+  suffix,
+}: {
+  count: number;
+  locale: string;
+  suffix: string;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: -8 }}
@@ -67,9 +74,9 @@ function WaitlistCounterBadge({ count }: { count: number }) {
       <Sparkles className="h-4 w-4 text-cyan-300" />
       <span>
         <strong className="font-semibold tabular-nums text-white">
-          {count.toLocaleString("ka-GE")}
+          {count.toLocaleString(locale === "ka" ? "ka-GE" : "en-US")}
         </strong>{" "}
-        Pet Parent უკვე მოლოდინის სიაშია
+        {suffix}
       </span>
     </motion.div>
   );
@@ -77,6 +84,8 @@ function WaitlistCounterBadge({ count }: { count: number }) {
 
 export function AyliopetOnboarding() {
   const router = useRouter();
+  const { locale } = useLocale();
+  const t = getPlatformOnboardingCopy(locale);
   const { user, displayName, email, ready: authReady } = useAuth();
   const supabase = useMemo(() => {
     try {
@@ -151,10 +160,10 @@ export function AyliopetOnboarding() {
 
   const validateFile = (file: File): string | null => {
     if (!ACCEPTED_PET_FILE_TYPES.includes(file.type as (typeof ACCEPTED_PET_FILE_TYPES)[number])) {
-      return `${file.name}: დასაშვებია მხოლოდ PDF, JPEG ან PNG.`;
+      return `${file.name}: ${t.errors.invalidFileType}`;
     }
     if (file.size > MAX_PET_FILE_BYTES) {
-      return `${file.name}: მაქსიმუმ 10MB.`;
+      return `${file.name}: ${t.errors.fileTooLarge}`;
     }
     return null;
   };
@@ -162,11 +171,11 @@ export function AyliopetOnboarding() {
   const handleWaitlistSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!supabase) {
-      setError("Supabase არ არის კონფიგურირებული.");
+      setError(t.errors.supabaseMissing);
       return;
     }
     if (waitlist.expectations.length === 0) {
-      setError("აირჩიე მინიმუმ ერთი მოლოდინი.");
+      setError(t.errors.pickExpectation);
       return;
     }
 
@@ -203,9 +212,7 @@ export function AyliopetOnboarding() {
       waitlist.phone,
     );
     if (duplicateCheck.emailTaken || duplicateCheck.phoneTaken) {
-      setError(
-        "თქვენ უკვე ხართ ჩვენს მოლოდინის სიაში! შეტყობინებას მოგივლენთ დაუყოვნებლივ გაშვებისთანავე.",
-      );
+      setError(t.errors.alreadyOnWaitlist);
       setLoading(false);
       return;
     }
@@ -217,7 +224,7 @@ export function AyliopetOnboarding() {
       return;
     }
     if (!result.userId) {
-      setError(result.error ?? "ანგარიში ვერ შეიქმნა.");
+      setError(result.error ?? t.errors.accountNotCreated);
       setLoading(false);
       return;
     }
@@ -237,7 +244,7 @@ export function AyliopetOnboarding() {
     event.preventDefault();
     if (!supabase || !userId) return;
     if (!pet.petName.trim() || !pet.breed.trim()) {
-      setError("შეავსე ძაღლის სახელი და ჯიში.");
+      setError(t.errors.petFieldsMissing);
       return;
     }
 
@@ -253,7 +260,7 @@ export function AyliopetOnboarding() {
 
     const petResult = await createPetProfile(supabase, userId, pet);
     if (petResult.error || !petResult.petId) {
-      setError(petResult.error ?? "ცხოველის პროფილი ვერ შეიქმნა.");
+      setError(petResult.error ?? t.errors.petCreateFailed);
       setLoading(false);
       return;
     }
@@ -285,7 +292,7 @@ export function AyliopetOnboarding() {
         category: uploadCategory,
       });
       if (result.error || !result.metadata) {
-        setError(result.error ?? "ატვირთვა ვერ მოხერხდა.");
+        setError(result.error ?? t.errors.uploadFailed);
         continue;
       }
       setUploadedFiles((current) => [result.metadata!, ...current]);
@@ -309,17 +316,21 @@ export function AyliopetOnboarding() {
   return (
     <div className="min-h-screen bg-[#0B0F17] px-4 py-10 text-white sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl">
-        <WaitlistCounterBadge count={waitlistCount} />
+        <WaitlistCounterBadge
+          count={waitlistCount}
+          locale={locale}
+          suffix={t.counterSuffix}
+        />
 
         <div className="mb-8 text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300/70">
-            Aylopet Platform Onboarding
+            {t.eyebrow}
           </p>
           <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-            შექმენი პერსონალური პლატფორმა
+            {t.title}
           </h1>
           <p className="mt-3 text-sm text-white/55">
-            ნაბიჯი {step} / 3, მონაცემები privateა და დაცულია RLS-ით
+            {t.stepIndicator.replace("{step}", String(step))}
           </p>
         </div>
 
@@ -352,15 +363,15 @@ export function AyliopetOnboarding() {
             {step === 1 && (
               <form onSubmit={handleWaitlistSubmit} className="space-y-5">
                 <div>
-                  <h2 className="text-xl font-semibold">ვეითლისტი & ანგარიში</h2>
+                  <h2 className="text-xl font-semibold">{t.stepOneTitle}</h2>
                   <p className="mt-1 text-sm text-white/50">
-                    შეუერთდი waitlist-ს და შექმენი უსაფრთხო ანგარიში.
+                    {t.stepOneSubtitle}
                   </p>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <label className="block sm:col-span-2">
-                    <span className="mb-1.5 block text-xs text-white/45">სრული სახელი</span>
+                    <span className="mb-1.5 block text-xs text-white/45">{t.fullName}</span>
                     <input
                       className={input}
                       value={waitlist.fullName}
@@ -371,7 +382,7 @@ export function AyliopetOnboarding() {
                     />
                   </label>
                   <label>
-                    <span className="mb-1.5 block text-xs text-white/45">ელ. ფოსტა</span>
+                    <span className="mb-1.5 block text-xs text-white/45">{t.email}</span>
                     <input
                       type="email"
                       className={input}
@@ -383,7 +394,7 @@ export function AyliopetOnboarding() {
                     />
                   </label>
                   <label>
-                    <span className="mb-1.5 block text-xs text-white/45">ტელეფონი</span>
+                    <span className="mb-1.5 block text-xs text-white/45">{t.phone}</span>
                     <input
                       className={input}
                       value={waitlist.phone}
@@ -395,7 +406,7 @@ export function AyliopetOnboarding() {
                   </label>
                   {!user && (
                     <label className="sm:col-span-2">
-                      <span className="mb-1.5 block text-xs text-white/45">პაროლი</span>
+                      <span className="mb-1.5 block text-xs text-white/45">{t.password}</span>
                       <input
                         type="password"
                         className={input}
@@ -412,7 +423,7 @@ export function AyliopetOnboarding() {
 
                 <div>
                   <p className="mb-2 text-xs text-white/45">
-                    რას ელოდები Aylopet-ისგან? (multi-select)
+                    {t.expectationsLabel}
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {WAITLIST_EXPECTATIONS.map((value) => {
@@ -433,7 +444,7 @@ export function AyliopetOnboarding() {
                               : "border-white/10 bg-white/[0.03] text-white/60 hover:border-cyan-300/20"
                           }`}
                         >
-                          {WAITLIST_EXPECTATION_LABELS[value]}
+                          {t.expectationLabels[value]}
                         </button>
                       );
                     })}
@@ -449,16 +460,16 @@ export function AyliopetOnboarding() {
                     <LoaderCircle className="h-4 w-4 animate-spin" />
                   ) : (
                     <>
-                      გაგრძელება
+                      {t.continueCta}
                       <ChevronRight className="h-4 w-4" />
                     </>
                   )}
                 </button>
 
                 <p className="text-center text-xs text-white/40">
-                  უკვე გაქვს ანგარიში?{" "}
+                  {t.alreadyHaveAccount}{" "}
                   <Link href="/auth/login?next=/onboarding/platform" className="text-cyan-200 underline">
-                    შესვლა
+                    {t.signIn}
                   </Link>
                 </p>
               </form>
@@ -467,15 +478,15 @@ export function AyliopetOnboarding() {
             {step === 2 && (
               <form onSubmit={handlePetSubmit} className="space-y-5">
                 <div>
-                  <h2 className="text-xl font-semibold">პირადი & ძაღლის პროფილი</h2>
+                  <h2 className="text-xl font-semibold">{t.stepTwoTitle}</h2>
                   <p className="mt-1 text-sm text-white/50">
-                    მფლობელი: {owner.fullName || displayName}, {owner.email}
+                    {t.ownerLine}: {owner.fullName || displayName}, {owner.email}
                   </p>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <label>
-                    <span className="mb-1.5 block text-xs text-white/45">ძაღლის სახელი</span>
+                    <span className="mb-1.5 block text-xs text-white/45">{t.dogName}</span>
                     <input
                       className={input}
                       value={pet.petName}
@@ -484,7 +495,7 @@ export function AyliopetOnboarding() {
                     />
                   </label>
                   <label>
-                    <span className="mb-1.5 block text-xs text-white/45">ჯიში</span>
+                    <span className="mb-1.5 block text-xs text-white/45">{t.breed}</span>
                     <BreedCombobox
                       variant="dark"
                       value={pet.breed}
@@ -492,7 +503,7 @@ export function AyliopetOnboarding() {
                     />
                   </label>
                   <label>
-                    <span className="mb-1.5 block text-xs text-white/45">ასაკი / დაბ. თარიღი</span>
+                    <span className="mb-1.5 block text-xs text-white/45">{t.ageOrDob}</span>
                     <input
                       className={input}
                       value={pet.ageDob}
@@ -500,7 +511,7 @@ export function AyliopetOnboarding() {
                     />
                   </label>
                   <label>
-                    <span className="mb-1.5 block text-xs text-white/45">წონა</span>
+                    <span className="mb-1.5 block text-xs text-white/45">{t.weight}</span>
                     <div className="flex gap-2">
                       <input
                         type="number"
@@ -542,7 +553,7 @@ export function AyliopetOnboarding() {
                           : "border-white/10 text-white/60"
                       }`}
                     >
-                      {gender === "male" ? "მამრობითი" : "მდედრობითი"}
+                      {gender === "male" ? t.male : t.female}
                     </button>
                   ))}
                   <button
@@ -554,12 +565,12 @@ export function AyliopetOnboarding() {
                         : "border-white/10 text-white/60"
                     }`}
                   >
-                    კასტრაცია / სტერილიზაცია
+                    {t.neutered}
                   </button>
                 </div>
 
                 <div>
-                  <p className="mb-2 text-xs text-white/45">მთავარი მიზანი</p>
+                  <p className="mb-2 text-xs text-white/45">{t.primaryGoal}</p>
                   <div className="flex flex-wrap gap-2">
                     {PET_PRIMARY_GOALS.map((goal) => (
                       <button
@@ -572,14 +583,14 @@ export function AyliopetOnboarding() {
                             : "border-white/10 text-white/60"
                         }`}
                       >
-                        {PET_PRIMARY_GOAL_LABELS[goal]}
+                        {t.primaryGoalLabels[goal]}
                       </button>
                     ))}
                   </div>
                 </div>
 
                 <label className="block">
-                  <span className="mb-1.5 block text-xs text-white/45">სამედიცინო შენიშვნები</span>
+                  <span className="mb-1.5 block text-xs text-white/45">{t.medicalNotes}</span>
                   <textarea
                     className={`${input} min-h-24 resize-y`}
                     value={pet.medicalNotes}
@@ -597,7 +608,7 @@ export function AyliopetOnboarding() {
                   {loading ? (
                     <LoaderCircle className="h-4 w-4 animate-spin" />
                   ) : (
-                    "დოკუმენტების ატვირთვა"
+                    t.uploadDocumentsCta
                   )}
                 </button>
               </form>
@@ -606,7 +617,7 @@ export function AyliopetOnboarding() {
             {step === 3 && (
               <div className="space-y-5">
                 <div>
-                  <h2 className="text-xl font-semibold">ფაილების ატვირთვა</h2>
+                  <h2 className="text-xl font-semibold">{t.stepThreeTitle}</h2>
                   <p className="mt-1 text-sm text-white/50">
                     Private bucket: pet-documents / {userId?.slice(0, 8)}…
                   </p>
@@ -624,7 +635,7 @@ export function AyliopetOnboarding() {
                           : "border-white/10 text-white/60"
                       }`}
                     >
-                      {PET_FILE_CATEGORY_LABELS[category]}
+                      {t.fileCategoryLabels[category]}
                     </button>
                   ))}
                 </div>
@@ -648,7 +659,7 @@ export function AyliopetOnboarding() {
                     }}
                   />
                   <UploadCloud className="h-8 w-8 text-cyan-200" />
-                  <p className="mt-3 text-sm font-medium">ჩააგდე ფაილები ან დააჭირე</p>
+                  <p className="mt-3 text-sm font-medium">{t.dropzone}</p>
                   <p className="mt-1 text-xs text-white/40">PDF/JPEG/PNG, 10MB</p>
                 </label>
 
@@ -675,11 +686,11 @@ export function AyliopetOnboarding() {
                         <p className="truncate text-sm font-medium">{file.fileName}</p>
                         <p className="text-xs text-white/40">
                           {formatBytes(file.fileSize)} ·{" "}
-                          {PET_FILE_CATEGORY_LABELS[file.category]}
+                          {t.fileCategoryLabels[file.category]}
                         </p>
                         <p className="mt-1 inline-flex items-center gap-1 text-xs text-emerald-300">
                           <CheckCircle2 className="h-3 w-3" />
-                          წარმატებით აიტვირთა
+                          {t.uploadedOk}
                         </p>
                       </div>
                       <button
@@ -703,8 +714,8 @@ export function AyliopetOnboarding() {
                   className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-cyan-300 px-6 py-3.5 text-sm font-semibold text-[#0B0F17]"
                 >
                   {petId
-                    ? "დასრულება, პროფილის რედაქტირება"
-                    : "დასრულება, პანელში გადასვლა"}
+                    ? t.finishEditProfile
+                    : t.finishGoToDashboard}
                 </button>
               </div>
             )}
@@ -714,9 +725,7 @@ export function AyliopetOnboarding() {
         <footer className="mt-6 flex items-start gap-3 rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-4 text-xs leading-relaxed text-white/45">
           <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300/70" />
           <p>
-            თქვენი მონაცემები დაცულია. ანალიზები გამოიყენება ექსკლუზიურად
-            AylopetAI-ის მიერ დაავადებების პრევენციისა და ინდივიდუალური ველნეს
-            გეგმის შესადგენად.
+            {t.privacyNote}
           </p>
         </footer>
       </div>

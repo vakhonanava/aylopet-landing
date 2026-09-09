@@ -15,45 +15,55 @@ import {
 } from "lucide-react";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
 import { addButton, fieldLabel, textInput } from "@/components/dashboard/FormControls";
+import { useToast } from "@/components/dashboard/Toast";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import {
-  CARE_TYPE_LABELS,
-  CARE_TYPE_OPTIONS,
-  MOOD_SCALE,
   daysUntil,
   formatDate,
+  getCareTypeLabels,
+  getCareTypeOptions,
+  getMoodScale,
   type CareType,
   type MealType,
   type Pet,
 } from "@/lib/dashboard";
-import { APPETITE_LABELS } from "@/lib/pet-history/labels";
+import { getAppetiteLabels } from "@/lib/pet-history/labels";
 import type { AppetiteLevel } from "@/lib/pet-history/types";
+
+/** Field-level validation shown under the input it belongs to. */
+function FieldError({ message }: { message?: string }) {
+  if (!message) return null;
+  return <p className="text-xs font-medium text-red-600">{message}</p>;
+}
 
 const tabTrigger =
   "flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-slate-500 transition-colors data-[state=active]:bg-[var(--brand-primary)] data-[state=active]:text-white";
 
 export function LogbookTabs({ pet }: { pet: Pet }) {
+  const { d } = useDashboardCopy();
+
   return (
     <section
       id="logbook-vaccines"
       className="rounded-[2rem] border border-[#e5e7eb] bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] sm:p-7"
     >
       <h2 className="mb-5 text-lg font-bold tracking-tight text-[var(--brand-primary)]">
-        ჯანმრთელობა & კეთილდღეობა
+        {d.logbook.title}
       </h2>
 
       <Tabs.Root defaultValue="vaccines">
         <Tabs.List className="mb-6 flex flex-wrap gap-1.5 rounded-full border border-[#e5e7eb] bg-[#FAFAF8] p-1.5">
           <Tabs.Trigger value="vaccines" className={tabTrigger}>
-            <Syringe className="h-4 w-4" /> ვაქცინები & პრევენცია
+            <Syringe className="h-4 w-4" /> {d.logbook.tabVaccines}
           </Tabs.Trigger>
           <Tabs.Trigger value="supplements" className={tabTrigger}>
-            <Pill className="h-4 w-4" /> დანამატები
+            <Pill className="h-4 w-4" /> {d.logbook.tabSupplements}
           </Tabs.Trigger>
           <Tabs.Trigger value="food" className={tabTrigger}>
-            <UtensilsCrossed className="h-4 w-4" /> საკვები
+            <UtensilsCrossed className="h-4 w-4" /> {d.logbook.tabFood}
           </Tabs.Trigger>
           <Tabs.Trigger value="mood" className={tabTrigger}>
-            <Activity className="h-4 w-4" /> ხასიათი
+            <Activity className="h-4 w-4" /> {d.logbook.tabMood}
           </Tabs.Trigger>
         </Tabs.List>
 
@@ -78,6 +88,14 @@ export function LogbookTabs({ pet }: { pet: Pet }) {
 
 function VaccinesTab({ pet }: { pet: Pet }) {
   const { addVaccine, updateVaccine, removeVaccine } = useDashboard();
+  const { d, locale } = useDashboardCopy();
+  const toast = useToast();
+  const careTypeLabels = getCareTypeLabels(locale);
+  const careTypeOptions = getCareTypeOptions(locale);
+  const [fieldErrors, setFieldErrors] = useState<{
+    name?: string;
+    administered?: string;
+  }>({});
   const [open, setOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState("");
@@ -95,6 +113,7 @@ function VaccinesTab({ pet }: { pet: Pet }) {
     setEditingId(null);
     setOpen(false);
     setError(null);
+    setFieldErrors({});
   };
 
   const startEdit = (v: (typeof pet.vaccines)[number]) => {
@@ -105,10 +124,16 @@ function VaccinesTab({ pet }: { pet: Pet }) {
     setNextDue(v.nextDue);
     setOpen(true);
     setError(null);
+    setFieldErrors({});
   };
 
   const submit = async () => {
-    if (!name || !administered) return;
+    const nextErrors: { name?: string; administered?: string } = {};
+    if (!name.trim()) nextErrors.name = d.logbook.vaccineNameRequired;
+    if (!administered) nextErrors.administered = d.logbook.vaccineDateRequired;
+    setFieldErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
+
     setBusy(true);
     setError(null);
 
@@ -124,9 +149,12 @@ function VaccinesTab({ pet }: { pet: Pet }) {
 
     setBusy(false);
     if (!result.ok) {
-      setError(result.error ?? "ვაქცინა ვერ შეინახა.");
+      const message = result.error ?? d.logbook.vaccineSaveFailed;
+      setError(message);
+      toast.error(message);
       return;
     }
+    toast.success(d.toast.saved);
     resetForm();
   };
 
@@ -135,15 +163,21 @@ function VaccinesTab({ pet }: { pet: Pet }) {
     setError(null);
     const result = await removeVaccine(pet.id, vaccineId);
     setBusy(false);
-    if (!result.ok) setError(result.error ?? "წაშლა ვერ მოხერხდა.");
+    if (!result.ok) {
+      const message = result.error ?? d.toast.deleteFailed;
+      setError(message);
+      toast.error(message);
+      return;
+    }
+    toast.success(d.toast.deleted);
   };
 
   return (
     <div>
       <div className="mb-5 flex items-center justify-between">
-        <p className="text-sm text-slate-500">ვაქცინაციისა და პარაზიტების საწინააღმდეგო დამუშავების ისტორია</p>
+        <p className="text-sm text-slate-500">{d.logbook.vaccinesSubtitle}</p>
         <button className={addButton} onClick={() => { setEditingId(null); setOpen((o) => !o); }}>
-          <Plus className="h-4 w-4" /> დამატება
+          <Plus className="h-4 w-4" /> {d.common.add}
         </button>
       </div>
 
@@ -156,9 +190,9 @@ function VaccinesTab({ pet }: { pet: Pet }) {
       {open && (
         <div className="mb-6 grid gap-3 rounded-2xl border border-[#e5e7eb] bg-[#FAFAF8] p-4 sm:grid-cols-3">
           <div className="flex flex-col gap-1.5 sm:col-span-3">
-            <label className={fieldLabel}>ტიპი</label>
+            <label className={fieldLabel}>{d.logbook.vaccineType}</label>
             <div className="flex flex-wrap gap-2">
-              {CARE_TYPE_OPTIONS.map((opt) => (
+              {careTypeOptions.map((opt) => (
                 <button
                   key={opt.value}
                   type="button"
@@ -175,25 +209,29 @@ function VaccinesTab({ pet }: { pet: Pet }) {
             </div>
           </div>
           <div className="flex flex-col gap-1.5 sm:col-span-3">
-            <label className={fieldLabel}>სახელი</label>
+            <label className={fieldLabel}>{d.logbook.vaccineName}</label>
             <input
               className={textInput}
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="მაგ. ცოფის ვაქცინა"
+              placeholder={d.logbook.vaccineNamePlaceholder}
+              aria-invalid={Boolean(fieldErrors.name)}
             />
+            <FieldError message={fieldErrors.name} />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className={fieldLabel}>ჩატარების თარიღი</label>
+            <label className={fieldLabel}>{d.logbook.administeredOn}</label>
             <input
               type="date"
               className={textInput}
               value={administered}
               onChange={(e) => setAdministered(e.target.value)}
+              aria-invalid={Boolean(fieldErrors.administered)}
             />
+            <FieldError message={fieldErrors.administered} />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className={fieldLabel}>შემდეგი თარიღი</label>
+            <label className={fieldLabel}>{d.logbook.nextDue}</label>
             <input
               type="date"
               className={textInput}
@@ -203,7 +241,7 @@ function VaccinesTab({ pet }: { pet: Pet }) {
           </div>
           <div className="flex items-end gap-2">
             <button className={addButton} disabled={busy} onClick={() => void submit()}>
-              <Check className="h-4 w-4" /> {editingId ? "განახლება" : "შენახვა"}
+              <Check className="h-4 w-4" /> {editingId ? d.common.update : d.common.save}
             </button>
             <button
               type="button"
@@ -211,7 +249,7 @@ function VaccinesTab({ pet }: { pet: Pet }) {
               onClick={resetForm}
               className="rounded-full border border-[#e5e7eb] bg-white px-4 py-2.5 text-sm font-medium text-slate-600"
             >
-              გაუქმება
+              {d.common.cancel}
             </button>
           </div>
         </div>
@@ -221,7 +259,7 @@ function VaccinesTab({ pet }: { pet: Pet }) {
       <ol className="relative ml-3 border-l border-[#e5e7eb]">
         {pet.vaccines.length === 0 && (
           <li className="ml-6 py-4 text-sm text-slate-400">
-            ჯერ არ არის ჩანაწერი.
+            {d.common.noEntries}
           </li>
         )}
         {pet.vaccines.map((v) => {
@@ -252,11 +290,11 @@ function VaccinesTab({ pet }: { pet: Pet }) {
                     <div className="flex flex-wrap items-center gap-2">
                       <h4 className="font-semibold text-[var(--brand-primary)]">{v.name}</h4>
                       <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-500">
-                        {CARE_TYPE_LABELS[v.careType]}
+                        {careTypeLabels[v.careType]}
                       </span>
                     </div>
                     <p className="mt-0.5 text-xs text-slate-400">
-                      ჩატარდა: {formatDate(v.administered)}
+                      {d.logbook.administeredLabel}: {formatDate(v.administered)}
                     </p>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
@@ -270,10 +308,10 @@ function VaccinesTab({ pet }: { pet: Pet }) {
                           <CalendarClock className="h-3.5 w-3.5" />
                         )}
                         {overdue
-                          ? `ვადაგადაცილებული, ${formatDate(v.nextDue)}`
+                          ? `${d.logbook.overdue}, ${formatDate(v.nextDue)}`
                           : soon
-                            ? `მალე (${due} დღე), ${formatDate(v.nextDue)}`
-                            : `შემდეგი: ${formatDate(v.nextDue)}`}
+                            ? `${d.logbook.dueSoon.replace("{days}", String(due))}, ${formatDate(v.nextDue)}`
+                            : `${d.logbook.nextLabel}: ${formatDate(v.nextDue)}`}
                       </span>
                     )}
                     <button
@@ -282,7 +320,7 @@ function VaccinesTab({ pet }: { pet: Pet }) {
                       onClick={() => startEdit(v)}
                       className="rounded-full border border-[#e5e7eb] px-3 py-1 text-xs font-medium text-[var(--brand-primary)]"
                     >
-                      რედაქტირება
+                      {d.common.edit}
                     </button>
                     <button
                       type="button"
@@ -290,7 +328,7 @@ function VaccinesTab({ pet }: { pet: Pet }) {
                       onClick={() => void handleDelete(v.id)}
                       className="rounded-full border border-red-200 px-3 py-1 text-xs font-medium text-red-600"
                     >
-                      წაშლა
+                      {d.common.remove}
                     </button>
                   </div>
                 </div>
@@ -307,6 +345,9 @@ function VaccinesTab({ pet }: { pet: Pet }) {
 
 function SupplementsTab({ pet }: { pet: Pet }) {
   const { toggleSupplement, addSupplement } = useDashboard();
+  const { d } = useDashboardCopy();
+  const toast = useToast();
+  const [nameError, setNameError] = useState<string | undefined>();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [dosage, setDosage] = useState("");
@@ -315,7 +356,11 @@ function SupplementsTab({ pet }: { pet: Pet }) {
   const [error, setError] = useState<string | null>(null);
 
   const submit = async () => {
-    if (!name) return;
+    if (!name.trim()) {
+      setNameError(d.logbook.supplementRequired);
+      return;
+    }
+    setNameError(undefined);
     setBusy(true);
     setError(null);
     const result = await addSupplement(pet.id, {
@@ -326,9 +371,12 @@ function SupplementsTab({ pet }: { pet: Pet }) {
     });
     setBusy(false);
     if (!result.ok) {
-      setError(result.error ?? "ვერ შეინახა.");
+      const message = result.error ?? d.toast.saveFailed;
+      setError(message);
+      toast.error(message);
       return;
     }
+    toast.success(d.toast.saved);
     setName("");
     setDosage("");
     setFrequency("");
@@ -337,15 +385,19 @@ function SupplementsTab({ pet }: { pet: Pet }) {
 
   const handleToggle = async (supplementId: string) => {
     const result = await toggleSupplement(pet.id, supplementId);
-    if (!result.ok) setError(result.error ?? "ვერ განახლდა.");
+    if (!result.ok) {
+      const message = result.error ?? d.medical.updateFailed;
+      setError(message);
+      toast.error(message);
+    }
   };
 
   return (
     <div>
       <div className="mb-5 flex items-center justify-between">
-        <p className="text-sm text-slate-500">ყოველდღიური დანამატების ჩეკლისტი</p>
+        <p className="text-sm text-slate-500">{d.logbook.supplementsSubtitle}</p>
         <button className={addButton} onClick={() => setOpen((o) => !o)}>
-          <Plus className="h-4 w-4" /> დამატება
+          <Plus className="h-4 w-4" /> {d.common.add}
         </button>
       </div>
 
@@ -357,27 +409,31 @@ function SupplementsTab({ pet }: { pet: Pet }) {
 
       {open && (
         <div className="mb-6 grid gap-3 rounded-2xl border border-[#e5e7eb] bg-[#FAFAF8] p-4 sm:grid-cols-3">
-          <input
-            className={textInput}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="დანამატის სახელი"
-          />
+          <div className="flex flex-col gap-1.5">
+            <input
+              className={textInput}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={d.logbook.supplementNamePlaceholder}
+              aria-invalid={Boolean(nameError)}
+            />
+            <FieldError message={nameError} />
+          </div>
           <input
             className={textInput}
             value={dosage}
             onChange={(e) => setDosage(e.target.value)}
-            placeholder="დოზა (მაგ. 1 აბი, 5ml)"
+            placeholder={d.logbook.supplementDoseHint}
           />
           <input
             className={textInput}
             value={frequency}
             onChange={(e) => setFrequency(e.target.value)}
-            placeholder="სიხშირე"
+            placeholder={d.logbook.supplementFrequencyPlaceholder}
           />
           <div className="sm:col-span-3">
             <button className={addButton} disabled={busy} onClick={() => void submit()}>
-              <Check className="h-4 w-4" /> შენახვა
+              <Check className="h-4 w-4" /> {d.common.save}
             </button>
           </div>
         </div>
@@ -385,7 +441,7 @@ function SupplementsTab({ pet }: { pet: Pet }) {
 
       <div className="grid gap-3 sm:grid-cols-2">
         {pet.supplements.length === 0 && (
-          <p className="py-4 text-sm text-slate-400">ჯერ არ არის ჩანაწერი.</p>
+          <p className="py-4 text-sm text-slate-400">{d.common.noEntries}</p>
         )}
         {pet.supplements.map((s) => (
           <button
@@ -418,7 +474,7 @@ function SupplementsTab({ pet }: { pet: Pet }) {
             <span
               className={`text-xs font-medium ${s.givenToday ? "text-[var(--brand-accent)]" : "text-slate-400"}`}
             >
-              {s.givenToday ? "მიცემულია" : "დღეს?"}
+              {s.givenToday ? d.logbook.givenToday : d.logbook.givenTodayQuestion}
             </span>
           </button>
         ))}
@@ -431,6 +487,10 @@ function SupplementsTab({ pet }: { pet: Pet }) {
 
 function FoodTab({ pet }: { pet: Pet }) {
   const { addFood } = useDashboard();
+  const { d, locale } = useDashboardCopy();
+  const toast = useToast();
+  const appetiteLabels = getAppetiteLabels(locale);
+  const [portionError, setPortionError] = useState<string | undefined>();
   const [open, setOpen] = useState(false);
   const [mealType, setMealType] = useState<MealType>("morning");
   const [brand, setBrand] = useState("Aylopet");
@@ -442,23 +502,38 @@ function FoodTab({ pet }: { pet: Pet }) {
   const [error, setError] = useState<string | null>(null);
 
   const submit = async () => {
-    if (!portion) return;
+    // Portion is mandatory, but the form used to bail out silently and leave
+    // the owner staring at an unchanged panel with no idea why.
+    const grams = Number(portion);
+    if (!portion.trim()) {
+      setPortionError(d.logbook.portionRequired);
+      return;
+    }
+    if (!Number.isFinite(grams) || grams <= 0) {
+      setPortionError(d.logbook.portionInvalid);
+      return;
+    }
+    setPortionError(undefined);
+
     setBusy(true);
     setError(null);
     const result = await addFood(pet.id, {
       date: new Date().toISOString().slice(0, 10),
       mealType,
-      brand: isAylopet ? "Aylopet" : brand || "სხვა",
+      brand: isAylopet ? "Aylopet" : brand || d.common.other,
       isAylopet,
-      portionGrams: Number(portion),
+      portionGrams: grams,
       digestiveResponse: response || undefined,
       appetite,
     });
     setBusy(false);
     if (!result.ok) {
-      setError(result.error ?? "ვერ შეინახა.");
+      const message = result.error ?? d.toast.saveFailed;
+      setError(message);
+      toast.error(message);
       return;
     }
+    toast.success(d.toast.saved);
     setPortion("");
     setResponse("");
     setAppetite("normal");
@@ -468,9 +543,9 @@ function FoodTab({ pet }: { pet: Pet }) {
   return (
     <div>
       <div className="mb-5 flex items-center justify-between">
-        <p className="text-sm text-slate-500">კვების ჩანაწერები</p>
+        <p className="text-sm text-slate-500">{d.logbook.foodSubtitle}</p>
         <button className={addButton} onClick={() => setOpen((o) => !o)}>
-          <Plus className="h-4 w-4" /> დამატება
+          <Plus className="h-4 w-4" /> {d.common.add}
         </button>
       </div>
 
@@ -484,7 +559,7 @@ function FoodTab({ pet }: { pet: Pet }) {
         <div className="mb-6 flex flex-col gap-4 rounded-2xl border border-[#e5e7eb] bg-[#FAFAF8] p-4">
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
-              <label className={fieldLabel}>კვების ტიპი</label>
+              <label className={fieldLabel}>{d.logbook.mealType}</label>
               <div className="flex gap-2">
                 {(["morning", "evening"] as MealType[]).map((m) => (
                   <button
@@ -497,25 +572,36 @@ function FoodTab({ pet }: { pet: Pet }) {
                         : "border-[#e5e7eb] bg-white text-slate-600"
                     }`}
                   >
-                    {m === "morning" ? "დილა" : "საღამო"}
+                    {m === "morning" ? d.logbook.morning : d.logbook.evening}
                   </button>
                 ))}
               </div>
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className={fieldLabel}>პორცია (გრამი)</label>
+              <label className={fieldLabel} htmlFor="food-portion">
+                {d.logbook.portionGrams}
+              </label>
               <input
+                id="food-portion"
                 type="number"
+                min="1"
+                inputMode="numeric"
                 className={textInput}
                 value={portion}
                 onChange={(e) => setPortion(e.target.value)}
                 placeholder="0"
+                required
+                aria-invalid={Boolean(portionError)}
+                aria-describedby={portionError ? "food-portion-error" : undefined}
               />
+              <span id="food-portion-error">
+                <FieldError message={portionError} />
+              </span>
             </div>
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className={fieldLabel}>ბრენდი</label>
+            <label className={fieldLabel}>{d.logbook.brand}</label>
             <div className="flex gap-2">
               <button
                 type="button"
@@ -537,7 +623,7 @@ function FoodTab({ pet }: { pet: Pet }) {
                     : "border-[#e5e7eb] bg-white text-slate-600"
                 }`}
               >
-                სხვა
+                {d.common.other}
               </button>
             </div>
             {!isAylopet && (
@@ -545,15 +631,15 @@ function FoodTab({ pet }: { pet: Pet }) {
                 className={`${textInput} mt-2`}
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
-                placeholder="ბრენდის სახელი"
+                placeholder={d.logbook.brandPlaceholder}
               />
             )}
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className={fieldLabel}>მადა</label>
+            <label className={fieldLabel}>{d.logbook.appetite}</label>
             <div className="flex flex-wrap gap-2">
-              {(Object.keys(APPETITE_LABELS) as AppetiteLevel[]).map((level) => (
+              {(Object.keys(appetiteLabels) as AppetiteLevel[]).map((level) => (
                 <button
                   key={level}
                   type="button"
@@ -564,7 +650,7 @@ function FoodTab({ pet }: { pet: Pet }) {
                       : "border-[#e5e7eb] bg-white text-slate-600"
                   }`}
                 >
-                  {APPETITE_LABELS[level]}
+                  {appetiteLabels[level]}
                 </button>
               ))}
             </div>
@@ -572,25 +658,25 @@ function FoodTab({ pet }: { pet: Pet }) {
 
           <div className="flex flex-col gap-1.5">
             <label className={fieldLabel}>
-              საჭმლის მონელება (არასავალდებულო)
+              {d.logbook.digestion} ({d.common.optional})
             </label>
             <textarea
               className={`${textInput} min-h-20 resize-none`}
               value={response}
               onChange={(e) => setResponse(e.target.value)}
-              placeholder="მაგ. ნორმალური განავალი, კუჭის აშლილობა..."
+              placeholder={d.logbook.digestionPlaceholder}
             />
           </div>
 
           <button className={addButton} disabled={busy} onClick={() => void submit()}>
-            <Check className="h-4 w-4" /> შენახვა
+            <Check className="h-4 w-4" /> {d.common.save}
           </button>
         </div>
       )}
 
       <div className="flex flex-col gap-3">
         {pet.food.length === 0 && (
-          <p className="py-4 text-sm text-slate-400">ჯერ არ არის ჩანაწერი.</p>
+          <p className="py-4 text-sm text-slate-400">{d.common.noEntries}</p>
         )}
         {pet.food.map((f) => (
           <article
@@ -604,7 +690,7 @@ function FoodTab({ pet }: { pet: Pet }) {
                 </span>
                 <div>
                   <h4 className="font-semibold text-[var(--brand-primary)]">
-                    {f.mealType === "morning" ? "დილის კვება" : "საღამოს კვება"}
+                    {f.mealType === "morning" ? d.logbook.morningMeal : d.logbook.eveningMeal}
                   </h4>
                   <p className="text-xs text-slate-400">{formatDate(f.date)}</p>
                 </div>
@@ -620,13 +706,14 @@ function FoodTab({ pet }: { pet: Pet }) {
                   {f.brand}
                 </span>
                 <span className="rounded-full bg-[var(--brand-primary)]/[0.05] px-3 py-1 text-xs font-semibold text-[var(--brand-primary)]">
-                  {f.portionGrams}გ
+                  {f.portionGrams}
+                  {d.logbook.gramsShort}
                 </span>
               </div>
             </div>
             {f.digestiveResponse && (
               <p className="mt-3 rounded-xl bg-[#FAFAF8] px-3 py-2 text-sm text-slate-600">
-                <span className="font-medium text-[var(--brand-primary)]">მონელება:</span>{" "}
+                <span className="font-medium text-[var(--brand-primary)]">{d.logbook.digestionLabel}</span>{" "}
                 {f.digestiveResponse}
               </p>
             )}
@@ -641,6 +728,9 @@ function FoodTab({ pet }: { pet: Pet }) {
 
 function MoodTab({ pet }: { pet: Pet }) {
   const { addMood } = useDashboard();
+  const { d, locale } = useDashboardCopy();
+  const toast = useToast();
+  const moodScale = getMoodScale(locale);
   const [mood, setMood] = useState(3);
   const [energy, setEnergy] = useState(50);
   const [notes, setNotes] = useState("");
@@ -658,9 +748,12 @@ function MoodTab({ pet }: { pet: Pet }) {
     });
     setBusy(false);
     if (!result.ok) {
-      setError(result.error ?? "ვერ შეინახა.");
+      const message = result.error ?? d.toast.saveFailed;
+      setError(message);
+      toast.error(message);
       return;
     }
+    toast.success(d.toast.saved);
     setMood(3);
     setEnergy(50);
     setNotes("");
@@ -670,14 +763,16 @@ function MoodTab({ pet }: { pet: Pet }) {
     <div className="flex flex-col gap-6">
       {/* Daily check-in card */}
       <div className="rounded-2xl border border-[#e5e7eb] bg-gradient-to-br from-[#FAFAF8] to-white p-5 sm:p-6">
-        <h3 className="text-base font-bold text-[var(--brand-primary)]">დღევანდელი ჩექ-ინი</h3>
-        <p className="mt-1 text-sm text-slate-500">როგორ გრძნობს თავს {pet.name}?</p>
+        <h3 className="text-base font-bold text-[var(--brand-primary)]">{d.logbook.checkInTitle}</h3>
+        <p className="mt-1 text-sm text-slate-500">
+          {d.logbook.checkInQuestion.replace("{name}", pet.name)}
+        </p>
 
         {/* Mood scale */}
         <div className="mt-5">
-          <label className={fieldLabel}>განწყობა</label>
+          <label className={fieldLabel}>{d.logbook.moodLabel}</label>
           <div className="mt-2 flex justify-between gap-2">
-            {MOOD_SCALE.map((m) => (
+            {moodScale.map((m) => (
               <button
                 key={m.value}
                 type="button"
@@ -702,7 +797,7 @@ function MoodTab({ pet }: { pet: Pet }) {
         {/* Energy slider */}
         <div className="mt-6">
           <div className="mb-2 flex items-center justify-between">
-            <label className={fieldLabel}>ენერგიის დონე</label>
+            <label className={fieldLabel}>{d.logbook.energyLabel}</label>
             <span className="text-sm font-semibold text-[var(--brand-primary)]">{energy}%</span>
           </div>
           <Slider.Root
@@ -717,19 +812,19 @@ function MoodTab({ pet }: { pet: Pet }) {
             </Slider.Track>
             <Slider.Thumb
               className="block h-5 w-5 rounded-full border-2 border-[var(--brand-primary)] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.08)] outline-none focus:ring-4 focus:ring-[var(--brand-primary)]/15"
-              aria-label="ენერგია"
+              aria-label={d.logbook.energy}
             />
           </Slider.Root>
         </div>
 
         {/* Notes */}
         <div className="mt-6 flex flex-col gap-1.5">
-          <label className={fieldLabel}>შენიშვნები</label>
+          <label className={fieldLabel}>{d.logbook.notes}</label>
           <textarea
             className={`${textInput} min-h-20 resize-none`}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            placeholder="მაგ. დღეს უჩვეულოდ ლეთარგიული იყო"
+            placeholder={d.logbook.notesPlaceholder}
           />
         </div>
 
@@ -744,14 +839,14 @@ function MoodTab({ pet }: { pet: Pet }) {
           disabled={busy}
           onClick={() => void submit()}
         >
-          <Check className="h-4 w-4" /> ჩექ-ინის შენახვა
+          <Check className="h-4 w-4" /> {d.logbook.saveCheckIn}
         </button>
       </div>
 
       {/* History */}
       <div className="flex flex-col gap-3">
         {pet.moods.map((entry) => {
-          const m = MOOD_SCALE.find((x) => x.value === entry.mood);
+          const m = moodScale.find((x) => x.value === entry.mood);
           return (
             <article
               key={entry.id}
@@ -766,7 +861,7 @@ function MoodTab({ pet }: { pet: Pet }) {
                   </span>
                 </div>
                 <div className="mt-2 flex items-center gap-2">
-                  <span className="text-xs text-slate-400">ენერგია</span>
+                  <span className="text-xs text-slate-400">{d.logbook.energy}</span>
                   <span className="h-2 w-28 overflow-hidden rounded-full bg-[#e5e7eb]">
                     <span
                       className="block h-full rounded-full bg-[var(--brand-accent)]"

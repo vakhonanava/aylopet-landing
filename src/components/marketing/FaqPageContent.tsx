@@ -193,7 +193,10 @@ export function FaqPageContent() {
             {/* Category tabs */}
             <motion.div
               variants={fadeUp}
-              className="mt-5 flex gap-2 overflow-x-auto rounded-full border border-[var(--border-light)] bg-[var(--oat-soft)] p-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              /* Nine category labels are far wider than the column, and the
+                 single scrolling row (with its scrollbar hidden) simply clipped
+                 the fifth tab mid-word. Wrap instead so every label is legible. */
+              className="mt-5 flex flex-wrap gap-1.5 rounded-[1.75rem] border border-[var(--border-light)] bg-[var(--oat-soft)] p-1.5"
               role="tablist"
               aria-label={copy.searchAriaLabel}
             >
@@ -294,7 +297,7 @@ function CategoryTab({
       role="tab"
       aria-selected={active}
       onClick={onClick}
-      className={`relative shrink-0 rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary)] ${
+      className={`relative rounded-full px-3.5 py-2 text-sm font-medium whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary)] ${
         active
           ? "text-white"
           : "text-[var(--text-secondary)] hover:text-[var(--forest-deep)]"

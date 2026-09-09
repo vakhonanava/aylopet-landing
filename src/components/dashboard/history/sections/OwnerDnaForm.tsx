@@ -4,6 +4,7 @@ import { BadgeCheck, Loader2, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { addButton, fieldLabel, textInput } from "@/components/dashboard/FormControls";
 import { useHistorySave } from "@/components/dashboard/history/useHistorySave";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import { uid, type Pet } from "@/lib/dashboard";
 import {
   GENETIC_CATEGORY_LABELS,
@@ -31,7 +32,8 @@ type RiskDraft = GeneticRiskMarker;
  */
 export function OwnerDnaForm({ pet, onDone }: OwnerDnaFormProps) {
   const existing = pet.history?.dna ?? null;
-  const { save, saving, error } = useHistorySave(pet.id);
+  const { d } = useDashboardCopy();
+  const { save, saving, saved, error } = useHistorySave(pet.id);
 
   const [provider, setProvider] = useState(existing?.provider ?? "");
   const [testedAt, setTestedAt] = useState(existing?.testedAt ?? "");
@@ -336,7 +338,7 @@ export function OwnerDnaForm({ pet, onDone }: OwnerDnaFormProps) {
           ) : (
             <BadgeCheck className="h-4 w-4" />
           )}
-          შენახვა
+          {saved && !saving ? d.common.saved : "შენახვა"}
         </button>
         <button
           type="button"

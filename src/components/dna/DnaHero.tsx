@@ -2,17 +2,16 @@
 
 import { motion } from "framer-motion";
 import { Dna, Sparkles } from "lucide-react";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import { Button } from "@/components/ui/Button";
 import { DnaHelix3D } from "@/components/visual/DnaHelix3D";
-import { DNA } from "@/lib/constants";
-
-const markers = [
-  { label: "Breed", value: "Weimaraner 98.2%" },
-  { label: "Metabolism", value: "Fast oxidizer" },
-  { label: "Allergens", value: "0 detected" },
-];
+import { getDnaCopy } from "@/lib/content/dna";
 
 export function DnaHero() {
+  const { locale } = useLocale();
+  const DNA = getDnaCopy(locale);
+  const markers = DNA.hero.markerRows;
+
   return (
     <section className="relative overflow-hidden bg-[var(--forest-deep)] pt-16 pb-24 lg:pt-24 lg:pb-32">
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -63,7 +62,7 @@ export function DnaHero() {
             transition={{ duration: 0.7, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="flex flex-col gap-3 sm:flex-row sm:items-center"
           >
-            <Button href="#start">{DNA.hero.cta}</Button>
+            <Button href="/onboarding/platform">{DNA.hero.cta}</Button>
             <Button href="#journey" variant="secondary" showArrow={false}>
               {DNA.hero.secondaryCta}
             </Button>
@@ -101,7 +100,7 @@ export function DnaHero() {
               <span className="flex items-center gap-1">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--status-emerald)]" />
                 <span className="text-[10px] font-medium uppercase tracking-wider text-[var(--status-emerald)]">
-                  live
+                  {DNA.hero.liveLabel}
                 </span>
               </span>
             </div>

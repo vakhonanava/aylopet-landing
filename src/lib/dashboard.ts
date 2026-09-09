@@ -1,4 +1,5 @@
 import type { MedicalRecord, Medication, SymptomLog } from "@/lib/medical";
+import type { Locale } from "@/lib/i18n/types";
 import type { AppetiteLevel, PetHistory } from "@/lib/pet-history/types";
 
 export type ActivityLevel = "low" | "moderate" | "high";
@@ -53,6 +54,42 @@ export const CARE_TYPE_LABELS: Record<CareType, string> = {
   deworming: "მატლების საწინააღმდეგო",
   flea_tick: "რწყილი-ტკიპის საწინააღმდეგო",
 };
+
+/* -------------------------- Localized label maps -------------------------- */
+/* The consts above stay as the Georgian source so existing callers keep
+   working; the getters below are what locale-aware components read. */
+
+const ACTIVITY_OPTIONS_EN: ActivityOption[] = [
+  { value: "low", label: "Low", description: "Mostly indoors, little movement" },
+  { value: "moderate", label: "Moderate", description: "A daily walk" },
+  {
+    value: "high",
+    label: "High / athlete",
+    description: "Intense daily exercise",
+  },
+];
+
+export function getActivityOptions(locale: Locale): ActivityOption[] {
+  return locale === "ka" ? ACTIVITY_OPTIONS : ACTIVITY_OPTIONS_EN;
+}
+
+const CARE_TYPE_LABELS_EN: Record<CareType, string> = {
+  vaccine: "Vaccine",
+  deworming: "Deworming",
+  flea_tick: "Flea & tick",
+};
+
+export function getCareTypeLabels(locale: Locale): Record<CareType, string> {
+  return locale === "ka" ? CARE_TYPE_LABELS : CARE_TYPE_LABELS_EN;
+}
+
+export function getCareTypeOptions(locale: Locale): CareTypeOption[] {
+  const labels = getCareTypeLabels(locale);
+  return CARE_TYPE_OPTIONS.map((option) => ({
+    value: option.value,
+    label: labels[option.value],
+  }));
+}
 
 export interface VaccineEntry {
   id: string;
@@ -161,6 +198,20 @@ export const MOOD_SCALE = [
   { value: 4, label: "კარგად", emoji: "🙂" },
   { value: 5, label: "შესანიშნავად", emoji: "😄" },
 ] as const;
+
+const MOOD_SCALE_EN = [
+  { value: 1, label: "Poor", emoji: "😣" },
+  { value: 2, label: "Low", emoji: "🙁" },
+  { value: 3, label: "Normal", emoji: "😐" },
+  { value: 4, label: "Good", emoji: "🙂" },
+  { value: 5, label: "Great", emoji: "😄" },
+] as const;
+
+export function getMoodScale(
+  locale: Locale,
+): readonly { value: number; label: string; emoji: string }[] {
+  return locale === "ka" ? MOOD_SCALE : MOOD_SCALE_EN;
+}
 
 function daysFromNow(days: number): string {
   const d = new Date();

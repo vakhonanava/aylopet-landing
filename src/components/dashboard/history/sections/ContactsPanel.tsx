@@ -17,6 +17,7 @@ import { useState } from "react";
 import { addButton, fieldLabel, textInput } from "@/components/dashboard/FormControls";
 import { EmptyState, SectionCard } from "@/components/dashboard/history/ui";
 import { useHistorySave } from "@/components/dashboard/history/useHistorySave";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import { formatDate, type Pet } from "@/lib/dashboard";
 import type { CaretakerNotes, VetContact } from "@/lib/pet-history/types";
 
@@ -27,7 +28,8 @@ function telHref(phone: string): string {
 
 function VetCard({ pet }: { pet: Pet }) {
   const [editing, setEditing] = useState(false);
-  const { save, saving, error } = useHistorySave(pet.id);
+  const { d } = useDashboardCopy();
+  const { save, saving, saved, error } = useHistorySave(pet.id);
   const vet = pet.history?.vet ?? null;
 
   const [clinicName, setClinicName] = useState(vet?.clinicName ?? "");
@@ -227,7 +229,7 @@ function VetCard({ pet }: { pet: Pet }) {
                 ) : (
                   <BadgeCheck className="h-4 w-4" />
                 )}
-                შენახვა
+                {saved && !saving ? d.common.saved : "შენახვა"}
               </button>
             </div>
           </motion.div>
@@ -271,7 +273,8 @@ const NOTE_FIELDS: {
 
 function CaretakerCard({ pet }: { pet: Pet }) {
   const [editing, setEditing] = useState(false);
-  const { save, saving, error } = useHistorySave(pet.id);
+  const { d } = useDashboardCopy();
+  const { save, saving, saved, error } = useHistorySave(pet.id);
   const notes = pet.history?.caretaker ?? null;
 
   const [draft, setDraft] = useState<Omit<CaretakerNotes, "updatedAt">>({
@@ -387,7 +390,7 @@ function CaretakerCard({ pet }: { pet: Pet }) {
                 ) : (
                   <BadgeCheck className="h-4 w-4" />
                 )}
-                შენახვა
+                {saved && !saving ? d.common.saved : "შენახვა"}
               </button>
             </div>
           </motion.div>

@@ -21,6 +21,7 @@ import {
   SectionCard,
 } from "@/components/dashboard/history/ui";
 import { useHistorySave } from "@/components/dashboard/history/useHistorySave";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import { formatDate, type Pet } from "@/lib/dashboard";
 import {
   calculateAge,
@@ -46,7 +47,8 @@ function dailyIntake(pet: Pet) {
 
 export function NutritionPanel({ pet }: { pet: Pet }) {
   const [editing, setEditing] = useState(false);
-  const { save, saving, error } = useHistorySave(pet.id);
+  const { d } = useDashboardCopy();
+  const { save, saving, saved, error } = useHistorySave(pet.id);
 
   const diet = pet.history?.diet ?? null;
   const [type, setType] = useState<DietType>(diet?.type ?? "aylopet_fresh");
@@ -368,7 +370,7 @@ export function NutritionPanel({ pet }: { pet: Pet }) {
                 ) : (
                   <BadgeCheck className="h-4 w-4" />
                 )}
-                შენახვა
+                {saved && !saving ? d.common.saved : "შენახვა"}
               </button>
             </div>
           </motion.div>

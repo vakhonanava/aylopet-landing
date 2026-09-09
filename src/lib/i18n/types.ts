@@ -220,7 +220,8 @@ export interface DnaUnifiedCopy {
   readyBody: string;
   joinWaitlist: string;
   tryAssistant: string;
-  steps: { title: string; body: string }[];
+  /** One card per step · never reuse `backendNote` for all of them. */
+  steps: { title: string; body: string; note: string }[];
 }
 
 export interface B2bFormCopy {

@@ -15,6 +15,7 @@ import { useMemo, useState } from "react";
 import { addButton, fieldLabel, textInput } from "@/components/dashboard/FormControls";
 import { EmptyState, SectionCard, StatusPill } from "@/components/dashboard/history/ui";
 import { useHistorySave } from "@/components/dashboard/history/useHistorySave";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import { formatDate, uid, type Pet } from "@/lib/dashboard";
 import {
   VET_VISIT_OUTCOME,
@@ -49,7 +50,8 @@ const OUTCOME_OPTIONS: VetVisitOutcome[] = [
 ];
 
 export function VetVisitsPanel({ pet }: { pet: Pet }) {
-  const { save, saving, error } = useHistorySave(pet.id);
+  const { d } = useDashboardCopy();
+  const { save, saving, saved, error } = useHistorySave(pet.id);
   const [open, setOpen] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
@@ -463,7 +465,7 @@ export function VetVisitsPanel({ pet }: { pet: Pet }) {
                 ) : (
                   <BadgeCheck className="h-4 w-4" />
                 )}
-                ვიზიტის შენახვა
+                {saved && !saving ? d.common.saved : "ვიზიტის შენახვა"}
               </button>
             </div>
           </motion.div>

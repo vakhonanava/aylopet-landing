@@ -1,28 +1,27 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
+import { useToast } from "@/components/dashboard/Toast";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import type { PetHistory } from "@/lib/pet-history/types";
 
 type SaveState = "idle" | "saving" | "saved" | "error";
 
 /**
- * Wraps `updatePetHistory` with the transient feedback every editor in this
- * module needs. The success flag self-clears; the timer is cancelled on unmount
- * so a fast navigation can't set state on a dead component.
+ * Wraps `updatePetHistory` with the feedback every editor in this module needs.
+ *
+ * The success flag used to clear itself on a 2.5s timer, so the button dropped
+ * back to "Save" moments after a successful write and owners read that as the
+ * save having failed. It now stays set until the next save starts, and a toast
+ * carries the confirmation even when the panel collapses on save.
  */
 export function useHistorySave(petId: string) {
   const { updatePetHistory } = useDashboard();
+  const { d } = useDashboardCopy();
+  const toast = useToast();
   const [state, setState] = useState<SaveState>("idle");
   const [error, setError] = useState<string | null>(null);
-  const timer = useRef<number | null>(null);
-
-  useEffect(
-    () => () => {
-      if (timer.current !== null) window.clearTimeout(timer.current);
-    },
-    [],
-  );
 
   const save = useCallback(
     async (patch: Partial<PetHistory>) => {
@@ -31,17 +30,18 @@ export function useHistorySave(petId: string) {
 
       const result = await updatePetHistory(petId, patch);
       if (!result.ok) {
-        setError(result.error ?? "შენახვა ვერ მოხერხდა.");
+        const message = result.error ?? d.toast.saveFailed;
+        setError(message);
         setState("error");
+        toast.error(message);
         return false;
       }
 
       setState("saved");
-      if (timer.current !== null) window.clearTimeout(timer.current);
-      timer.current = window.setTimeout(() => setState("idle"), 2500);
+      toast.success(d.toast.saved);
       return true;
     },
-    [petId, updatePetHistory],
+    [petId, updatePetHistory, toast, d.toast.saved, d.toast.saveFailed],
   );
 
   return { save, saving: state === "saving", saved: state === "saved", error };

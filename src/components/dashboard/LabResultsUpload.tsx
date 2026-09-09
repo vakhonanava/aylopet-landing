@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
+import { useToast } from "@/components/dashboard/Toast";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import {
   uid,
   type LabReportEntry,
@@ -66,12 +68,15 @@ function safeFilename(file: File): string {
   return `${base || "medical-report"}.${extension}`;
 }
 
-function validateFile(file: File): string | null {
+function validateFile(
+  file: File,
+  messages: { invalidType: string; tooLarge: string },
+): string | null {
   if (!ACCEPTED_TYPES.includes(file.type as AcceptedMimeType)) {
-    return `${file.name}: დასაშვებია მხოლოდ PDF, JPEG ან PNG.`;
+    return `${file.name}: ${messages.invalidType}`;
   }
   if (file.size > MAX_FILE_SIZE) {
-    return `${file.name}: ფაილის მაქსიმალური ზომაა 10MB.`;
+    return `${file.name}: ${messages.tooLarge}`;
   }
   return null;
 }
@@ -135,6 +140,8 @@ function uploadViaSupabase(
 
 export function LabResultsUpload({ pet }: LabResultsUploadProps) {
   const { addLabReport, removeLabReport } = useDashboard();
+  const { d } = useDashboardCopy();
+  const toast = useToast();
   const inputRef = useRef<HTMLInputElement>(null);
   const [storageMode, setStorageMode] = useState<LabStorageMode>("blob");
   const [isDragging, setIsDragging] = useState(false);
@@ -216,11 +223,11 @@ export function LabResultsUpload({ pet }: LabResultsUploadProps) {
 
       addLabReport(pet.id, report);
       setPending((current) => current.filter((item) => item.id !== pendingId));
+      toast.success(d.toast.uploaded);
     } catch {
       setPending((current) => current.filter((item) => item.id !== pendingId));
-      setError(
-        "ატვირთვა ვერ მოხერხდა. შეამოწმე კავშირი და სცადე თავიდან.",
-      );
+      setError(d.labs.uploadFailed);
+      toast.error(d.labs.uploadFailed);
     }
   };
 
@@ -229,9 +236,9 @@ export function LabResultsUpload({ pet }: LabResultsUploadProps) {
     if (files.length === 0) return;
 
     const validationErrors = files
-      .map(validateFile)
+      .map((file) => validateFile(file, d.labs))
       .filter((message): message is string => Boolean(message));
-    const validFiles = files.filter((file) => !validateFile(file));
+    const validFiles = files.filter((file) => !validateFile(file, d.labs));
 
     setError(validationErrors.length ? validationErrors.join(" ") : null);
     await Promise.all(validFiles.map(uploadFile));
@@ -249,8 +256,10 @@ export function LabResultsUpload({ pet }: LabResultsUploadProps) {
       });
       if (!response.ok) throw new Error("Delete failed");
       removeLabReport(pet.id, report.id);
+      toast.success(d.toast.deleted);
     } catch {
-      setError("ფაილის წაშლა ვერ მოხერხდა. სცადე თავიდან.");
+      setError(d.labs.deleteFailed);
+      toast.error(d.labs.deleteFailed);
     } finally {
       setDeletingId(null);
     }
@@ -271,12 +280,10 @@ export function LabResultsUpload({ pet }: LabResultsUploadProps) {
               AylopetAI Clinical Intake
             </p>
             <h2 className="mt-2 font-display text-2xl font-semibold tracking-tight">
-              ანალიზების გაზიარება
+              {d.labs.title}
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/58">
-              ატვირთე სისხლის ანალიზი, ვეტერინარის ჩანაწერი ან დიაგნოსტიკური
-              დოკუმენტი. AylopetAI მონაცემებს პრევენციული ინსაითებისთვის
-              დაამუშავებს.
+              {d.labs.description}
             </p>
           </div>
           <div className="flex flex-col items-start gap-2 sm:items-end">
@@ -290,7 +297,7 @@ export function LabResultsUpload({ pet }: LabResultsUploadProps) {
               className="inline-flex w-fit items-center gap-2 rounded-full bg-emerald-300 px-4 py-2 text-sm font-semibold text-[#071b18] transition hover:bg-emerald-200"
             >
               <UploadCloud className="h-4 w-4" />
-              ანალიზის ატვირთვა
+              {d.labs.uploadCta}
             </button>
           </div>
         </div>
@@ -334,10 +341,10 @@ export function LabResultsUpload({ pet }: LabResultsUploadProps) {
             <UploadCloud className="h-6 w-6" />
           </motion.span>
           <p className="mt-4 text-sm font-semibold text-white/90">
-            ჩააგდე ფაილები აქ ან დააჭირე ასარჩევად
+            {d.labs.dropzone}
           </p>
           <p id="lab-upload-help" className="mt-1.5 text-xs text-white/42">
-            PDF, JPEG ან PNG, მაქსიმუმ 10MB თითო ფაილზე
+            {d.labs.dropzoneHint}
           </p>
         </label>
 
@@ -382,7 +389,7 @@ export function LabResultsUpload({ pet }: LabResultsUploadProps) {
                       <p className="truncate text-sm font-medium">{item.name}</p>
                       <span className="text-xs tabular-nums text-cyan-100/65">
                         {item.phase === "scanning"
-                          ? "ანალიზდება"
+                          ? d.labs.analyzing
                           : `${item.progress}%`}
                       </span>
                     </div>
@@ -402,7 +409,7 @@ export function LabResultsUpload({ pet }: LabResultsUploadProps) {
         {reports.length > 0 && (
           <div className="relative mt-5 space-y-2">
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-white/40">
-              ატვირთული ანალიზები, {reports.length}
+              {d.labs.uploadedCount}, {reports.length}
             </p>
             <AnimatePresence initial={false}>
               {reports.map((report) => {
@@ -432,7 +439,7 @@ export function LabResultsUpload({ pet }: LabResultsUploadProps) {
                         <span aria-hidden>·</span>
                         <span className="inline-flex items-center gap-1 text-emerald-300/80">
                           <CheckCircle2 className="h-3 w-3" />
-                          წარმატებით აიტვირთა
+                          {d.labs.uploadedOk}
                         </span>
                       </div>
                     </div>
@@ -442,7 +449,7 @@ export function LabResultsUpload({ pet }: LabResultsUploadProps) {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white/50 transition-colors hover:bg-white/10 hover:text-emerald-200"
-                        aria-label={`${report.name} ნახვა`}
+                        aria-label={`${report.name} · ${d.labs.viewAria}`}
                       >
                         <ExternalLink className="h-4 w-4" />
                       </a>
@@ -452,7 +459,7 @@ export function LabResultsUpload({ pet }: LabResultsUploadProps) {
                       onClick={() => void deleteReport(report)}
                       disabled={deletingId === report.id}
                       className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white/35 transition-colors hover:bg-red-400/10 hover:text-red-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300/40 disabled:opacity-40"
-                      aria-label={`${report.name} წაშლა`}
+                      aria-label={`${report.name} · ${d.labs.deleteAria}`}
                     >
                       {deletingId === report.id ? (
                         <LoaderCircle className="h-4 w-4 animate-spin" />
@@ -471,9 +478,7 @@ export function LabResultsUpload({ pet }: LabResultsUploadProps) {
       <footer className="flex items-start gap-3 border-t border-white/8 bg-black/10 px-5 py-4 text-xs leading-relaxed text-white/48 sm:px-7">
         <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300/70" />
         <p>
-          თქვენი მონაცემები დაცულია. ანალიზები გამოიყენება ექსკლუზიურად
-          AylopetAI-ის მიერ დაავადებების პრევენციისა და ინდივიდუალური ველნეს
-          გეგმის შესადგენად.
+          {d.labs.privacyNote}
         </p>
       </footer>
     </section>

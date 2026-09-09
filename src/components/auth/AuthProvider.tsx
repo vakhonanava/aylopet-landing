@@ -73,6 +73,26 @@ function userHasPasswordLogin(user: User | null): boolean {
   );
 }
 
+/**
+ * Supabase re-emits SIGNED_IN / TOKEN_REFRESHED on tab focus and on every token
+ * refresh, each time with a freshly built user object. Consumers that key an
+ * effect off `user` (the dashboard store, most visibly) would then re-run their
+ * whole fetch for a session that never actually changed. Compare the fields
+ * anything downstream reacts to and reuse the previous object otherwise, so the
+ * identity only changes when the account really does.
+ */
+function sameUser(a: User | null, b: User | null): boolean {
+  if (a === b) return true;
+  if (!a || !b) return false;
+  return (
+    a.id === b.id &&
+    a.email === b.email &&
+    a.email_confirmed_at === b.email_confirmed_at &&
+    a.updated_at === b.updated_at &&
+    a.identities?.length === b.identities?.length
+  );
+}
+
 function getBrowserClient() {
   try {
     return createClient();
@@ -93,14 +113,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user);
+      setUser((prev) => (sameUser(prev, data.user) ? prev : data.user));
       setReady(true);
     });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+      const next = session?.user ?? null;
+      setUser((prev) => (sameUser(prev, next) ? prev : next));
       setReady(true);
     });
 
@@ -156,15 +177,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (error) {
-        if (error.message?.toLowerCase().includes("already registered")) {
-          const signInResult = await signInWithPassword(email, password);
-          return signInResult;
-        }
         return { error: formatAuthError(error) };
       }
 
       if (data.session) {
         return { error: null };
+      }
+
+      // With "Confirm email" enabled, Supabase does not error on a duplicate
+      // address — to avoid leaking which emails exist it returns a placeholder
+      // user carrying an empty `identities` array. Treating that as a fresh
+      // signup showed "check your email for the link" to someone who already
+      // has an account, so detect it and report the duplicate instead.
+      if (data.user && (data.user.identities?.length ?? 0) === 0) {
+        return { error: "already_registered" };
       }
 
       if (data.user && !data.user.email_confirmed_at) {
@@ -185,7 +211,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       return { error: null };
     },
-    [signInWithPassword],
+    [],
   );
 
   const sendVerificationEmail = useCallback(async (): Promise<AuthResult> => {

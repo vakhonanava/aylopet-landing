@@ -15,7 +15,7 @@ import { TechDashboardPreview } from "@/components/sections/TechDashboardPreview
 import { HeroEcosystemMedia } from "@/components/visual/HeroEcosystemMedia";
 import { fadeUp, staggerContainer } from "@/lib/motion";
 import { IMAGES } from "@/lib/images";
-import { scrollToWaitlist } from "@/lib/navigation";
+import { WAITLIST_FORM_HREF } from "@/lib/navigation";
 
 const linkClass =
   "group inline-flex min-h-[52px] cursor-pointer items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-primary)] sm:text-base";
@@ -119,14 +119,15 @@ export function Hero3D({ media = "ecosystem" }: { media?: "current" | "ecosystem
             variants={fadeUp}
             className="mt-9 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-center lg:justify-start"
           >
-            <button
-              type="button"
-              onClick={scrollToWaitlist}
+            {/* Straight to the signup form · scrolling to the #waitlist
+                teaser only got the visitor to another CTA card. */}
+            <Link
+              href={WAITLIST_FORM_HREF}
               className={`${linkClass} w-full bg-[var(--brand-primary)] text-white shadow-[0_16px_42px_rgba(58,90,64,0.25)] hover:bg-[var(--brand-primary-hover)] hover:shadow-[0_20px_48px_rgba(58,90,64,0.3)] sm:w-auto`}
             >
               {t.joinWaitlistPromo}
               <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden />
-            </button>
+            </Link>
             <Link
               href="/products/aylopet-ai"
               className={`${linkClass} w-full border border-[var(--brand-primary)]/15 bg-white/75 text-[var(--text-primary)] backdrop-blur-sm hover:border-[var(--brand-primary)]/30 hover:bg-white hover:shadow-soft sm:w-auto`}

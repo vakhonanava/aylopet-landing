@@ -22,6 +22,8 @@ import { useDashboard } from "@/components/dashboard/DashboardStore";
 import { WeightTrendChart } from "@/components/dashboard/history/WeightTrendChart";
 import { DataField, EmptyState, SectionCard } from "@/components/dashboard/history/ui";
 import { useHistorySave } from "@/components/dashboard/history/useHistorySave";
+import { useToast } from "@/components/dashboard/Toast";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import { formatDate, uid, type Pet } from "@/lib/dashboard";
 import {
   calculateAge,
@@ -137,12 +139,15 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
   >(null);
 
   const reproductive = pet.history?.reproductive ?? null;
+  const { d } = useDashboardCopy();
+  const toast = useToast();
   const age = calculateAge(pet.birthDate);
 
   // Birth date · saved via the flat `pets.birth_date` column, so bcsScore and
   // microchipId are passed through untouched rather than cleared.
   const [birthDateInput, setBirthDateInput] = useState(pet.birthDate ?? "");
   const [savingBirthDate, setSavingBirthDate] = useState(false);
+  const [savedBirthDate, setSavedBirthDate] = useState(false);
   const [birthDateError, setBirthDateError] = useState<string | null>(null);
 
   const openBirthDateEditor = () => {
@@ -153,6 +158,7 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
 
   const submitBirthDate = async () => {
     setSavingBirthDate(true);
+    setSavedBirthDate(false);
     setBirthDateError(null);
     const result = await updatePetIdentity(pet.id, {
       birthDate: birthDateInput || null,
@@ -161,9 +167,13 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
     });
     setSavingBirthDate(false);
     if (!result.ok) {
-      setBirthDateError(result.error ?? "შენახვა ვერ მოხერხდა.");
+      const message = result.error ?? d.toast.saveFailed;
+      setBirthDateError(message);
+      toast.error(message);
       return;
     }
+    setSavedBirthDate(true);
+    toast.success(d.toast.saved);
     setEditingField(null);
   };
 
@@ -171,6 +181,7 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
   const {
     save: saveReproductive,
     saving: savingReproductive,
+    saved: savedReproductive,
     error: reproductiveError,
   } = useHistorySave(pet.id);
   const [sex, setSex] = useState<Sex>(reproductive?.sex ?? "male");
@@ -205,6 +216,7 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
   const {
     save: saveWeight,
     saving: savingWeight,
+    saved: savedWeight,
     error: weightError,
   } = useHistorySave(pet.id);
   const [weightFormOpen, setWeightFormOpen] = useState(false);
@@ -348,7 +360,7 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
                   ) : (
                     <BadgeCheck className="h-4 w-4" />
                   )}
-                  შენახვა
+                  {savedBirthDate && !savingBirthDate ? d.common.saved : "შენახვა"}
                 </button>
               </div>
             </motion.div>
@@ -467,7 +479,7 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
                   ) : (
                     <BadgeCheck className="h-4 w-4" />
                   )}
-                  შენახვა
+                  {savedReproductive && !savingReproductive ? d.common.saved : "შენახვა"}
                 </button>
               </div>
             </motion.div>
@@ -654,7 +666,7 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
                   ) : (
                     <BadgeCheck className="h-4 w-4" />
                   )}
-                  ჩანაწერის შენახვა
+                  {savedWeight && !savingWeight ? d.common.saved : "ჩანაწერის შენახვა"}
                 </button>
               </div>
             </motion.div>

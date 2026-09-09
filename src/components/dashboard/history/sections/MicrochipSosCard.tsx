@@ -17,6 +17,7 @@ import { addButton, fieldLabel, textInput } from "@/components/dashboard/FormCon
 import { QrCode } from "@/components/dashboard/history/QrCode";
 import { SectionCard, StatusPill } from "@/components/dashboard/history/ui";
 import { useHistorySave } from "@/components/dashboard/history/useHistorySave";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import { formatDate, type Pet } from "@/lib/dashboard";
 import { MICROCHIP_STATUS } from "@/lib/pet-history/labels";
 import { buildSosPayload } from "@/lib/pet-history/sos";
@@ -27,7 +28,8 @@ import type {
 
 export function MicrochipSosCard({ pet }: { pet: Pet }) {
   const [editing, setEditing] = useState(false);
-  const { save, saving, error } = useHistorySave(pet.id);
+  const { d } = useDashboardCopy();
+  const { save, saving, saved, error } = useHistorySave(pet.id);
   const svgRef = useRef<HTMLDivElement>(null);
 
   const registration = pet.history?.microchip ?? null;
@@ -237,7 +239,7 @@ export function MicrochipSosCard({ pet }: { pet: Pet }) {
                 ) : (
                   <BadgeCheck className="h-4 w-4" />
                 )}
-                შენახვა
+                {saved && !saving ? d.common.saved : "შენახვა"}
               </button>
             </div>
           </motion.div>

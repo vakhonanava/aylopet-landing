@@ -6,10 +6,12 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import {
   createSeedPet,
   uid,
@@ -151,6 +153,8 @@ interface DashboardContextValue extends DashboardState {
 }
 
 const STORAGE_KEY = "aylopet.dashboard.v1";
+/** Sentinel for `loadedForUser` while nobody is signed in. */
+const GUEST_KEY = "__guest__";
 const UUID_LIKE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -172,16 +176,40 @@ function emptyPetExtras() {
 
 export function DashboardProvider({ children }: { children: ReactNode }) {
   const { user, ready: authReady } = useAuth();
+  // Errors returned from here are rendered verbatim by the panels, so they have
+  // to follow the interface language rather than being Georgian literals.
+  const { d } = useDashboardCopy();
+  const defaultUserName = d.common.defaultUserName;
   const [state, setState] = useState<DashboardState>({
     account: null,
     pets: [],
   });
   const [ready, setReady] = useState(false);
 
+  // The fetch is keyed on the account id alone. Reading the rest of the user
+  // off a ref keeps the display-name fallback current without making a token
+  // refresh (which hands us an equal-but-new user object) look like a new
+  // account and trigger a full reload of the dashboard.
+  const userId = user?.id ?? null;
+  const userRef = useRef(user);
+
+  // Declared before the fetch effect so `userRef` is already current by the
+  // time that one reads it in the same commit.
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
+
+  // Guards against re-fetching an account we already hold. Navigating between
+  // dashboard routes keeps this provider mounted, so without it every effect
+  // re-run threw the loaded pets away and showed the loading state again.
+  const loadedForUser = useRef<string | null>(null);
+
   useEffect(() => {
     if (!authReady) return;
 
-    if (!user) {
+    if (!userId) {
+      if (loadedForUser.current === GUEST_KEY) return;
+      loadedForUser.current = GUEST_KEY;
       queueMicrotask(() => {
         try {
           const raw = localStorage.getItem(STORAGE_KEY);
@@ -219,8 +247,17 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       return;
     }
 
+    if (loadedForUser.current === userId) return;
+
     let cancelled = false;
     setReady(false);
+
+    const fallbackAccount = () => ({
+      name:
+        (userRef.current?.user_metadata?.full_name as string | undefined) ??
+        defaultUserName,
+      email: userRef.current?.email ?? "",
+    });
 
     const supabase = (() => {
       try {
@@ -231,30 +268,17 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     })();
 
     if (!supabase) {
-      setState({
-        account: {
-          name:
-            (user.user_metadata?.full_name as string | undefined) ??
-            "მომხმარებელი",
-          email: user.email ?? "",
-        },
-        pets: [],
-      });
+      loadedForUser.current = userId;
+      setState({ account: fallbackAccount(), pets: [] });
       setReady(true);
       return;
     }
 
-    void fetchUserDashboardFromSupabase(supabase, user.id).then((data) => {
+    void fetchUserDashboardFromSupabase(supabase, userId).then((data) => {
       if (cancelled) return;
+      loadedForUser.current = userId;
       setState({
-        account: data?.account.name
-          ? data.account
-          : {
-              name:
-                (user.user_metadata?.full_name as string | undefined) ??
-                "მომხმარებელი",
-              email: user.email ?? "",
-            },
+        account: data?.account.name ? data.account : fallbackAccount(),
         pets: data?.pets ?? [],
       });
       setReady(true);
@@ -263,7 +287,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [authReady, user]);
+  }, [authReady, userId, defaultUserName]);
 
   useEffect(() => {
     if (!ready || user) return;
@@ -306,7 +330,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       petPatch?: Partial<Pick<Pet, "supplements" | "food" | "moods">>,
     ): Promise<{ ok: boolean; error?: string }> => {
       const pet = state.pets.find((p) => p.id === petId);
-      if (!pet) return { ok: false, error: "ძაღლი ვერ მოიძებნა." };
+      if (!pet) return { ok: false, error: d.common.petNotFound };
 
       const next: PetHistory = {
         ...emptyPetHistory(),
@@ -317,7 +341,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       if (user && isPlatformPetId(petId)) {
         const supabase = getSupabaseClient();
         if (!supabase) {
-          return { ok: false, error: "Supabase არ არის კონფიგურირებული." };
+          return { ok: false, error: d.common.supabaseMissing };
         }
         const result = await savePetHistoryInSupabase(
           supabase,
@@ -331,7 +355,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       updatePetState(petId, (p) => ({ ...p, history: next, ...petPatch }));
       return { ok: true };
     },
-    [state.pets, user, getSupabaseClient, updatePetState],
+    [state.pets, user, d, getSupabaseClient, updatePetState],
   );
 
   const value = useMemo<DashboardContextValue>(
@@ -357,7 +381,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       updatePet: (id, patch) => updatePetState(id, (p) => ({ ...p, ...patch })),
       savePetProfile: async (petId, payload) => {
         const pet = state.pets.find((p) => p.id === petId);
-        if (!pet) return { ok: false, error: "ძაღლი ვერ მოიძებნა." };
+        if (!pet) return { ok: false, error: d.common.petNotFound };
 
         const previous = petToPayload(pet);
         const changed = !profilesEqual(previous, payload);
@@ -367,7 +391,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
           if (user && isPlatformPetId(petId)) {
             const supabase = getSupabaseClient();
             if (!supabase) {
-              return { ok: false, error: "Supabase არ არის კონფიგურირებული." };
+              return { ok: false, error: d.common.supabaseMissing };
             }
             const snapResult = await createPetProfileSnapshotInSupabase(
               supabase,
@@ -403,7 +427,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         if (user && isPlatformPetId(petId)) {
           const supabase = getSupabaseClient();
           if (!supabase) {
-            return { ok: false, error: "Supabase არ არის კონფიგურირებული." };
+            return { ok: false, error: d.common.supabaseMissing };
           }
           const result = await updatePetProfileInSupabase(
             supabase,
@@ -441,7 +465,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
         if (user && isPlatformPetId(petId)) {
           const supabase = getSupabaseClient();
-          if (!supabase) return { ok: false, error: "Supabase არ არის კონფიგურირებული." };
+          if (!supabase) return { ok: false, error: d.common.supabaseMissing };
           const result = await upsertVaccineInSupabase(
             supabase,
             user.id,
@@ -449,7 +473,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
             localEntry,
           );
           if (result.error || !result.id) {
-            return { ok: false, error: result.error ?? "ვაქცინა ვერ შეინახა." };
+            return { ok: false, error: result.error ?? d.logbook.vaccineSaveFailed };
           }
           localEntry.id = result.id;
         }
@@ -463,7 +487,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       updateVaccine: async (petId, entry) => {
         if (user && isPlatformPetId(petId)) {
           const supabase = getSupabaseClient();
-          if (!supabase) return { ok: false, error: "Supabase არ არის კონფიგურირებული." };
+          if (!supabase) return { ok: false, error: d.common.supabaseMissing };
           const result = await upsertVaccineInSupabase(
             supabase,
             user.id,
@@ -500,13 +524,13 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       },
       addSupplement: (petId, entry) => {
         const pet = state.pets.find((p) => p.id === petId);
-        if (!pet) return Promise.resolve({ ok: false, error: "ძაღლი ვერ მოიძებნა." });
+        if (!pet) return Promise.resolve({ ok: false, error: d.common.petNotFound });
         const supplements = [{ ...entry, id: uid("s") }, ...pet.supplements];
         return persistHistoryPatch(petId, { supplements }, { supplements });
       },
       toggleSupplement: (petId, supplementId) => {
         const pet = state.pets.find((p) => p.id === petId);
-        if (!pet) return Promise.resolve({ ok: false, error: "ძაღლი ვერ მოიძებნა." });
+        if (!pet) return Promise.resolve({ ok: false, error: d.common.petNotFound });
         const supplements = pet.supplements.map((s) =>
           s.id === supplementId ? { ...s, givenToday: !s.givenToday } : s,
         );
@@ -514,13 +538,13 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       },
       addFood: (petId, entry) => {
         const pet = state.pets.find((p) => p.id === petId);
-        if (!pet) return Promise.resolve({ ok: false, error: "ძაღლი ვერ მოიძებნა." });
+        if (!pet) return Promise.resolve({ ok: false, error: d.common.petNotFound });
         const food = [{ ...entry, id: uid("f") }, ...pet.food];
         return persistHistoryPatch(petId, { foodLogs: food }, { food });
       },
       addMood: (petId, entry) => {
         const pet = state.pets.find((p) => p.id === petId);
-        if (!pet) return Promise.resolve({ ok: false, error: "ძაღლი ვერ მოიძებნა." });
+        if (!pet) return Promise.resolve({ ok: false, error: d.common.petNotFound });
         const moods = [{ ...entry, id: uid("m") }, ...pet.moods];
         return persistHistoryPatch(petId, { moodLogs: moods }, { moods });
       },
@@ -539,7 +563,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       updatePetIdentity: async (petId, payload) => {
         if (user && isPlatformPetId(petId)) {
           const supabase = getSupabaseClient();
-          if (!supabase) return { ok: false, error: "Supabase არ არის კონფიგურირებული." };
+          if (!supabase) return { ok: false, error: d.common.supabaseMissing };
           const result = await updatePetIdentityInSupabase(supabase, user.id, petId, payload);
           if (result.error) return { ok: false, error: result.error };
         }
@@ -555,7 +579,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       saveMedicalRecord: async (petId, payload) => {
         if (user && isPlatformPetId(petId)) {
           const supabase = getSupabaseClient();
-          if (!supabase) return { ok: false, error: "Supabase არ არის კონფიგურირებული." };
+          if (!supabase) return { ok: false, error: d.common.supabaseMissing };
           const result = await upsertMedicalRecordInSupabase(supabase, user.id, petId, payload);
           if (result.error) return { ok: false, error: result.error };
         }
@@ -571,10 +595,10 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
         if (user && isPlatformPetId(petId)) {
           const supabase = getSupabaseClient();
-          if (!supabase) return { ok: false, error: "Supabase არ არის კონფიგურირებული." };
+          if (!supabase) return { ok: false, error: d.common.supabaseMissing };
           const result = await createSymptomLogInSupabase(supabase, user.id, petId, entry);
           if (result.error || !result.id) {
-            return { ok: false, error: result.error ?? "სიმპტომი ვერ შეინახა." };
+            return { ok: false, error: result.error ?? d.medical.symptomSaveFailed };
           }
           localEntry.id = result.id;
         }
@@ -605,10 +629,10 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
         if (user && isPlatformPetId(petId)) {
           const supabase = getSupabaseClient();
-          if (!supabase) return { ok: false, error: "Supabase არ არის კონფიგურირებული." };
+          if (!supabase) return { ok: false, error: d.common.supabaseMissing };
           const result = await upsertMedicationInSupabase(supabase, user.id, petId, localEntry);
           if (result.error || !result.id) {
-            return { ok: false, error: result.error ?? "მედიკამენტი ვერ შეინახა." };
+            return { ok: false, error: result.error ?? d.medical.medicationSaveFailed };
           }
           localEntry.id = result.id;
         }
@@ -622,7 +646,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       updateMedication: async (petId, entry) => {
         if (user && isPlatformPetId(petId)) {
           const supabase = getSupabaseClient();
-          if (!supabase) return { ok: false, error: "Supabase არ არის კონფიგურირებული." };
+          if (!supabase) return { ok: false, error: d.common.supabaseMissing };
           const result = await upsertMedicationInSupabase(supabase, user.id, petId, entry);
           if (result.error) return { ok: false, error: result.error };
         }
@@ -650,7 +674,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       },
       updatePetHistory: (petId, patch) => persistHistoryPatch(petId, patch),
     }),
-    [state, ready, user, updatePetState, getSupabaseClient, persistHistoryPatch],
+    [state, ready, user, d, updatePetState, getSupabaseClient, persistHistoryPatch],
   );
 
   return (

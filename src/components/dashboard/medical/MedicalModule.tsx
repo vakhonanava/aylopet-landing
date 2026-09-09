@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ClipboardList, FileHeart, Pill, Share2 } from "lucide-react";
 import type { Pet } from "@/lib/dashboard";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import { SymptomTracker } from "@/components/dashboard/medical/SymptomTracker";
 import { MedicalRecordForm } from "@/components/dashboard/medical/MedicalRecordForm";
 import { MedicationsPanel } from "@/components/dashboard/medical/MedicationsPanel";
@@ -10,28 +11,33 @@ import { VetExportButton } from "@/components/dashboard/medical/VetExportButton"
 
 type Section = "symptoms" | "record" | "medications" | "export";
 
-const NAV: { value: Section; label: string; icon: typeof ClipboardList }[] = [
-  { value: "symptoms", label: "სიმპტომები", icon: ClipboardList },
-  { value: "record", label: "სამედიცინო ბარათი", icon: FileHeart },
-  { value: "medications", label: "მედიკამენტები", icon: Pill },
-  { value: "export", label: "ექსპორტი ვეტისთვის", icon: Share2 },
+const NAV: {
+  value: Section;
+  labelKey: "tabSymptoms" | "tabRecord" | "tabMedications" | "tabExport";
+  icon: typeof ClipboardList;
+}[] = [
+  { value: "symptoms", labelKey: "tabSymptoms", icon: ClipboardList },
+  { value: "record", labelKey: "tabRecord", icon: FileHeart },
+  { value: "medications", labelKey: "tabMedications", icon: Pill },
+  { value: "export", labelKey: "tabExport", icon: Share2 },
 ];
 
 export function MedicalModule({ pet }: { pet: Pet }) {
+  const { d } = useDashboardCopy();
   const [section, setSection] = useState<Section>("symptoms");
 
   return (
     <section className="rounded-[2rem] border border-[#e5e7eb] bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] sm:p-7">
       <h2 className="mb-1 text-lg font-bold tracking-tight text-[var(--brand-primary)]">
-        სამედიცინო მონაცემები
+        {d.medical.title}
       </h2>
       <p className="mb-5 text-sm text-slate-500">
-        ვაქცინები და პრევენციული მოვლა ხელმისაწვდომია{" "}
+        {d.medical.vaccinesHint}{" "}
         <a
           href="#logbook-vaccines"
           className="font-medium text-[var(--brand-primary)] underline underline-offset-2"
         >
-          ზემოთ „ვაქცინები & პრევენცია“ ჩანართში
+          {d.medical.vaccinesHintLink}
         </a>
         .
       </p>
@@ -48,7 +54,7 @@ export function MedicalModule({ pet }: { pet: Pet }) {
                 active ? "bg-[var(--brand-primary)] text-white" : "text-slate-500"
               }`}
             >
-              <item.icon className="h-4 w-4" /> {item.label}
+              <item.icon className="h-4 w-4" /> {d.medical[item.labelKey]}
             </button>
           );
         })}

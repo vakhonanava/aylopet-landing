@@ -1,9 +1,16 @@
+"use client";
+
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import { Button } from "@/components/ui/Button";
 import { DnaStrand } from "@/components/dna/DnaStrand";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-import { BRAND, DNA } from "@/lib/constants";
+import { getDnaCopy } from "@/lib/content/dna";
+import { BRAND } from "@/lib/constants";
 
 export function DnaCTA() {
+  const { locale } = useLocale();
+  const DNA = getDnaCopy(locale);
+
   return (
     <footer id="start" className="pb-12">
       <section className="mx-auto max-w-6xl px-6 lg:px-8">
@@ -34,7 +41,7 @@ export function DnaCTA() {
                 {DNA.cta.subheadline}
               </p>
               <div className="mt-10 flex justify-center">
-                <Button href="#start" variant="onDark">
+                <Button href="/onboarding/platform" variant="onDark">
                   {DNA.cta.cta}
                 </Button>
               </div>

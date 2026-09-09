@@ -4,9 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { Copy, ExternalLink, Loader2 } from "lucide-react";
 import { addButton } from "@/components/dashboard/FormControls";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import type { Pet } from "@/lib/dashboard";
 
 export function VetExportButton({ pet }: { pet: Pet }) {
+  const { d } = useDashboardCopy();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -22,14 +24,14 @@ export function VetExportButton({ pet }: { pet: Pet }) {
       });
       const json = await res.json();
       if (!res.ok || !json.ok) {
-        setError(json.error ?? "ბმული ვერ შეიქმნა.");
+        setError(json.error ?? d.medical.exportLinkFailed);
         return;
       }
       await navigator.clipboard.writeText(json.url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      setError("ბმული ვერ შეიქმნა.");
+      setError(d.medical.exportLinkFailed);
     } finally {
       setBusy(false);
     }
@@ -38,7 +40,7 @@ export function VetExportButton({ pet }: { pet: Pet }) {
   return (
     <div className="flex flex-col gap-4">
       <p className="text-sm text-slate-500">
-        გადაეცი სრული ჯანმრთელობის რეპორტი ვეტერინარს ბეჭდვით ან ბმულის გაზიარებით.
+        {d.medical.exportHint}
       </p>
 
       {error && (
@@ -49,7 +51,7 @@ export function VetExportButton({ pet }: { pet: Pet }) {
 
       <div className="flex flex-wrap gap-3">
         <Link href={`/dashboard/pets/${pet.id}/vet-report`} target="_blank" className={addButton}>
-          <ExternalLink className="h-4 w-4" /> რეპორტის ნახვა / ბეჭდვა
+          <ExternalLink className="h-4 w-4" /> {d.medical.exportView}
         </Link>
         <button
           type="button"
@@ -58,7 +60,7 @@ export function VetExportButton({ pet }: { pet: Pet }) {
           className="inline-flex items-center gap-2 rounded-full border border-[#e5e7eb] bg-white px-5 py-2.5 text-sm font-medium text-[var(--brand-primary)]"
         >
           {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Copy className="h-4 w-4" />}
-          {copied ? "დაკოპირდა!" : "ბმულის კოპირება"}
+          {copied ? d.medical.exportCopied : d.medical.exportCopyLink}
         </button>
       </div>
     </div>

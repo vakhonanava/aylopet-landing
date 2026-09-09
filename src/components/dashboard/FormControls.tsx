@@ -2,8 +2,9 @@
 
 import { useMemo, useState } from "react";
 import { Check, ChevronDown, Search, X } from "lucide-react";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import {
-  ACTIVITY_OPTIONS,
+  getActivityOptions,
   searchDogBreeds,
   type ActivityLevel,
 } from "@/lib/dashboard";
@@ -29,10 +30,14 @@ export function BreedCombobox({
   error?: string;
   variant?: "light" | "dark";
 }) {
+  const { d, locale } = useDashboardCopy();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
 
+  // searchDogBreeds already matches both scripts, so the list stays searchable
+  // in either language; only the line order follows the interface locale.
   const filtered = useMemo(() => searchDogBreeds(query), [query]);
+  const placeholder = d.pet.breedPlaceholder;
 
   const isDark = variant === "dark";
 
@@ -75,7 +80,7 @@ export function BreedCombobox({
         }}
         className={`flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-left text-sm outline-none transition-all duration-200 focus:ring-4 ${triggerClass}`}
       >
-        {value || "აირჩიე ჯიში"}
+        {value || placeholder}
         <ChevronDown
           className={`h-4 w-4 ${chevronClass} transition-transform ${open ? "rotate-180" : ""}`}
         />
@@ -91,13 +96,13 @@ export function BreedCombobox({
                 autoFocus
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="ძებნა..."
+                placeholder={d.common.search}
                 className={`w-full bg-transparent text-sm outline-none ${searchInputClass}`}
               />
             </div>
             <ul className="max-h-56 overflow-y-auto py-1">
               {filtered.length === 0 && (
-                <li className={`px-4 py-3 text-sm ${emptyClass}`}>ვერ მოიძებნა</li>
+                <li className={`px-4 py-3 text-sm ${emptyClass}`}>{d.common.noResults}</li>
               )}
               {filtered.map((breed) => (
                 <li key={breed.en}>
@@ -112,8 +117,12 @@ export function BreedCombobox({
                     className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-sm transition-colors ${itemClass}`}
                   >
                     <span>
-                      <span className="block">{breed.ka}</span>
-                      <span className={`block text-xs ${subtitleClass}`}>{breed.en}</span>
+                      <span className="block">
+                        {locale === "ka" ? breed.ka : breed.en}
+                      </span>
+                      <span className={`block text-xs ${subtitleClass}`}>
+                        {locale === "ka" ? breed.en : breed.ka}
+                      </span>
                     </span>
                     {value === breed.ka && (
                       <Check
@@ -141,9 +150,10 @@ export function ActivityRadioCards({
   value: ActivityLevel | "";
   onChange: (value: ActivityLevel) => void;
 }) {
+  const { locale } = useDashboardCopy();
   return (
     <div className="grid gap-3 sm:grid-cols-3">
-      {ACTIVITY_OPTIONS.map((opt) => {
+      {getActivityOptions(locale).map((opt) => {
         const active = value === opt.value;
         return (
           <button
@@ -191,6 +201,7 @@ export function TextChipInput({
   placeholder?: string;
   variant?: "light" | "dark";
 }) {
+  const { d } = useDashboardCopy();
   const [draft, setDraft] = useState("");
   const isDark = variant === "dark";
 
@@ -221,7 +232,7 @@ export function TextChipInput({
             type="button"
             onClick={() => remove(chip)}
             className="rounded-full transition-opacity hover:opacity-70"
-            aria-label={`${chip} წაშლა`}
+            aria-label={`${chip} · ${d.common.removeChip}`}
           >
             <X className="h-3 w-3" />
           </button>

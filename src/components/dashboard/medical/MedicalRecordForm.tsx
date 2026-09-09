@@ -4,10 +4,14 @@ import { useState } from "react";
 import { Check } from "lucide-react";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
 import { TextChipInput, addButton, fieldLabel, textInput } from "@/components/dashboard/FormControls";
+import { useToast } from "@/components/dashboard/Toast";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import type { Pet } from "@/lib/dashboard";
 
 export function MedicalRecordForm({ pet }: { pet: Pet }) {
   const { saveMedicalRecord } = useDashboard();
+  const { d } = useDashboardCopy();
+  const toast = useToast();
 
   const [chronicConditions, setChronicConditions] = useState<string[]>(
     pet.medicalRecord?.chronicConditions ?? [],
@@ -36,11 +40,15 @@ export function MedicalRecordForm({ pet }: { pet: Pet }) {
     });
     setBusy(false);
     if (!recordResult.ok) {
-      setError(recordResult.error ?? "ვერ შეინახა.");
+      const message = recordResult.error ?? d.toast.saveFailed;
+      setError(message);
+      toast.error(message);
       return;
     }
+    // Sticky · the label used to reset itself after 2s, which read as the save
+    // having been undone. It now holds until the next edit is submitted.
     setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+    toast.success(d.toast.saved);
   };
 
   return (
@@ -52,39 +60,39 @@ export function MedicalRecordForm({ pet }: { pet: Pet }) {
       )}
 
       <div className="flex flex-col gap-1.5">
-        <label className={fieldLabel}>ქრონიკული დაავადებები</label>
+        <label className={fieldLabel}>{d.medical.chronicConditions}</label>
         <TextChipInput
           value={chronicConditions}
           onChange={setChronicConditions}
-          placeholder="დაწერე და დააჭირე Enter-ს"
+          placeholder={d.medical.chipHint}
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label className={fieldLabel}>ალერგიები</label>
+        <label className={fieldLabel}>{d.medical.allergies}</label>
         <TextChipInput
           value={allergies}
           onChange={setAllergies}
-          placeholder="საკვები / მედიკამენტოზური ალერგიები"
+          placeholder={d.medical.allergiesPlaceholder}
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label className={fieldLabel}>გენეტიკური / ჯიშობრივი რისკები</label>
+        <label className={fieldLabel}>{d.medical.geneticRisks}</label>
         <TextChipInput
           value={geneticRisks}
           onChange={setGeneticRisks}
-          placeholder="დაწერე და დააჭირე Enter-ს"
+          placeholder={d.medical.chipHint}
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label className={fieldLabel}>ოპერაციები / ტრავმები</label>
+        <label className={fieldLabel}>{d.medical.surgeries}</label>
         <textarea
           className={`${textInput} min-h-24 resize-none`}
           value={surgeriesAndTraumas}
           onChange={(e) => setSurgeriesAndTraumas(e.target.value)}
-          placeholder="აღწერე წარსული ოპერაციები ან ტრავმები"
+          placeholder={d.medical.surgeriesPlaceholder}
         />
       </div>
 
@@ -94,7 +102,7 @@ export function MedicalRecordForm({ pet }: { pet: Pet }) {
         disabled={busy}
         onClick={() => void handleSave()}
       >
-        <Check className="h-4 w-4" /> {saved ? "შენახულია!" : "შენახვა"}
+        <Check className="h-4 w-4" /> {saved ? d.common.saved : d.common.save}
       </button>
     </div>
   );

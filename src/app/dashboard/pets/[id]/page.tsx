@@ -4,12 +4,14 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { PawPrint } from "lucide-react";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import { PetProfileCard } from "@/components/dashboard/PetProfileCard";
 import { LogbookTabs } from "@/components/dashboard/LogbookTabs";
 import { MedicalModule } from "@/components/dashboard/medical/MedicalModule";
 import { PetHistoryDashboard } from "@/components/dashboard/history/PetHistoryDashboard";
 
 export default function PetProfilePage() {
+  const { d } = useDashboardCopy();
   const params = useParams<{ id: string }>();
   const { getPet, ready } = useDashboard();
   const pet = getPet(params.id);
@@ -17,7 +19,7 @@ export default function PetProfilePage() {
   if (!ready) {
     return (
       <div className="flex h-64 items-center justify-center text-slate-400">
-        იტვირთება...
+        {d.common.loading}
       </div>
     );
   }
@@ -26,12 +28,12 @@ export default function PetProfilePage() {
     return (
       <div className="flex flex-col items-center gap-4 rounded-[2rem] border border-[#e5e7eb] bg-white p-12 text-center">
         <PawPrint className="h-9 w-9 text-slate-300" />
-        <p className="text-slate-500">ეს ძაღლი ვერ მოიძებნა.</p>
+        <p className="text-slate-500">{d.pet.notFound}</p>
         <Link
           href="/dashboard"
           className="rounded-full bg-[var(--brand-primary)] px-6 py-2.5 text-sm font-medium text-white"
         >
-          დაბრუნება პანელზე
+          {d.common.backToDashboard}
         </Link>
       </div>
     );
@@ -44,7 +46,7 @@ export default function PetProfilePage() {
           href="/dashboard"
           className="text-sm font-medium text-slate-400 transition-colors hover:text-[var(--brand-primary)]"
         >
-          ← პანელი
+          ← {d.pet.backLink}
         </Link>
       </div>
       <PetProfileCard pet={pet} />

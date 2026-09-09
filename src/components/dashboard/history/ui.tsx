@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useRef, type ReactNode } from "react";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import type { ToneClasses } from "@/lib/pet-history/labels";
 
 /** Entrance transition shared by every section card. */
@@ -85,6 +86,7 @@ export function GroupSection({
   defaultOpen?: boolean;
   children: ReactNode;
 }) {
+  const { d } = useDashboardCopy();
   const detailsRef = useRef<HTMLDetailsElement>(null);
 
   return (
@@ -116,7 +118,7 @@ export function GroupSection({
           </span>
           <div className="min-w-0">
             <p className="text-[11px] font-semibold tracking-[0.14em] text-slate-400 uppercase">
-              სექცია {eyebrow}
+              {d.common.sectionLabel} {eyebrow}
             </p>
             <h2 className="mt-0.5 text-xl font-bold tracking-tight text-[#1c1c1c] sm:text-2xl">
               {title}

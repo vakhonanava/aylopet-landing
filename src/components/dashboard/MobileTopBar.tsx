@@ -4,8 +4,10 @@ import Link from "next/link";
 import { Dog, Plus } from "lucide-react";
 import { AylopetLogo } from "@/components/brand/AylopetLogo";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 
 export function MobileTopBar() {
+  const { d } = useDashboardCopy();
   const { pets, ready } = useDashboard();
 
   return (
@@ -15,7 +17,7 @@ export function MobileTopBar() {
         <Link
           href="/dashboard/onboarding"
           className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--brand-primary)] text-white"
-          aria-label="ახალი ძაღლი"
+          aria-label={d.nav.addDog}
         >
           <Plus className="h-4 w-4" />
         </Link>

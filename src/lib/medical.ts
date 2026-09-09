@@ -1,3 +1,5 @@
+import type { Locale } from "@/lib/i18n/types";
+
 export interface MedicalRecord {
   chronicConditions: string[];
   surgeriesAndTraumas: string;
@@ -55,8 +57,43 @@ export const SYMPTOM_TYPE_PRESETS = [
   "ქავილი",
   "აპათია/უენერგეტიკობა",
   "კოჭლობა",
-  "აპეტიტის დაკარგვა",
+  "მადის დაქვეითება",
 ] as const;
+
+/* -------------------------- Localized label maps -------------------------- */
+
+const SEVERITY_LABELS_EN: Record<SeverityLevel, string> = {
+  low: "Mild",
+  medium: "Moderate",
+  high: "High",
+  critical: "Critical",
+};
+
+export function getSeverityLabels(locale: Locale): Record<SeverityLevel, string> {
+  return locale === "ka" ? SEVERITY_LABELS : SEVERITY_LABELS_EN;
+}
+
+export function getSeverityLevels(locale: Locale): SeverityOption[] {
+  const labels = getSeverityLabels(locale);
+  return SEVERITY_LEVELS.map((level) => ({ ...level, label: labels[level.value] }));
+}
+
+const SYMPTOM_TYPE_PRESETS_EN = [
+  "Vomiting",
+  "Diarrhoea",
+  "Itching",
+  "Lethargy / low energy",
+  "Limping",
+  "Reduced appetite",
+] as const;
+
+/**
+ * Symptom types are stored as free text, so a log written in one language keeps
+ * its original wording. Only the preset chips follow the interface language.
+ */
+export function getSymptomPresets(locale: Locale): readonly string[] {
+  return locale === "ka" ? SYMPTOM_TYPE_PRESETS : SYMPTOM_TYPE_PRESETS_EN;
+}
 
 export interface SymptomAttachment {
   path: string;

@@ -13,6 +13,11 @@ function LoginPageContent() {
   const params = useSearchParams();
   const nextPath = params.get("next") || "/dashboard";
   const authError = params.get("error");
+  // Supabase reports OAuth failures (provider disabled, redirect URI not in the
+  // allow-list, consent denied) only in the callback query string. Surfacing a
+  // trimmed copy under the localized headline makes those diagnosable instead
+  // of every failure looking the same. Rendered as plain text, never markup.
+  const authReason = params.get("reason")?.slice(0, 200);
 
   return (
     <AuthFormShell
@@ -31,9 +36,14 @@ function LoginPageContent() {
       }
     >
       {authError && (
-        <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-          {a.oauthFailed}
-        </p>
+        <div className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p>{a.oauthFailed}</p>
+          {authReason ? (
+            <p className="mt-1 break-words font-mono text-xs text-red-600/80">
+              {authReason}
+            </p>
+          ) : null}
+        </div>
       )}
       <LoginForm nextPath={nextPath} />
     </AuthFormShell>

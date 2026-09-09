@@ -11,26 +11,21 @@ import { useRef, useState } from "react";
 import { Activity, Cpu, Dna, ShieldPlus, UtensilsCrossed } from "lucide-react";
 import { DnaSection } from "@/components/dna/DnaSection";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-import { DNA } from "@/lib/constants";
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import { getDnaCopy } from "@/lib/content/dna";
 
 const icons = [Dna, Cpu, ShieldPlus, UtensilsCrossed, Activity];
 
 /** Steps 0-2 read the genome; 3-4 are downstream of it and show the ration. */
 const HELIX_STEPS = 3;
 
-/** Overlay badge pinned to the visual for each journey step. */
-const STEP_BADGES = [
-  "60s, cheek swab",
-  "230,000+ markers",
-  "risk map, prevention",
-  "tailored fresh ration",
-  "24/7 AI monitoring",
-] as const;
-
 /** Helix travel per step · the strand is fully read by the risk-mapping step. */
 const HELIX_STOPS = [0.28, 0.62, 0.95, 1, 1] as const;
 
 export function Journey() {
+  const { locale } = useLocale();
+  const DNA = getDnaCopy(locale);
+  const STEP_BADGES = DNA.journey.badges;
   const [active, setActive] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
 

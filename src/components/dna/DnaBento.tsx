@@ -3,13 +3,15 @@
 import { Activity, Brain, Dna, ShieldCheck } from "lucide-react";
 import { DnaStrand } from "@/components/dna/DnaStrand";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-import { DNA } from "@/lib/constants";
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import { getDnaCopy } from "@/lib/content/dna";
 
 const cardBase =
   "rounded-[2rem] border border-[var(--border-light)] bg-white p-8 shadow-soft transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:scale-[1.01] hover:bg-[var(--background-main)] hover:shadow-diffuse";
 
 export function DnaBento() {
-  const { bento } = DNA;
+  const { locale } = useLocale();
+  const { bento } = getDnaCopy(locale);
 
   return (
     <section id="science" className="py-20 lg:py-28">

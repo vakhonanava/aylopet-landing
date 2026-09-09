@@ -3,12 +3,17 @@
 import { useState } from "react";
 import { Check, Plus } from "lucide-react";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
+import { useToast } from "@/components/dashboard/Toast";
+import { useDashboardCopy } from "@/components/dashboard/useDashboardCopy";
 import { addButton, textInput } from "@/components/dashboard/FormControls";
 import type { Pet } from "@/lib/dashboard";
 import type { Medication } from "@/lib/medical";
 
 export function MedicationsPanel({ pet }: { pet: Pet }) {
   const { addMedication, updateMedication, removeMedication } = useDashboard();
+  const { d } = useDashboardCopy();
+  const toast = useToast();
+  const [nameError, setNameError] = useState<string | undefined>();
   const [open, setOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState("");
@@ -22,6 +27,7 @@ export function MedicationsPanel({ pet }: { pet: Pet }) {
     setDosage("");
     setFrequency("");
     setEditingId(null);
+    setNameError(undefined);
     setOpen(false);
     setError(null);
   };
@@ -36,7 +42,13 @@ export function MedicationsPanel({ pet }: { pet: Pet }) {
   };
 
   const submit = async () => {
-    if (!name) return;
+    // Blank name used to abort with a bare `return`, leaving the form frozen
+    // and the owner with no idea what was missing.
+    if (!name.trim()) {
+      setNameError(d.medical.medicationNameRequired);
+      return;
+    }
+    setNameError(undefined);
     setBusy(true);
     setError(null);
     const existing = editingId ? pet.medications.find((m) => m.id === editingId) : null;
@@ -52,9 +64,12 @@ export function MedicationsPanel({ pet }: { pet: Pet }) {
       : await addMedication(pet.id, { name, dosage, frequency, isActive: true });
     setBusy(false);
     if (!result.ok) {
-      setError(result.error ?? "მედიკამენტი ვერ შეინახა.");
+      const message = result.error ?? d.medical.medicationSaveFailed;
+      setError(message);
+      toast.error(message);
       return;
     }
+    toast.success(d.toast.saved);
     resetForm();
   };
 
@@ -62,20 +77,30 @@ export function MedicationsPanel({ pet }: { pet: Pet }) {
     setBusy(true);
     const result = await updateMedication(pet.id, { ...m, isActive: !m.isActive });
     setBusy(false);
-    if (!result.ok) setError(result.error ?? "ვერ განახლდა.");
+    if (!result.ok) {
+      const message = result.error ?? d.medical.updateFailed;
+      setError(message);
+      toast.error(message);
+    }
   };
 
   const handleDelete = async (medicationId: string) => {
     setBusy(true);
     const result = await removeMedication(pet.id, medicationId);
     setBusy(false);
-    if (!result.ok) setError(result.error ?? "წაშლა ვერ მოხერხდა.");
+    if (!result.ok) {
+      const message = result.error ?? d.toast.deleteFailed;
+      setError(message);
+      toast.error(message);
+      return;
+    }
+    toast.success(d.toast.deleted);
   };
 
   return (
     <div>
       <div className="mb-5 flex items-center justify-between">
-        <p className="text-sm text-slate-500">მიმდინარე მედიკამენტები და დანამატები</p>
+        <p className="text-sm text-slate-500">{d.medical.medicationsSubtitle}</p>
         <button
           type="button"
           className={addButton}
@@ -84,7 +109,7 @@ export function MedicationsPanel({ pet }: { pet: Pet }) {
             setOpen((o) => !o);
           }}
         >
-          <Plus className="h-4 w-4" /> დამატება
+          <Plus className="h-4 w-4" /> {d.common.add}
         </button>
       </div>
 
@@ -96,27 +121,33 @@ export function MedicationsPanel({ pet }: { pet: Pet }) {
 
       {open && (
         <div className="mb-6 grid gap-3 rounded-2xl border border-[#e5e7eb] bg-[#FAFAF8] p-4 sm:grid-cols-3">
-          <input
-            className={textInput}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="მედიკამენტის სახელი"
-          />
+          <div className="flex flex-col gap-1.5">
+            <input
+              className={textInput}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={d.medical.medicationName}
+              aria-invalid={Boolean(nameError)}
+            />
+            {nameError ? (
+              <p className="text-xs font-medium text-red-600">{nameError}</p>
+            ) : null}
+          </div>
           <input
             className={textInput}
             value={dosage}
             onChange={(e) => setDosage(e.target.value)}
-            placeholder="დოზა"
+            placeholder={d.medical.medicationDose}
           />
           <input
             className={textInput}
             value={frequency}
             onChange={(e) => setFrequency(e.target.value)}
-            placeholder="სიხშირე"
+            placeholder={d.medical.medicationFrequency}
           />
           <div className="flex items-center gap-2 sm:col-span-3">
             <button type="button" className={addButton} disabled={busy} onClick={() => void submit()}>
-              <Check className="h-4 w-4" /> {editingId ? "განახლება" : "შენახვა"}
+              <Check className="h-4 w-4" /> {editingId ? d.common.update : d.common.save}
             </button>
             <button
               type="button"
@@ -124,7 +155,7 @@ export function MedicationsPanel({ pet }: { pet: Pet }) {
               onClick={resetForm}
               className="rounded-full border border-[#e5e7eb] bg-white px-4 py-2.5 text-sm font-medium text-slate-600"
             >
-              გაუქმება
+              {d.common.cancel}
             </button>
           </div>
         </div>
@@ -132,7 +163,7 @@ export function MedicationsPanel({ pet }: { pet: Pet }) {
 
       <div className="grid gap-3 sm:grid-cols-2">
         {pet.medications.length === 0 && (
-          <p className="py-4 text-sm text-slate-400">ჯერ არ არის ჩანაწერი.</p>
+          <p className="py-4 text-sm text-slate-400">{d.common.noEntries}</p>
         )}
         {pet.medications.map((m) => (
           <article
@@ -159,7 +190,7 @@ export function MedicationsPanel({ pet }: { pet: Pet }) {
                     : "border border-[#e5e7eb] text-slate-500"
                 }`}
               >
-                {m.isActive ? "აქტიური" : "შეჩერებული"}
+                {m.isActive ? d.medical.medicationActive : d.medical.medicationPaused}
               </button>
             </div>
             <div className="mt-3 flex gap-2">
@@ -168,14 +199,14 @@ export function MedicationsPanel({ pet }: { pet: Pet }) {
                 onClick={() => startEdit(m)}
                 className="rounded-full border border-[#e5e7eb] px-3 py-1 text-xs font-medium text-[var(--brand-primary)]"
               >
-                რედაქტირება
+                {d.common.edit}
               </button>
               <button
                 type="button"
                 onClick={() => void handleDelete(m.id)}
                 className="rounded-full border border-red-200 px-3 py-1 text-xs font-medium text-red-600"
               >
-                წაშლა
+                {d.common.remove}
               </button>
             </div>
           </article>

@@ -83,7 +83,7 @@ export function DnaUnifiedPlatform() {
                           <Icon className="h-6 w-6" />
                         </span>
                         <p className="text-sm leading-relaxed text-[var(--text-secondary)]">
-                          {t.backendNote}
+                          {item.note || t.backendNote}
                         </p>
                       </div>
                     </div>

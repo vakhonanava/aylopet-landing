@@ -96,11 +96,14 @@ export function isNavGroupActive(
   return children.some((c) => isNavActive(pathname, c.href));
 }
 
+/** The actual waitlist signup form · not the `#waitlist` teaser section. */
+export const WAITLIST_FORM_HREF = "/onboarding/platform";
+
 export function scrollToWaitlist() {
   const el = document.getElementById("waitlist");
   if (el) {
     el.scrollIntoView({ behavior: "smooth", block: "start" });
     return;
   }
-  window.location.href = "/onboarding/platform";
+  window.location.href = WAITLIST_FORM_HREF;
 }

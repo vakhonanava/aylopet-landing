@@ -192,22 +192,27 @@ export const en: Dictionary = {
         {
           title: "Share health history incrementally",
           body: "You can share your dog's health history, vet records, and lab test analysis with us, one step at a time, at your pace.",
+          note: "Documents are held in encrypted storage, with a full audit trail and the right to delete.",
         },
         {
           title: "Genomic sequencing & QC",
           body: "Cheek swab DNA is sequenced against 230,000+ markers. Our backend validates sample quality and breed specific risk alleles.",
+          note: "Every sample passes quality control; low signal reads are re-processed rather than reported.",
         },
         {
           title: "AI fusion engine",
           body: "Clinical notes, lab values, and genomic data merge into a living digital pet profile.",
+          note: "Each conclusion carries its source, so the analysis can be audited end to end.",
         },
         {
           title: "Nutrition & wellness modeling",
           body: "MER/RER, allergy filters, and breed metabolism models produce personalized food plans.",
+          note: "Plans are driven by measured values and veterinary guidance, never by assumption.",
         },
         {
           title: "Actionable output",
           body: "You receive a unified dashboard: genomic insights, vet ready reports, portion plans, and ongoing AI assistant guidance.",
+          note: "Dashboard and vet report are generated from one source, exported at clinical grade.",
         },
       ],
     },
