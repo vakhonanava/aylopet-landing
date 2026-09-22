@@ -1,10 +1,21 @@
 "use client";
 
-import { Check, Copy, Gift, Link2, MessageCircle, Sparkles, Users } from "lucide-react";
+import {
+  BadgeCheck,
+  Check,
+  Copy,
+  Gift,
+  Link2,
+  MessageCircle,
+  Sparkles,
+  Users,
+} from "lucide-react";
 import { useState } from "react";
 import { useLocale } from "@/components/i18n/LocaleProvider";
+import { EARLY_ADOPTER_CAP } from "@/lib/constants/marketing";
 import {
   ACTIVE_INVITES_FOR_UPGRADE,
+  AMBASSADOR_BASE_POINTS,
   getAmbassadorStatus,
   REFERRAL_POINTS,
 } from "@/lib/referral/program";
@@ -31,6 +42,11 @@ export function AmbassadorProgram({
     referral?.earnedPoints ?? 0,
   );
   const pointsPerInvite = referral?.pointsPerInvite || REFERRAL_POINTS;
+  // Founding benefits belong to the first EARLY_ADOPTER_CAP members only.
+  const foundingNumber =
+    referral && referral.ambassadorNumber > 0 && referral.ambassadorNumber <= EARLY_ADOPTER_CAP
+      ? referral.ambassadorNumber
+      : null;
 
   return (
     <section
@@ -71,6 +87,40 @@ export function AmbassadorProgram({
           </span>
         </span>
       </div>
+
+      {foundingNumber ? (
+        <div className="mt-5 rounded-2xl border border-[var(--terracotta)]/30 bg-[var(--terracotta)]/[0.06] p-4">
+          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--terracotta)]">
+            <BadgeCheck className="h-4 w-4" aria-hidden />
+            {a.foundingEyebrow}
+          </p>
+          <p className="mt-2 font-display text-lg font-semibold text-[var(--forest-deep)]">
+            {a.foundingNumber
+              .replace("{number}", String(foundingNumber))
+              .replace("{cap}", String(EARLY_ADOPTER_CAP))}
+          </p>
+          <p className="mt-1 text-xs text-[var(--text-secondary)]">
+            {a.foundingIntro.replace("{cap}", String(EARLY_ADOPTER_CAP))}
+          </p>
+          <ul className="mt-3 space-y-2">
+            {a.foundingBenefits.map((benefit) => (
+              <li
+                key={benefit}
+                className="flex items-start gap-2 text-sm leading-relaxed text-[var(--text-body)]"
+              >
+                <Check
+                  className="mt-0.5 h-4 w-4 shrink-0 text-[var(--status-emerald)]"
+                  aria-hidden
+                />
+                {benefit
+                  .replace("{points}", String(AMBASSADOR_BASE_POINTS))
+                  .replace("{perInvite}", String(pointsPerInvite))
+                  .replace("{invites}", String(ACTIVE_INVITES_FOR_UPGRADE))}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
 
       {referral?.code ? (
         <InviteCode

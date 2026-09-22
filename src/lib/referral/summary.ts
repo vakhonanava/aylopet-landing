@@ -8,6 +8,8 @@ export interface ReferralSummary {
   pending: number;
   earnedPoints: number;
   pointsPerInvite: number;
+  /** Position in joining order · 1 is the first member ever. */
+  ambassadorNumber: number;
 }
 
 interface SummaryRow {
@@ -16,6 +18,7 @@ interface SummaryRow {
   pending: number;
   earned_points: number;
   points_per_invite: number;
+  ambassador_number: number;
 }
 
 /** Reads the signed-in member's own numbers (migration 011). */
@@ -31,6 +34,7 @@ export async function fetchReferralSummary(
     pending: Number(row.pending) || 0,
     earnedPoints: Number(row.earned_points) || 0,
     pointsPerInvite: Number(row.points_per_invite) || 0,
+    ambassadorNumber: Number(row.ambassador_number) || 0,
   };
 }
 

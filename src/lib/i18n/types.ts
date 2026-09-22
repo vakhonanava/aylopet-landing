@@ -391,6 +391,10 @@ export interface AmbassadorCopy {
   perInviteRule: string;
   invitedLabel: string;
   pendingLabel: string;
+  foundingEyebrow: string;
+  foundingNumber: string;
+  foundingIntro: string;
+  foundingBenefits: string[];
 }
 
 export interface CommunityCopy {
