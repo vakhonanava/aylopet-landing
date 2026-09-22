@@ -515,6 +515,16 @@ export const en: Dictionary = {
       "+{points} points for every friend who signs up with your code and confirms their email.",
     invitedLabel: "friends joined",
     pendingLabel: "{count} awaiting email confirmation",
+    foundingEyebrow: "Founding Ambassador",
+    foundingNumber: "You are #{number} of the first {cap} Ambassadors",
+    foundingIntro: "This status stays with the first {cap} members for good.",
+    foundingBenefits: [
+      "An exclusive offer on your first order",
+      "Access to the product from launch day",
+      "{points} base points, plus {perInvite} for every friend who joins",
+      "A status upgrade after {invites} active invites",
+      "A direct say in how the product is built",
+    ],
   },
   userExpectations: {
     eyebrow: "Your voice",
