@@ -115,6 +115,38 @@ export async function getAllReferrals(): Promise<ReferralRow[]> {
   return (data ?? []) as unknown as ReferralRow[];
 }
 
+export interface MemberBenefitRow {
+  ambassador_number: number;
+  full_name: string | null;
+  email: string | null;
+  referral_code: string | null;
+  confirmed_invites: number;
+  food_discount_now: number | null;
+  food_discount_after_intro: number;
+  food_intro_percent: number;
+  food_intro_months: number;
+  intro_started_at: string | null;
+  intro_ends_at: string | null;
+  ai_free_months: number;
+  collar_percent: number;
+  collar_free_months: number;
+  dna_percent: number;
+}
+
+/** Founding members and the discount each one is owed (migration 015). */
+export async function getMemberBenefits(): Promise<MemberBenefitRow[]> {
+  if (!isSupabaseConfigured()) return [];
+
+  const supabase = createSupabaseAdmin();
+  const { data, error } = await supabase
+    .from("admin_member_benefits")
+    .select("*")
+    .order("ambassador_number", { ascending: true });
+
+  if (error) return [];
+  return (data ?? []) as MemberBenefitRow[];
+}
+
 export function formatExpectations(values: string[]): string {
   return values
     .map((value) => {
