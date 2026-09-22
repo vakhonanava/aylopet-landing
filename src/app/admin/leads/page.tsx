@@ -6,6 +6,7 @@ import {
   getAllPlatformSignups,
   getAllReferrals,
   getLeadStorageMode,
+  getMemberBenefits,
 } from "@/lib/platform/admin";
 
 export const metadata: Metadata = {
@@ -28,9 +29,10 @@ export default async function LeadsAdminPage() {
   const { data: isAdmin } = await supabase.rpc("is_admin");
   if (isAdmin !== true) notFound();
 
-  const [leads, referrals] = await Promise.all([
+  const [leads, referrals, benefits] = await Promise.all([
     getAllPlatformSignups(),
     getAllReferrals(),
+    getMemberBenefits(),
   ]);
   const storageMode = getLeadStorageMode();
 
@@ -188,6 +190,78 @@ export default async function LeadsAdminPage() {
               </table>
             </div>
           </>
+        )}
+        <h2 className="mt-14 text-xl font-bold text-[var(--text-primary)]">
+          დამფუძნებელი Ambassador-ების შეღავათები
+        </h2>
+        <p className="mt-1 text-sm text-[var(--text-secondary)]">
+          {benefits.length} წევრი პირველი 200-იდან · სვეტი „საკვები ახლა“ ცარიელია,
+          სანამ წევრი პირველ შეკვეთას არ გააკეთებს (3-თვიანი პერიოდი იქიდან იწყება).
+        </p>
+
+        {benefits.length === 0 ? (
+          <p className="mt-6 text-[var(--text-secondary)]">
+            ჯერ არავის მინიჭებია შეღავათები.
+          </p>
+        ) : (
+          <div className="mt-6 overflow-x-auto rounded-2xl border border-[var(--border-light)] bg-white shadow-soft">
+            <table className="w-full min-w-[1000px] text-left text-sm">
+              <thead className="border-b border-[var(--border-light)] bg-[var(--background-secondary)]">
+                <tr>
+                  <th className="px-4 py-3 font-semibold">#</th>
+                  <th className="px-4 py-3 font-semibold">წევრი</th>
+                  <th className="px-4 py-3 font-semibold">კოდი</th>
+                  <th className="px-4 py-3 font-semibold">მოწვევა</th>
+                  <th className="px-4 py-3 font-semibold">საკვები ახლა</th>
+                  <th className="px-4 py-3 font-semibold">საკვები 3 თვის შემდეგ</th>
+                  <th className="px-4 py-3 font-semibold">3 თვე იწურება</th>
+                  <th className="px-4 py-3 font-semibold">AI</th>
+                  <th className="px-4 py-3 font-semibold">ყელსაბამი</th>
+                  <th className="px-4 py-3 font-semibold">DNA</th>
+                </tr>
+              </thead>
+              <tbody>
+                {benefits.map((row) => (
+                  <tr
+                    key={row.ambassador_number}
+                    className="border-b border-[var(--border-light)] last:border-0"
+                  >
+                    <td className="px-4 py-3 tabular-nums font-semibold">
+                      {row.ambassador_number}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="font-medium">{row.full_name ?? "·"}</span>
+                      <span className="block text-xs text-[var(--text-secondary)]">
+                        {row.email ?? "·"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 font-mono text-xs">
+                      {row.referral_code ?? "·"}
+                    </td>
+                    <td className="px-4 py-3 tabular-nums">{row.confirmed_invites}</td>
+                    <td className="px-4 py-3 tabular-nums">
+                      {row.food_discount_now === null
+                        ? `· (${row.food_intro_percent}% შეკვეთიდან)`
+                        : `${row.food_discount_now}%`}
+                    </td>
+                    <td className="px-4 py-3 tabular-nums">
+                      {row.food_discount_after_intro}%
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-[var(--text-secondary)]">
+                      {row.intro_ends_at
+                        ? new Date(row.intro_ends_at).toLocaleDateString("ka-GE")
+                        : "·"}
+                    </td>
+                    <td className="px-4 py-3 tabular-nums">{row.ai_free_months} თვე</td>
+                    <td className="px-4 py-3 tabular-nums">
+                      {row.collar_percent}% · {row.collar_free_months} თვე
+                    </td>
+                    <td className="px-4 py-3 tabular-nums">{row.dna_percent}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </main>
