@@ -7,9 +7,13 @@ function protectAdmin(request: NextRequest, response: NextResponse) {
     return response;
   }
 
-  const adminSecret = process.env.ADMIN_SECRET;
+  // Fail closed: without a configured secret the leads table (names, emails)
+  // would be public, which is exactly what production served while it was unset.
+  const adminSecret = process.env.ADMIN_SECRET?.trim();
   if (!adminSecret) {
-    return response;
+    return new NextResponse("Admin access is not configured.", {
+      status: 503,
+    });
   }
 
   const token =
