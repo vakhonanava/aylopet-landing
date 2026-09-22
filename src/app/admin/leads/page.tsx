@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { notFound, redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/server";
 import {
   formatExpectations,
   getAllPlatformSignups,
@@ -16,6 +18,16 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function LeadsAdminPage() {
+  // Checked here, before any service-role read: middleware only guarantees a
+  // session, not that the session belongs to an admin.
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/auth/login?next=/admin/leads");
+  const { data: isAdmin } = await supabase.rpc("is_admin");
+  if (isAdmin !== true) notFound();
+
   const [leads, referrals] = await Promise.all([
     getAllPlatformSignups(),
     getAllReferrals(),
