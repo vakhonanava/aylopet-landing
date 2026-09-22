@@ -7,7 +7,13 @@ interface TocItem {
   label: string;
 }
 
-export function StickyArticleToc({ items }: { items: TocItem[] }) {
+export function StickyArticleToc({
+  items,
+  label,
+}: {
+  items: TocItem[];
+  label: string;
+}) {
   const [active, setActive] = useState(items[0]?.id ?? "");
 
   useEffect(() => {
@@ -30,10 +36,10 @@ export function StickyArticleToc({ items }: { items: TocItem[] }) {
   return (
     <nav
       className="sticky top-32 hidden max-h-[calc(100vh-8rem)] overflow-y-auto lg:block"
-      aria-label="სარჩევი"
+      aria-label={label}
     >
       <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
-        სარჩევი
+        {label}
       </p>
       <ul className="space-y-1 border-l border-[var(--border-light)]">
         {items.map((item) => (
@@ -81,15 +87,19 @@ export function DigestibilityInfographic() {
 export function ProsConsMatrix({
   pros,
   cons,
+  prosLabel,
+  consLabel,
 }: {
   pros: readonly string[];
   cons: readonly string[];
+  prosLabel: string;
+  consLabel: string;
 }) {
   return (
     <div className="mt-6 grid gap-4 sm:grid-cols-2">
       <div className="rounded-2xl border border-[var(--status-emerald)]/20 bg-[var(--brand-accent-soft)]/40 p-5">
         <h4 className="text-xs font-bold uppercase tracking-wide text-[var(--brand-primary)]">
-          უპირატესობები
+          {prosLabel}
         </h4>
         <ul className="mt-3 space-y-2">
           {pros.map((p) => (
@@ -102,7 +112,7 @@ export function ProsConsMatrix({
       </div>
       <div className="rounded-2xl border border-[var(--border-light)] bg-white p-5">
         <h4 className="text-xs font-bold uppercase tracking-wide text-[var(--text-secondary)]">
-          შეზღუდვები
+          {consLabel}
         </h4>
         <ul className="mt-3 space-y-2">
           {cons.map((c) => (

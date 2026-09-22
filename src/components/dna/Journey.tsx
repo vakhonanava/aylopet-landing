@@ -11,7 +11,8 @@ import { useRef, useState } from "react";
 import { Activity, Cpu, Dna, ShieldPlus, UtensilsCrossed } from "lucide-react";
 import { DnaSection } from "@/components/dna/DnaSection";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-import { DNA } from "@/lib/constants";
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import { getDna } from "@/lib/constants";
 
 const icons = [Dna, Cpu, ShieldPlus, UtensilsCrossed, Activity];
 
@@ -31,6 +32,8 @@ const STEP_BADGES = [
 const HELIX_STOPS = [0.28, 0.62, 0.95, 1, 1] as const;
 
 export function Journey() {
+  const { locale } = useLocale();
+  const DNA = getDna(locale);
   const [active, setActive] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
 

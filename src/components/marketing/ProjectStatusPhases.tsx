@@ -144,7 +144,8 @@ function PhaseCard({
   statusCopy: { statusLive: string; statusActive: string; statusSoon: string };
   locale: "ka" | "en";
 }) {
-  const tilt = useTilt(10);
+  const { ref: tiltRef, style: tiltStyle, onMouseMove, onMouseLeave } =
+    useTilt(10);
   const Icon = meta.icon;
   const emoji = REACTION_EMOJI[phase.reaction] ?? "💚";
 
@@ -155,10 +156,10 @@ function PhaseCard({
       <div className="group block">
         <div className="perspective-[1200px]">
           <div
-            ref={tilt.ref}
-            style={tilt.style}
-            onMouseMove={tilt.onMouseMove}
-            onMouseLeave={tilt.onMouseLeave}
+            ref={tiltRef}
+            style={tiltStyle}
+            onMouseMove={onMouseMove}
+            onMouseLeave={onMouseLeave}
             className={`relative overflow-hidden rounded-[2rem] border border-[var(--border-light)] bg-gradient-to-br ${meta.accent} p-1 shadow-[0_20px_60px_rgba(13,46,39,0.08)] transition-shadow duration-300 group-hover:shadow-[0_28px_70px_rgba(13,46,39,0.12)]`}
           >
             <FloatingOrb

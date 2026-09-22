@@ -31,7 +31,7 @@ export const CONTENT = {
   },
 } as const;
 
-export const DNA = {
+const DNA_KA = {
   hero: {
     eyebrow: "DNA × AI × NUTRITION",
     headline: "მეტი წელი, მეტი სიყვარული.\nმართული დნმ-ითა და AI-ით.",
@@ -101,7 +101,86 @@ export const DNA = {
       "ერთი ნაცხი გყოფნის, რომ პერსონალიზებული, მეცნიერებაზე დაფუძნებული კვება დაიწყო.",
     cta: "დაიწყე DNA ტესტი",
   },
-} as const;
+};
+
+type DnaCopy = typeof DNA_KA;
+
+const DNA_EN: DnaCopy = {
+  hero: {
+    eyebrow: "DNA × AI × NUTRITION",
+    headline: "More years, more love.\nGuided by DNA and AI.",
+    subheadline:
+      "We decode your dog's health by combining genetics with artificial intelligence.\n\nA genetic profile reveals hidden risks before symptoms ever appear.\n\nAI then turns that data into a practical, everyday diet.",
+    cta: "Start the DNA test",
+    secondaryCta: "How it works",
+    parsingLabel: "AI parsing genome",
+    markers: "230,000+ markers",
+  },
+  journey: {
+    eyebrow: "HOW IT WORKS",
+    heading: "Five steps from genetics to everyday care",
+    steps: [
+      {
+        index: "01",
+        tag: "Data & Sample Collection",
+        title: "Collecting data and a sample",
+        text: "A simple swab from the inside of the cheek · done in just 60 seconds. Alongside it, we gather vet records, lab results and everyday behavior data.",
+      },
+      {
+        index: "02",
+        tag: "AI Marker Analysis",
+        title: "Decoding 230,000+ genetic markers",
+        text: "Our algorithm processes more than 230,000 genetic markers · breed, allergens, metabolism and drug sensitivities are decoded in real time.",
+      },
+      {
+        index: "03",
+        tag: "Risk & Prevention Mapping",
+        title: "Spotting risks early and preventing them",
+        text: "The genome is merged with clinical history into a risk map · hidden predispositions surface before symptoms appear, together with concrete prevention steps.",
+      },
+      {
+        index: "04",
+        tag: "Tailored Fresh Nutrition",
+        title: "Composing a personal fresh diet",
+        text: "Gently cooked food tailored to the genetic profile · with precise calories, balanced nutrients and allergens left out.",
+      },
+      {
+        index: "05",
+        tag: "Continuous AI Monitoring",
+        title: "A 24/7 wellness assistant",
+        text: "AylopetAI keeps track of changes · weight, activity and new lab results, and updates the diet and recommendations automatically.",
+      },
+    ],
+  },
+  bento: {
+    eyebrow: "THE SCIENCE",
+    heading: "Where science meets nature",
+    markersTitle: "230,000+",
+    markersText:
+      "genetic markers analyzed per sample · to map breed-specific nutrient needs precisely.",
+    aiTitle: "AI Health Engine",
+    aiText:
+      "A machine-learning model that turns the genome into a real diet.",
+    breedsValue: "350+",
+    breedsLabel: "breeds in the database",
+    accuracyValue: "99.9%",
+    accuracyLabel: "lab accuracy",
+    allergyTitle: "Allergen detection",
+    allergyText: "Genetically driven sensitivities are identified early.",
+    cleanLabel: "hidden additives",
+  },
+  cta: {
+    heading: "Get to know your dog at the genetic level.",
+    subheadline:
+      "One swab is all it takes to start personalized, science-based nutrition.",
+    cta: "Start the DNA test",
+  },
+};
+
+/** /dna-journey copy · components read the locale and pick a side. */
+export function getDna(locale: "ka" | "en"): DnaCopy {
+  return locale === "ka" ? DNA_KA : DNA_EN;
+}
 
 export const ROADMAP = {
   hero: {

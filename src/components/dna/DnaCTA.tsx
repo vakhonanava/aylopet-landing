@@ -1,12 +1,18 @@
+"use client";
+
 import { Button } from "@/components/ui/Button";
 import { DnaStrand } from "@/components/dna/DnaStrand";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-import { BRAND, DNA } from "@/lib/constants";
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import { getDna } from "@/lib/constants";
 
 export function DnaCTA() {
+  const { locale } = useLocale();
+  const DNA = getDna(locale);
+
   return (
-    <footer id="start" className="pb-12">
-      <section className="mx-auto max-w-6xl px-6 lg:px-8">
+    <section id="start" className="pb-12">
+      <div className="mx-auto max-w-6xl px-6 lg:px-8">
         <RevealOnScroll>
           <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[var(--brand-primary)] to-[var(--brand-primary-hover)] px-8 py-20 text-center shadow-diffuse sm:px-16">
             <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-60">
@@ -34,28 +40,14 @@ export function DnaCTA() {
                 {DNA.cta.subheadline}
               </p>
               <div className="mt-10 flex justify-center">
-                <Button href="#start" variant="onDark">
+                <Button href="/onboarding/platform" variant="onDark">
                   {DNA.cta.cta}
                 </Button>
               </div>
             </div>
           </div>
         </RevealOnScroll>
-
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-black/5 pt-8 sm:flex-row">
-          <div className="flex items-center gap-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--brand-primary)] text-xs font-bold text-white">
-              A
-            </span>
-            <span className="text-sm font-semibold text-[var(--text-body)]">
-              {BRAND.name}
-            </span>
-          </div>
-          <p className="text-sm text-[var(--text-tertiary)]">
-            © {new Date().getFullYear()} {BRAND.name}. DNA × AI × Nutrition.
-          </p>
-        </div>
-      </section>
-    </footer>
+      </div>
+    </section>
   );
 }
