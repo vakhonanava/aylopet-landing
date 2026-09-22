@@ -255,6 +255,7 @@ const LEGAL_KA: LegalContent = {
       {
         heading: "17. მნიშვნელოვანი გაფრთხილება ანგარიშის წაშლამდე",
         paragraphs: [
+          "ანგარიშის წაშლა ხელმისაწვდომია პანელის პარამეტრებში. წაშლა შეუქცევადია: ერთიანად იშლება ძაღლების პროფილები, ჯანმრთელობის ისტორია, ატვირთული ფაილები, მოსაწვევი კოდი, მოწვევები, ქულები და Ambassador-ის სტატუსი. აღდგენა შეუძლებელია.",
           "არაგანზრახი გადასახადების ან სერვისის ფუნქციონალის დაკარგვის თავიდან ასაცილებლად, ანგარიშის წაშლამდე ხელით უნდა გააუქმოთ:",
         ],
         list: [
@@ -636,6 +637,7 @@ const LEGAL_EN: LegalContent = {
       {
         heading: "17. Important Notice Before Deleting Your Account",
         paragraphs: [
+          "Account deletion is available in the dashboard settings. It is irreversible: pet profiles, health history, uploaded files, the invite code, invites, points and Ambassador status are removed together and cannot be restored.",
           "To avoid unintended charges or loss of service functionality, before deleting your account you must manually cancel:",
         ],
         list: [
