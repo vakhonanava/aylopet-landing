@@ -509,6 +509,17 @@ export const ka: Dictionary = {
       "მოიწვიე {count} აქტიური მომხმარებელი და შენი სტატუსი ავტომატურად განახლდება.",
     progressLabel: "დარჩა {count} მოწვევა",
     upgradedLabel: "სტატუსი განახლებულია",
+    totalPointsLabel: "ჯამური ქულა",
+    codeLabel: "შენი მოსაწვევი კოდი",
+    copyCode: "კოდის კოპირება",
+    copyLink: "ბმულის კოპირება",
+    copied: "დაკოპირდა",
+    share: "გაზიარება",
+    shareText: "შემოუერთდი Aylopet-ს ჩემი მოსაწვევი კოდით {code}:",
+    perInviteRule:
+      "+{points} ქულა ყოველ მეგობარზე, რომელიც შენი კოდით დარეგისტრირდება და ელფოსტას დაადასტურებს.",
+    invitedLabel: "მოწვეული მეგობარი",
+    pendingLabel: "{count} ელოდება ელფოსტის დადასტურებას",
   },
   userExpectations: {
     eyebrow: "შენი აზრი",

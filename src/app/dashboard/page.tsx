@@ -5,10 +5,12 @@ import { Lock, PawPrint, Pencil, Plus, Users } from "lucide-react";
 import { DashboardPetCard } from "@/components/dashboard/DashboardPetCard";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
 import { AmbassadorProgram } from "@/components/early-access/AmbassadorProgram";
+import { useReferralSummary } from "@/hooks/useReferralSummary";
 import { ADDITIONAL_PET_PRICE_GEL, canAddPet } from "@/lib/pricing/pets";
 
 export default function DashboardHome() {
   const { pets, account, ready } = useDashboard();
+  const referral = useReferralSummary();
   const addPet = canAddPet(pets.length, account?.hasPaidPlan ?? false);
 
   return (
@@ -73,7 +75,7 @@ export default function DashboardHome() {
 
       {/* Every registered member is an Ambassador · this is the surface they
           actually land on after onboarding. */}
-      <AmbassadorProgram className="mt-8" />
+      <AmbassadorProgram referral={referral} className="mt-8" />
     </div>
   );
 }

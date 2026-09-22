@@ -381,6 +381,16 @@ export interface AmbassadorCopy {
   upgradeRule: string;
   progressLabel: string;
   upgradedLabel: string;
+  totalPointsLabel: string;
+  codeLabel: string;
+  copyCode: string;
+  copyLink: string;
+  copied: string;
+  share: string;
+  shareText: string;
+  perInviteRule: string;
+  invitedLabel: string;
+  pendingLabel: string;
 }
 
 export interface CommunityCopy {

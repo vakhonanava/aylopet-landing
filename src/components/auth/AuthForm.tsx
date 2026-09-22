@@ -8,6 +8,7 @@ import {
   isValidReferralCode,
   normalizeReferralCode,
 } from "@/lib/referral/codes";
+import { readPendingReferral } from "@/lib/referral/storage";
 import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { PasswordField } from "@/components/auth/PasswordField";
 import { useLocale } from "@/components/i18n/LocaleProvider";
@@ -154,15 +155,26 @@ export function LoginForm({ nextPath = "/dashboard" }: LoginFormProps) {
 
 interface RegisterFormProps {
   nextPath?: string;
+  /** `?ref=` from an invite link. */
+  initialReferralCode?: string | null;
 }
 
-export function RegisterForm({ nextPath = "/dashboard" }: RegisterFormProps) {
+export function RegisterForm({
+  nextPath = "/dashboard",
+  initialReferralCode,
+}: RegisterFormProps) {
   const { locale } = useLocale();
   const a = getAuthCopy(locale);
   const { signUpWithPassword } = useAuth();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [referralCode, setReferralCode] = useState("");
+  // The page renders client-side only (useSearchParams under Suspense), so
+  // reading storage in the initializer cannot cause a hydration mismatch.
+  const [referralCode, setReferralCode] = useState(() => {
+    const fromLink = initialReferralCode ?? "";
+    if (isValidReferralCode(fromLink)) return normalizeReferralCode(fromLink);
+    return typeof window === "undefined" ? "" : (readPendingReferral() ?? "");
+  });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);

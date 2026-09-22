@@ -4,6 +4,7 @@ import "./globals.css";
 import { Analytics } from "@/components/analytics/Analytics";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { LocaleProvider } from "@/components/i18n/LocaleProvider";
+import { ReferralCapture } from "@/components/referral/ReferralCapture";
 import { GlobalHeader } from "@/components/layout/GlobalHeader";
 import {
   OG_DESCRIPTION,
@@ -98,6 +99,7 @@ export default function RootLayout({
           </LocaleProvider>
         </AuthProvider>
         <Analytics />
+        <ReferralCapture />
       </body>
     </html>
   );

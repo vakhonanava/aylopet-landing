@@ -504,6 +504,17 @@ export const en: Dictionary = {
       "Invite {count} active users and your status upgrades automatically.",
     progressLabel: "{count} invites to go",
     upgradedLabel: "Status upgraded",
+    totalPointsLabel: "Total points",
+    codeLabel: "Your invite code",
+    copyCode: "Copy code",
+    copyLink: "Copy link",
+    copied: "Copied",
+    share: "Share",
+    shareText: "Join Aylopet with my invite code {code}:",
+    perInviteRule:
+      "+{points} points for every friend who signs up with your code and confirms their email.",
+    invitedLabel: "friends joined",
+    pendingLabel: "{count} awaiting email confirmation",
   },
   userExpectations: {
     eyebrow: "Your voice",

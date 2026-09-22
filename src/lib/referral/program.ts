@@ -11,6 +11,12 @@ export const AMBASSADOR_TIER_ID = "ambassadors" as const;
 /** Points every member receives on joining · no tier maths. */
 export const AMBASSADOR_BASE_POINTS = 200;
 
+/**
+ * Points paid to the inviter per confirmed friend. The database is the source
+ * of truth (referral_points() in migration 011); keep the two in sync.
+ */
+export const REFERRAL_POINTS = 100;
+
 /** Active invites required to auto-upgrade a member's status. */
 export const ACTIVE_INVITES_FOR_UPGRADE = 5;
 
