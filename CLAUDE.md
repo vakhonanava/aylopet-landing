@@ -40,6 +40,8 @@ npm run lint
 | `SUPABASE_SECRET_KEY` | Server-only (legacy: `SUPABASE_SERVICE_ROLE_KEY`) |
 | `ADMIN_SECRET` | Protects `/admin/leads` |
 | `BLOB_READ_WRITE_TOKEN` | Fallback lab upload storage (Vercel Blob) |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Optional override of the GA4 ID hardcoded in `Analytics.tsx` (`G-99LP5KDVX4`, production builds only); GA never loads on `/admin` or `/vet-report` |
+| `NEXT_PUBLIC_WHATSAPP_GROUP_URL` | Optional override of the WhatsApp community invite in `constants/marketing.ts`; empty hides the join buttons |
 
 Set the same keys in **Vercel → Settings → Environment Variables** for Production.
 
