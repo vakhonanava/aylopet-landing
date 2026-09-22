@@ -21,7 +21,11 @@ import {
   establishSessionAfterSignUp,
   isEmailVerified,
 } from "@/lib/auth/session";
-import { generateReferralCode } from "@/lib/referral/codes";
+import {
+  clearPendingReferral,
+  readPendingReferral,
+} from "@/lib/referral/storage";
+import { claimReferral } from "@/lib/referral/summary";
 import { createClient } from "@/utils/supabase/client";
 
 export interface AuthResult {
@@ -107,6 +111,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Google sign-ups cannot carry the invite code in signup metadata, so claim
+  // it once a session exists. The server only accepts claims from accounts
+  // created in the last day, so an existing member logging in is a no-op.
+  const userId = user?.id;
+  useEffect(() => {
+    if (!userId) return;
+    const code = readPendingReferral();
+    const supabase = getBrowserClient();
+    if (!code || !supabase) return;
+    void claimReferral(supabase, code).finally(clearPendingReferral);
+  }, [userId]);
+
   const signInWithPassword = useCallback(
     async (email: string, password: string): Promise<AuthResult> => {
       const supabase = getBrowserClient();
@@ -148,7 +164,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             // full_name is kept in sync so anything still reading it (older
             // rows, Supabase dashboards, email templates) keeps working.
             full_name: `${firstName.trim()} ${lastName.trim()}`.trim(),
-            referral_code: generateReferralCode(),
             ...(referralCode ? { referred_by_code: referralCode } : {}),
           },
           emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,

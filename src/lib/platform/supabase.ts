@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { establishSessionAfterSignUp } from "@/lib/auth/session";
+import { readPendingReferral } from "@/lib/referral/storage";
 import {
   PET_DOCUMENTS_BUCKET,
   type OwnerProfile,
@@ -23,12 +24,16 @@ export async function registerWaitlistUser(
   entry: WaitlistEntry,
 ): Promise<{ userId: string | null; error: string | null }> {
   const email = entry.email.trim().toLowerCase();
+  const pendingReferral = readPendingReferral();
 
   const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
     email,
     password: entry.password,
     options: {
-      data: { full_name: entry.fullName.trim() },
+      data: {
+        full_name: entry.fullName.trim(),
+        ...(pendingReferral ? { referred_by_code: pendingReferral } : {}),
+      },
       emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding/platform`,
     },
   });

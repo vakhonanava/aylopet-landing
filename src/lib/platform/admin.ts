@@ -87,6 +87,34 @@ export async function getAllPlatformSignups(): Promise<PlatformSignupRow[]> {
   return (data ?? []) as PlatformSignupRow[];
 }
 
+export interface ReferralRow {
+  id: string;
+  code: string;
+  status: "pending" | "completed";
+  points_awarded: number;
+  created_at: string;
+  completed_at: string | null;
+  referrer: { full_name: string | null; email: string | null } | null;
+  referred: { full_name: string | null; email: string | null } | null;
+}
+
+/** Who invited whom (migration 011) · service role, admin page only. */
+export async function getAllReferrals(): Promise<ReferralRow[]> {
+  if (!isSupabaseConfigured()) return [];
+
+  const supabase = createSupabaseAdmin();
+  const { data, error } = await supabase
+    .from("referrals")
+    .select(
+      "id, code, status, points_awarded, created_at, completed_at, referrer:profiles!referrals_referrer_id_fkey(full_name, email), referred:profiles!referrals_referred_id_fkey(full_name, email)",
+    )
+    .order("created_at", { ascending: false });
+
+  // Missing table (migration 011 not applied) reads as "no referrals yet".
+  if (error) return [];
+  return (data ?? []) as unknown as ReferralRow[];
+}
+
 export function formatExpectations(values: string[]): string {
   return values
     .map((value) => {

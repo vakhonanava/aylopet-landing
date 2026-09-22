@@ -33,7 +33,7 @@ function RegisterPageContent() {
         </>
       }
     >
-      <RegisterForm nextPath={nextPath} />
+      <RegisterForm nextPath={nextPath} initialReferralCode={params.get("ref")} />
     </AuthFormShell>
   );
 }
