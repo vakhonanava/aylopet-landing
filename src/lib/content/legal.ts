@@ -118,7 +118,7 @@ const LEGAL_KA: LegalContent = {
   },
   terms: {
     title: "გამოყენების პირობები",
-    lastUpdated: "2026 წლის 27 თებერვალი",
+    lastUpdated: "2026 წლის 22 სექტემბერი",
     sections: [
       {
         heading: "შეთანხმება ჩვენს იურიდიულ პირობებზე",
@@ -265,7 +265,22 @@ const LEGAL_KA: LegalContent = {
         ],
       },
       {
-        heading: "18. დაგვიკავშირდით",
+        heading: "18. Ambassador პროგრამა (პირველი 200 წევრი)",
+        paragraphs: [
+          "Ambassador-ის დამფუძნებელი სტატუსი ვრცელდება პირველ 200 დარეგისტრირებულ მომხმარებელზე, რეგისტრაციის თანმიმდევრობით. სტატუსი და მისი შეღავათები ამ წევრებს რჩებათ სამუდამოდ.",
+          "შეღავათები ამოქმედდება პროდუქტის გაშვების შემდეგ და ვრცელდება Aylopet-ის საკუთარ პროდუქტებსა და სერვისებზე:",
+        ],
+        list: [
+          "საკვებზე 40% ფასდაკლება პირველი შეკვეთიდან 3 თვის განმავლობაში",
+          "ამ 3 თვის შემდეგ, საკვებზე 10% ფასდაკლება სამუდამოდ",
+          "თუ წევრის მოსაწვევი კოდით 5 მეგობარი დარეგისტრირდება და ელ. ფოსტას დაადასტურებს, სამუდამო ფასდაკლება 10%-ის ნაცვლად 20% ხდება",
+          "AylopetAI უფასოდ პირველი 3 თვის განმავლობაში",
+          "ჭკვიან ყელსაბამზე 50% ფასდაკლება მოწყობილობის ღირებულებაზე და მისი გამოწერა უფასოდ 3 თვის განმავლობაში",
+          "DNA ტესტზე 50% ფასდაკლება",
+        ],
+      },
+      {
+        heading: "19. დაგვიკავშირდით",
         paragraphs: [
           "სერვისებთან დაკავშირებული საჩივრის ან დამატებითი ინფორმაციისთვის დაგვიკავშირდით:",
         ],
@@ -486,7 +501,7 @@ const LEGAL_EN: LegalContent = {
   },
   terms: {
     title: "Terms of Use",
-    lastUpdated: "February 27, 2026",
+    lastUpdated: "September 22, 2026",
     sections: [
       {
         heading: "Agreement to Our Legal Terms",
@@ -631,7 +646,22 @@ const LEGAL_EN: LegalContent = {
         ],
       },
       {
-        heading: "18. Contact Us",
+        heading: "18. Ambassador Program (the first 200 members)",
+        paragraphs: [
+          "Founding Ambassador status applies to the first 200 registered members, in registration order. The status and its benefits stay with those members permanently.",
+          "The benefits take effect once the product launches and apply to Aylopet's own products and services:",
+        ],
+        list: [
+          "40% off fresh food for 3 months from the first order",
+          "After those 3 months, a 10% discount on food for life",
+          "If 5 friends register with the member's invite code and confirm their email address, that lifetime discount becomes 20% instead of 10%",
+          "AylopetAI free for the first 3 months",
+          "50% off the Smart Collar device, and its subscription free for 3 months",
+          "50% off the DNA test",
+        ],
+      },
+      {
+        heading: "19. Contact Us",
         paragraphs: [
           "For complaints or further information about the Services, contact us:",
         ],
