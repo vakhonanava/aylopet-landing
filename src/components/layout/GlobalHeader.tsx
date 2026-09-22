@@ -127,7 +127,17 @@ export function GlobalHeader() {
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent"
         />
         <div className="mx-auto flex h-14 max-w-7xl items-center gap-2 overflow-visible px-3 lg:gap-2.5 lg:px-4 xl:gap-3">
-          <AylopetLogo compact className="relative z-10 shrink-0" />
+          <AylopetLogo
+            compact
+            className="relative z-10 shrink-0"
+            onClick={() => {
+              // The drawer lives in the root layout and survives navigation, so
+              // it would stay open over the home page; and a Link to the current
+              // route is a no-op, so on "/" the logo has to scroll up itself.
+              setMobileOpen(false);
+              if (pathname === "/") window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          />
 
           <nav
             aria-label="Main"
