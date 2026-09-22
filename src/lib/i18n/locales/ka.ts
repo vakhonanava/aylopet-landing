@@ -262,6 +262,7 @@ export const ka: Dictionary = {
     },
   },
   footer: {
+    tagline: "ცოცხალი საკვები",
     resources: "რესურსები",
     platform: "პლატფორმა",
     legal: "სამართლებრივი",

@@ -21,7 +21,7 @@ export function ReviewsPageContent() {
           <div className="mx-auto flex max-w-4xl items-start justify-between gap-4">
             <div>
               <Link href="/" className="text-sm text-[var(--text-secondary)] hover:text-[var(--brand-primary)]">
-                ← მთავარი
+                ← {dict.common.backHome}
               </Link>
               <h1 className="mt-4 font-display text-3xl font-semibold text-[var(--text-primary)]">
                 {copy.title}

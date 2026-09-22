@@ -319,7 +319,7 @@ export function AyliopetOnboarding() {
             შექმენი პერსონალური პლატფორმა
           </h1>
           <p className="mt-3 text-sm text-white/55">
-            ნაბიჯი {step} / 3, მონაცემები privateა და დაცულია RLS-ით
+            ნაბიჯი {step} / 3, მონაცემები კონფიდენციალურია და დაცულია
           </p>
         </div>
 

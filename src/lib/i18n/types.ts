@@ -160,6 +160,7 @@ export interface WaitlistFormCopy {
 }
 
 export interface FooterCopy {
+  tagline: string;
   resources: string;
   platform: string;
   legal: string;

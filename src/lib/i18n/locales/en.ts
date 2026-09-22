@@ -264,6 +264,7 @@ export const en: Dictionary = {
     },
   },
   footer: {
+    tagline: "Fresh food",
     resources: "Resources",
     platform: "Platform",
     legal: "Legal",
