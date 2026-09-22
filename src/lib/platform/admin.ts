@@ -4,6 +4,7 @@ import {
   PRODUCT_INTEREST_LABELS,
   type ProductInterest,
 } from "@/lib/leads/types";
+import { getLeadStorageMode as getBlobOrFileMode } from "@/lib/leads/blob-storage";
 
 export interface PlatformSignupRow {
   id: string;
@@ -29,8 +30,6 @@ export type LeadStorageMode = "supabase" | "blob" | "file";
 
 export function getLeadStorageMode(): LeadStorageMode {
   if (isSupabaseConfigured()) return "supabase";
-  const { getLeadStorageMode: getBlobOrFileMode } =
-    require("@/lib/leads/blob-storage") as typeof import("@/lib/leads/blob-storage");
   return getBlobOrFileMode();
 }
 
