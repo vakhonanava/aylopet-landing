@@ -13,6 +13,7 @@ function LoginPageContent() {
   const params = useSearchParams();
   const nextPath = params.get("next") || "/dashboard";
   const authError = params.get("error");
+  const authErrorReason = params.get("reason");
 
   return (
     <AuthFormShell
@@ -31,9 +32,12 @@ function LoginPageContent() {
       }
     >
       {authError && (
-        <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-          {a.oauthFailed}
-        </p>
+        <div className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p>{a.oauthFailed}</p>
+          {authErrorReason && (
+            <p className="mt-1 text-xs text-red-600/80">{authErrorReason}</p>
+          )}
+        </div>
       )}
       <LoginForm nextPath={nextPath} />
     </AuthFormShell>
