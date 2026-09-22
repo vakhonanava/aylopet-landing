@@ -519,11 +519,12 @@ export const en: Dictionary = {
     foundingNumber: "You are #{number} of the first {cap} Ambassadors",
     foundingIntro: "This status stays with the first {cap} members for good.",
     foundingBenefits: [
-      "An exclusive offer on your first order",
-      "Access to the product from launch day",
-      "{points} base points, plus {perInvite} for every friend who joins",
-      "A status upgrade after {invites} active invites",
-      "A direct say in how the product is built",
+      "40% off fresh food for your first 3 months",
+      "A lifetime 10% discount on food after those 3 months",
+      "Invite {invites} friends and that lifetime discount becomes 20%",
+      "AylopetAI free for your first 3 months",
+      "50% off the Smart Collar, plus 3 months of its subscription free",
+      "50% off the DNA test",
     ],
   },
   userExpectations: {
