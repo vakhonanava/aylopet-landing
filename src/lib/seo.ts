@@ -60,7 +60,7 @@ export const organizationSchema = {
   image: `${SITE_URL}${OG_IMAGE.url}`,
   description: "Pet Health Tech platform utilizing AI & DNA insights for pets.",
   email: "support@aylopet.com",
-  telephone: "+995595885625",
+  telephone: "+995568888424",
   address: {
     "@type": "PostalAddress",
     streetAddress: "David Aghmashenebeli Avenue, No. 200",
@@ -72,7 +72,7 @@ export const organizationSchema = {
       "@type": "ContactPoint",
       contactType: "customer support",
       email: "support@aylopet.com",
-      telephone: "+995595885625",
+      telephone: "+995568888424",
       availableLanguage: ["ka", "en"],
     },
   ],

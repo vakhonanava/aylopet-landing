@@ -1,7 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { Mail, MessageCircle, Phone } from "lucide-react";
 import { BRAND } from "@/lib/constants";
+import {
+  SUPPORT_EMAIL,
+  SUPPORT_PHONE,
+  SUPPORT_PHONE_DISPLAY,
+  WHATSAPP_GROUP_URL,
+} from "@/lib/constants/marketing";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { AylopetLogo } from "@/components/brand/AylopetLogo";
 import { PulsingStatusDot } from "@/components/japandi/PulsingStatusDot";
@@ -21,6 +28,43 @@ export function SiteFooter() {
           <p className="mt-4 text-sm leading-relaxed text-[var(--text-secondary)]">
             {BRAND.tagline}, {f.taglineSuffix}
           </p>
+
+          <h4 className="mt-6 text-sm font-semibold text-[var(--text-primary)]">
+            {f.contact}
+          </h4>
+          <ul className="mt-3 space-y-2">
+            <li>
+              <a
+                href={`mailto:${SUPPORT_EMAIL}`}
+                className="inline-flex items-center gap-2 text-sm text-[var(--text-secondary)] transition-colors hover:text-[var(--brand-primary)]"
+              >
+                <Mail className="h-4 w-4 shrink-0" aria-hidden />
+                {SUPPORT_EMAIL}
+              </a>
+            </li>
+            <li>
+              <a
+                href={`tel:${SUPPORT_PHONE}`}
+                className="inline-flex items-center gap-2 text-sm text-[var(--text-secondary)] transition-colors hover:text-[var(--brand-primary)]"
+              >
+                <Phone className="h-4 w-4 shrink-0" aria-hidden />
+                {SUPPORT_PHONE_DISPLAY}
+              </a>
+            </li>
+            {WHATSAPP_GROUP_URL && (
+              <li>
+                <a
+                  href={WHATSAPP_GROUP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm text-[var(--text-secondary)] transition-colors hover:text-[#128C7E]"
+                >
+                  <MessageCircle className="h-4 w-4 shrink-0 text-[#25D366]" aria-hidden />
+                  {dict.community.whatsappCta}
+                </a>
+              </li>
+            )}
+          </ul>
         </div>
 
         {mainNav.slice(0, 2).map((item) => (
