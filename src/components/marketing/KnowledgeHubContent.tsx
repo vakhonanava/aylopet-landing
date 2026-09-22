@@ -45,19 +45,24 @@ export function KnowledgeHubContent() {
             <ul className="mt-4 grid gap-3 sm:grid-cols-2">
               {categories.map((label, i) => (
                 <li key={label}>
-                  <Link
-                    href={CATEGORY_HREFS[i] ?? "/knowledge"}
-                    className={`flex items-center justify-between rounded-xl border px-4 py-3 text-sm transition-colors ${
-                      CATEGORY_LIVE[i]
-                        ? "border-[var(--brand-primary)]/30 bg-[var(--brand-accent-soft)] text-[var(--forest-deep)] hover:border-[var(--brand-primary)]"
-                        : "border-[var(--border-light)] bg-white text-[var(--text-secondary)]"
-                    }`}
-                  >
-                    {label}
-                    <span className="text-xs font-medium">
-                      {CATEGORY_LIVE[i] ? k.readNow : k.comingSoon}
-                    </span>
-                  </Link>
+                  {/* Unpublished categories have no page yet · a link would 404. */}
+                  {CATEGORY_LIVE[i] ? (
+                    <Link
+                      href={CATEGORY_HREFS[i]}
+                      className="flex items-center justify-between rounded-xl border border-[var(--brand-primary)]/30 bg-[var(--brand-accent-soft)] px-4 py-3 text-sm text-[var(--forest-deep)] transition-colors hover:border-[var(--brand-primary)]"
+                    >
+                      {label}
+                      <span className="text-xs font-medium">{k.readNow}</span>
+                    </Link>
+                  ) : (
+                    <div
+                      aria-disabled="true"
+                      className="flex cursor-default items-center justify-between rounded-xl border border-[var(--border-light)] bg-white px-4 py-3 text-sm text-[var(--text-secondary)]"
+                    >
+                      {label}
+                      <span className="text-xs font-medium">{k.comingSoon}</span>
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>
@@ -81,6 +86,7 @@ export function KnowledgeHubContent() {
                 }
                 href="/why-fresh-food"
                 description={k.articleDescription}
+                ctaLabel={k.readNow}
               />
             </div>
           </div>

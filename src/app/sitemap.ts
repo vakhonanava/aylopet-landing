@@ -3,11 +3,12 @@ import { SITE_URL } from "@/lib/seo";
 
 /**
  * Public, indexable routes only. Dashboard, auth, admin, portal and tokenised
- * vet-report pages are intentionally excluded (see `robots.ts`).
+ * vet-report pages are intentionally excluded (see `robots.ts`), and so are
+ * redirecting aliases (/about, /nutrition, /early-access) · Search Console
+ * flags a sitemap entry that redirects instead of serving 200.
  */
 const ROUTES: Array<{ path: string; priority: number }> = [
   { path: "/", priority: 1 },
-  { path: "/about", priority: 0.7 },
   { path: "/about/what-is-aylopet", priority: 0.8 },
   { path: "/about/story", priority: 0.6 },
   { path: "/about/vision", priority: 0.6 },
@@ -17,14 +18,12 @@ const ROUTES: Array<{ path: string; priority: number }> = [
   { path: "/products/fresh-food", priority: 0.9 },
   { path: "/products/smart-collar", priority: 0.9 },
   { path: "/dna-journey", priority: 0.9 },
-  { path: "/nutrition", priority: 0.7 },
   { path: "/why-fresh-food", priority: 0.7 },
   { path: "/knowledge", priority: 0.7 },
   { path: "/knowledge/scientific-overview", priority: 0.6 },
   { path: "/faq", priority: 0.7 },
   { path: "/reviews", priority: 0.6 },
   { path: "/b2b", priority: 0.7 },
-  { path: "/early-access", priority: 0.8 },
   { path: "/onboarding", priority: 0.6 },
   { path: "/onboarding/platform", priority: 0.6 },
   { path: "/project-status", priority: 0.4 },

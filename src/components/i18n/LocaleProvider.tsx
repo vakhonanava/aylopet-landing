@@ -36,6 +36,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
       const stored = localStorage.getItem(STORAGE_KEY) as Locale | null;
       if (stored === "ka" || stored === "en") {
         setLocaleState(stored);
+        document.documentElement.lang = stored;
       }
       setReady(true);
     });

@@ -115,10 +115,12 @@ export function ArticleCard({
   title,
   href,
   description,
+  ctaLabel,
 }: {
   title: string;
   href: string;
   description?: string;
+  ctaLabel: string;
 }) {
   return (
     <Link
@@ -134,7 +136,7 @@ export function ArticleCard({
         </p>
       )}
       <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--brand-primary)] transition-all group-hover:gap-2.5">
-        წაიკითხე
+        {ctaLabel}
         <ArrowRight className="h-4 w-4" />
       </span>
     </Link>
