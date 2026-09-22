@@ -4,7 +4,8 @@ import { motion } from "framer-motion";
 import { Dna, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { DnaHelix3D } from "@/components/visual/DnaHelix3D";
-import { DNA } from "@/lib/constants";
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import { getDna } from "@/lib/constants";
 
 const markers = [
   { label: "Breed", value: "Weimaraner 98.2%" },
@@ -13,6 +14,9 @@ const markers = [
 ];
 
 export function DnaHero() {
+  const { locale } = useLocale();
+  const DNA = getDna(locale);
+
   return (
     <section className="relative overflow-hidden bg-[var(--forest-deep)] pt-16 pb-24 lg:pt-24 lg:pb-32">
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -63,7 +67,7 @@ export function DnaHero() {
             transition={{ duration: 0.7, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="flex flex-col gap-3 sm:flex-row sm:items-center"
           >
-            <Button href="#start">{DNA.hero.cta}</Button>
+            <Button href="/onboarding/platform">{DNA.hero.cta}</Button>
             <Button href="#journey" variant="secondary" showArrow={false}>
               {DNA.hero.secondaryCta}
             </Button>
