@@ -13,9 +13,9 @@ const GA_MEASUREMENT_ID =
   (process.env.NODE_ENV === "production" ? PRODUCTION_GA_ID : "");
 
 /**
- * Routes whose URL carries a secret (`/admin?token=`, the vet-report share
- * token). Both are only reached by a full page load, so not mounting gtag there
- * keeps those secrets out of GA's page_location.
+ * Private routes: the admin tables, and vet-report links whose URL is a share
+ * token. Both are only reached by a full page load, so not mounting gtag there
+ * keeps them out of GA's page_location.
  */
 const EXCLUDED_PREFIXES = ["/admin", "/vet-report"];
 

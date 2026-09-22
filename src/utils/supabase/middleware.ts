@@ -5,7 +5,7 @@ import {
   getSupabaseUrl,
 } from "@/lib/supabase/env";
 
-const PROTECTED_PREFIXES = ["/dashboard"];
+const PROTECTED_PREFIXES = ["/dashboard", "/admin"];
 const AUTH_PAGES_REDIRECT_IF_LOGGED_IN = ["/auth/login", "/auth/register"];
 
 function isProtectedPath(pathname: string): boolean {

@@ -38,7 +38,7 @@ npm run lint
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Browser/client key (legacy: `NEXT_PUBLIC_SUPABASE_ANON_KEY`) |
 | `SUPABASE_SECRET_KEY` | Server-only (legacy: `SUPABASE_SERVICE_ROLE_KEY`) |
-| `ADMIN_SECRET` | Protects `/admin/leads` |
+| ~~`ADMIN_SECRET`~~ | No longer used · `/admin/leads` needs a signed-in account listed in `public.admin_users` (migration 013) |
 | `BLOB_READ_WRITE_TOKEN` | Fallback lab upload storage (Vercel Blob) |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Optional override of the GA4 ID hardcoded in `Analytics.tsx` (`G-99LP5KDVX4`, production builds only); GA never loads on `/admin` or `/vet-report` |
 | `NEXT_PUBLIC_WHATSAPP_GROUP_URL` | Optional override of the WhatsApp community invite in `constants/marketing.ts`; empty hides the join buttons |
