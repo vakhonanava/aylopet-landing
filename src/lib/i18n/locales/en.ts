@@ -273,6 +273,7 @@ export const en: Dictionary = {
     terms: "Terms of Use",
     cookies: "Cookie Policy",
     accessibility: "Accessibility",
+    contact: "Contact",
   },
   waitlistForm: {
     quickTitle: "Join in 30 seconds",

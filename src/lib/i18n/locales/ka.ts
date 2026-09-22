@@ -271,6 +271,7 @@ export const ka: Dictionary = {
     terms: "წესები და პირობები",
     cookies: "ქუქი ფაილები",
     accessibility: "ხელმისაწვდომობა",
+    contact: "კონტაქტი",
   },
   waitlistForm: {
     quickTitle: "შემოუერთდი 30 წამში",

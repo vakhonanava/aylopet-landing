@@ -169,6 +169,7 @@ export interface FooterCopy {
   terms: string;
   cookies: string;
   accessibility: string;
+  contact: string;
 }
 
 export interface LandingChatbotCopy {

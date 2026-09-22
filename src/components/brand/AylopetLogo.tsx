@@ -14,6 +14,7 @@ interface AylopetLogoProps {
   size?: keyof typeof sizes;
   href?: string | null;
   className?: string;
+  onClick?: () => void;
 }
 
 export function AylopetLogo({
@@ -22,6 +23,7 @@ export function AylopetLogo({
   size = "md",
   href = "/",
   className = "",
+  onClick,
 }: AylopetLogoProps) {
   const s = sizes[size];
 
@@ -54,6 +56,7 @@ export function AylopetLogo({
     return (
       <Link
         href={href}
+        onClick={onClick}
         className={`flex items-center gap-2.5 transition-opacity duration-300 hover:opacity-80 ${className}`}
       >
         {content}

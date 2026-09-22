@@ -24,8 +24,8 @@ const STEPS: Record<"ka" | "en", { label: string; short: string; tooltip?: boole
 };
 
 const PASTEURIZATION_TOOLTIP: Record<"ka" | "en", string> = {
-  ka: "75 to 80°C, 1 to 6 სთ, სალმონელა, ლისტერია, ე. კოლი",
-  en: "75 to 80°C, 1 to 6 hrs, Salmonella, Listeria, E. coli",
+  ka: "75-80°C, 1 სთ, სალმონელა, ლისტერია, ე. კოლი",
+  en: "75 to 80°C, 1 hr, Salmonella, Listeria, E. coli",
 };
 
 export function ProcessTimeline({ locale = "ka" }: { locale?: "ka" | "en" }) {

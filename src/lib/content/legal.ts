@@ -267,8 +267,9 @@ const LEGAL_KA: LegalContent = {
       {
         heading: "18. დაგვიკავშირდით",
         paragraphs: [
-          "სერვისებთან დაკავშირებული საჩივრის ან დამატებითი ინფორმაციისთვის დაგვიკავშირდით: support@aylopet.com.",
+          "სერვისებთან დაკავშირებული საჩივრის ან დამატებითი ინფორმაციისთვის დაგვიკავშირდით:",
         ],
+        list: ["ელფოსტა: support@aylopet.com", "ტელეფონი: +995568888424"],
       },
     ],
   },
@@ -340,8 +341,8 @@ const LEGAL_KA: LegalContent = {
         paragraphs: [
           "თუ გაქვთ შეკითხვები ქუქი-ფაილების ან სხვა ტექნოლოგიების გამოყენებასთან დაკავშირებით, დაგვიკავშირდით:",
           "Aylopet LLC, საქართველო",
-          "ტელეფონი: +995595885625",
         ],
+        list: ["ელფოსტა: support@aylopet.com", "ტელეფონი: +995568888424"],
       },
     ],
   },
@@ -382,7 +383,7 @@ const LEGAL_KA: LegalContent = {
           "თუ საიტზე შეამჩნიეთ ხელმისაწვდომობასთან დაკავშირებული ბარიერი ან გჭირდებათ კონკრეტული დახმარება, დაგვიკავშირდით და ვეცდებით გონივრულ ვადაში რეაგირებას.",
           "შეგიძლიათ მოგვწეროთ რა გვერდზე ან პროცესში შეგექმნათ სირთულე, რათა სწრაფად გამოვასწოროთ.",
         ],
-        list: ["ელფოსტა: support@aylopet.com", "ტელეფონი: +995595885625"],
+        list: ["ელფოსტა: support@aylopet.com", "ტელეფონი: +995568888424"],
       },
     ],
   },
@@ -632,8 +633,9 @@ const LEGAL_EN: LegalContent = {
       {
         heading: "18. Contact Us",
         paragraphs: [
-          "For complaints or further information about the Services, contact us at: support@aylopet.com.",
+          "For complaints or further information about the Services, contact us:",
         ],
+        list: ["Email: support@aylopet.com", "Phone: +995568888424"],
       },
     ],
   },
@@ -705,8 +707,8 @@ const LEGAL_EN: LegalContent = {
         paragraphs: [
           "If you have any questions about our use of cookies or other technologies, contact us:",
           "Aylopet LLC, Georgia",
-          "Phone: +995595885625",
         ],
+        list: ["Email: support@aylopet.com", "Phone: +995568888424"],
       },
     ],
   },
@@ -747,7 +749,7 @@ const LEGAL_EN: LegalContent = {
           "If you notice an accessibility barrier on the site or need specific assistance, contact us and we will do our best to respond within a reasonable timeframe.",
           "Feel free to let us know which page or process gave you difficulty, so we can fix it quickly.",
         ],
-        list: ["Email: support@aylopet.com", "Phone: +995595885625"],
+        list: ["Email: support@aylopet.com", "Phone: +995568888424"],
       },
     ],
   },

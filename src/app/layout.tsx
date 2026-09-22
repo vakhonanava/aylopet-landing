@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Lora, Nunito_Sans } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@/components/analytics/Analytics";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { LocaleProvider } from "@/components/i18n/LocaleProvider";
 import { GlobalHeader } from "@/components/layout/GlobalHeader";
@@ -96,6 +97,7 @@ export default function RootLayout({
             {children}
           </LocaleProvider>
         </AuthProvider>
+        <Analytics />
       </body>
     </html>
   );
