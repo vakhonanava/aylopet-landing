@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { ChangePasswordForm } from "@/components/auth/AuthForm";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { DeleteAccountSection } from "@/components/dashboard/DeleteAccountSection";
 
 function SettingsContent() {
   const { firstName, displayName, email } = useAuth();
@@ -51,6 +52,8 @@ function SettingsContent() {
           </div>
         </div>
       </section>
+
+      <DeleteAccountSection />
 
       <p className="mt-6 text-sm text-slate-500">
         <Link href="/dashboard" className="font-medium text-[var(--brand-primary)] hover:underline">
