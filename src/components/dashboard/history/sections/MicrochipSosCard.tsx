@@ -19,7 +19,7 @@ import { SectionCard, StatusPill } from "@/components/dashboard/history/ui";
 import { useHistorySave } from "@/components/dashboard/history/useHistorySave";
 import { formatDate, type Pet } from "@/lib/dashboard";
 import { MICROCHIP_STATUS } from "@/lib/pet-history/labels";
-import { buildSosPayload } from "@/lib/pet-history/sos";
+import { buildSosPayload, sosOwnerPhone } from "@/lib/pet-history/sos";
 import type {
   MicrochipRegistration,
   MicrochipRegistryStatus,
@@ -42,9 +42,8 @@ export function MicrochipSosCard({ pet }: { pet: Pet }) {
   );
 
   const payload = useMemo(() => buildSosPayload(pet, chip), [pet, chip]);
-  const hasCallback = Boolean(
-    pet.history?.vet?.phone || pet.history?.vet?.emergencyPhone,
-  );
+  const [ownerPhone, setOwnerPhone] = useState(registration?.ownerPhone ?? "");
+  const hasCallback = Boolean(sosOwnerPhone(pet));
 
   const submit = async () => {
     const next: MicrochipRegistration = {
@@ -56,6 +55,7 @@ export function MicrochipSosCard({ pet }: { pet: Pet }) {
       ...(registration?.implantedAt
         ? { implantedAt: registration.implantedAt }
         : {}),
+      ...(ownerPhone.trim() ? { ownerPhone: ownerPhone.trim() } : {}),
     };
     if (await save({ microchip: next })) setEditing(false);
   };
@@ -128,7 +128,7 @@ export function MicrochipSosCard({ pet }: { pet: Pet }) {
           {!hasCallback ? (
             <p className="flex items-start gap-2 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-700">
               <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" />
-              QR კოდს საკონტაქტო ნომერი არ აქვს. დაამატეთ ვეტერინარის კონტაქტი,
+              QR კოდს საკონტაქტო ნომერი არ აქვს. დაამატეთ მეპატრონის ნომერი,
               რომ მპოვნელმა დარეკვა შეძლოს.
             </p>
           ) : null}
@@ -192,6 +192,21 @@ export function MicrochipSosCard({ pet }: { pet: Pet }) {
                     value={registryName}
                     onChange={(event) => setRegistryName(event.target.value)}
                     placeholder="PetMaxx / Europetnet"
+                    className={`${textInput} mt-2`}
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className={fieldLabel} htmlFor="chip-owner-phone">
+                    მეპატრონის ნომერი
+                  </label>
+                  <input
+                    id="chip-owner-phone"
+                    type="tel"
+                    value={ownerPhone}
+                    onChange={(event) => setOwnerPhone(event.target.value)}
+                    inputMode="tel"
+                    autoComplete="tel"
+                    placeholder="+995 5XX XX XX XX"
                     className={`${textInput} mt-2`}
                   />
                 </div>

@@ -27,6 +27,7 @@ import type {
   VetVisitOutcome,
   VetVisitReason,
 } from "@/lib/pet-history/types";
+import { sanitizeDecimal } from "@/components/ui/DecimalInput";
 
 function today(): string {
   return new Date().toISOString().slice(0, 10);
@@ -427,11 +428,10 @@ export function VetVisitsPanel({ pet }: { pet: Pet }) {
                   </label>
                   <input
                     id="visit-cost"
-                    type="number"
-                    min="0"
+                    type="text"
                     inputMode="decimal"
                     value={cost}
-                    onChange={(event) => setCost(event.target.value)}
+                    onChange={(event) => setCost(sanitizeDecimal(event.target.value))}
                     placeholder="მაგ. 150"
                     className={`${textInput} mt-2`}
                   />

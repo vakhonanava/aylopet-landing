@@ -13,10 +13,13 @@ export function buildSosPayload(pet: Pet, chip: string | null): string {
   const lines = ["AYLOPET SOS", `Dog: ${pet.name.slice(0, MAX_NAME_LENGTH)}`];
   if (chip) lines.push(`Chip: ${chip}`);
 
-  const vet = pet.history?.vet;
-  if (vet?.phone) lines.push(`Vet: ${vet.phone}`);
-  if (vet?.emergencyPhone) lines.push(`SOS: ${vet.emergencyPhone}`);
+  const ownerPhone = sosOwnerPhone(pet);
+  if (ownerPhone) lines.push(`Owner: ${ownerPhone}`);
 
   lines.push("aylopet.com");
   return lines.join("\n");
+}
+
+export function sosOwnerPhone(pet: Pet): string | null {
+  return pet.history?.microchip?.ownerPhone?.trim() || null;
 }

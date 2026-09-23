@@ -44,13 +44,13 @@ export interface CareTypeOption {
 
 export const CARE_TYPE_OPTIONS: CareTypeOption[] = [
   { value: "vaccine", label: "ვაქცინა" },
-  { value: "deworming", label: "მატლების საწინააღმდეგო" },
+  { value: "deworming", label: "ჭიაზე დამუშავება" },
   { value: "flea_tick", label: "რწყილი-ტკიპის საწინააღმდეგო" },
 ];
 
 export const CARE_TYPE_LABELS: Record<CareType, string> = {
   vaccine: "ვაქცინა",
-  deworming: "მატლების საწინააღმდეგო",
+  deworming: "ჭიაზე დამუშავება",
   flea_tick: "რწყილი-ტკიპის საწინააღმდეგო",
 };
 
@@ -75,7 +75,10 @@ export type MealType = "morning" | "evening";
 export interface FoodEntry {
   id: string;
   date: string;
-  mealType: MealType;
+  /** Legacy · entries logged before owners picked their own meal count. */
+  mealType?: MealType;
+  /** Which meal of the day (1-based) — owners feed as often as they choose. */
+  mealNumber?: number;
   brand: string;
   isAylopet: boolean;
   portionGrams: number;
@@ -154,6 +157,19 @@ export interface Account {
   hasPaidPlan?: boolean;
 }
 
+const ORDINAL_SUFFIX = ["", "-ლი", "-ე"];
+
+/** „1-ლი კვება“, „2-ე კვება“… with the legacy morning/evening labels kept. */
+export function mealLabel(entry: Pick<FoodEntry, "mealType" | "mealNumber">): string {
+  if (entry.mealNumber) {
+    const suffix = ORDINAL_SUFFIX[Math.min(entry.mealNumber, 2)];
+    return `${entry.mealNumber}${suffix} კვება`;
+  }
+  if (entry.mealType === "morning") return "დილის კვება";
+  if (entry.mealType === "evening") return "საღამოს კვება";
+  return "კვება";
+}
+
 export const MOOD_SCALE = [
   { value: 1, label: "ცუდად", emoji: "😣" },
   { value: 2, label: "დაბალი", emoji: "🙁" },
@@ -225,7 +241,7 @@ export function createSeedPet(): Pet {
       {
         id: "f1",
         date: daysFromNow(0),
-        mealType: "morning",
+        mealNumber: 1,
         brand: "Aylopet",
         isAylopet: true,
         portionGrams: 220,
@@ -234,7 +250,7 @@ export function createSeedPet(): Pet {
       {
         id: "f2",
         date: daysFromNow(-1),
-        mealType: "evening",
+        mealNumber: 2,
         brand: "Aylopet",
         isAylopet: true,
         portionGrams: 240,

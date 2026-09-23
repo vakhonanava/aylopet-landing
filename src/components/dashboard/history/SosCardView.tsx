@@ -7,15 +7,14 @@ import { QrCode } from "@/components/dashboard/history/QrCode";
 import { StatusPill } from "@/components/dashboard/history/ui";
 import { formatDate, type Pet } from "@/lib/dashboard";
 import { MICROCHIP_STATUS } from "@/lib/pet-history/labels";
-import { buildSosPayload } from "@/lib/pet-history/sos";
+import { buildSosPayload, sosOwnerPhone } from "@/lib/pet-history/sos";
 
 export function SosCardView({ pet }: { pet: Pet }) {
   const registration = pet.history?.microchip ?? null;
   const chip = registration?.code ?? pet.microchipId ?? null;
   const payload = useMemo(() => buildSosPayload(pet, chip), [pet, chip]);
 
-  const vet = pet.history?.vet;
-  const callbackNumber = vet?.emergencyPhone || vet?.phone || null;
+  const callbackNumber = sosOwnerPhone(pet);
 
   return (
     <div className="mx-auto max-w-xl px-6 py-10">
@@ -84,10 +83,10 @@ export function SosCardView({ pet }: { pet: Pet }) {
           ) : null}
           <div className="flex items-center justify-between gap-3">
             <span className="text-xs font-medium uppercase tracking-wide text-slate-400">
-              საკონტაქტო ნომერი
+              მეპატრონის ნომერი
             </span>
             <span className="text-sm font-semibold text-[var(--brand-primary)]">
-              {callbackNumber ?? "დაამატეთ ვეტერინარის კონტაქტში"}
+              {callbackNumber ?? "დაამატეთ ჩიპის რეგისტრაციაში"}
             </span>
           </div>
         </div>

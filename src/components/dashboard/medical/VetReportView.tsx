@@ -5,6 +5,7 @@ import { Printer } from "lucide-react";
 import { CARE_TYPE_LABELS, daysUntil, formatDate, type CareType } from "@/lib/dashboard";
 import { SEVERITY_LEVELS } from "@/lib/medical";
 import type { VetReportData } from "@/lib/platform/vet-report";
+import { LabFilesPrint } from "@/components/dashboard/medical/LabFilesPrint";
 
 function computeAge(birthDate: string | null): string {
   if (!birthDate) return "უცნობია";
@@ -42,6 +43,7 @@ export function VetReportView({
     activeMedications,
     recentSymptomLogs,
     preventativeCare,
+    labFiles,
     symptomWindowDays,
     generatedAt,
   } = data;
@@ -236,6 +238,10 @@ export function VetReportView({
           </tbody>
         </table>
       </section>
+
+      <div className="mt-6">
+        <LabFilesPrint files={labFiles} />
+      </div>
     </div>
   );
 }

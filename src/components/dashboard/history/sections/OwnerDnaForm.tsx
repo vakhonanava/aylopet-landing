@@ -16,6 +16,7 @@ import type {
   GeneticRiskMarker,
   OwnerDnaRecord,
 } from "@/lib/pet-history/types";
+import { DecimalInput } from "@/components/ui/DecimalInput";
 
 interface OwnerDnaFormProps {
   pet: Pet;
@@ -148,16 +149,11 @@ export function OwnerDnaForm({ pet, onDone }: OwnerDnaFormProps) {
                 />
               </div>
               <div className="w-24 shrink-0">
-                <input
-                  type="number"
-                  min="0"
-                  max="100"
-                  step="0.1"
-                  inputMode="decimal"
-                  value={segment.percentage || ""}
-                  onChange={(event) =>
+                <DecimalInput
+                  value={segment.percentage || null}
+                  onValueChange={(percentage) =>
                     updateAncestry(index, {
-                      percentage: Number(event.target.value),
+                      percentage: percentage ?? 0,
                     })
                   }
                   placeholder="%"

@@ -42,6 +42,7 @@ import {
   type WaitlistExpectation,
 } from "@/lib/platform/types";
 import { createClient } from "@/utils/supabase/client";
+import { DecimalInput } from "@/components/ui/DecimalInput";
 
 type OnboardingStep = 1 | 2 | 3;
 
@@ -502,15 +503,11 @@ export function AyliopetOnboarding() {
                   <label>
                     <span className="mb-1.5 block text-xs text-white/45">წონა</span>
                     <div className="flex gap-2">
-                      <input
-                        type="number"
+                      <DecimalInput
                         className={input}
-                        value={pet.weight ?? ""}
-                        onChange={(e) =>
-                          setPet((c) => ({
-                            ...c,
-                            weight: e.target.value ? Number(e.target.value) : null,
-                          }))
+                        value={pet.weight}
+                        onValueChange={(weight) =>
+                          setPet((c) => ({ ...c, weight }))
                         }
                       />
                       <select

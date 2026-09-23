@@ -51,6 +51,8 @@ export interface MicrochipRegistration {
   /** ISO timestamp of the last successful registry lookup. */
   verifiedAt: string | null;
   implantedAt?: string;
+  /** Owner callback number printed on the SOS QR code. */
+  ownerPhone?: string;
 }
 
 /** Purina/WSAVA 9-point body condition score. */

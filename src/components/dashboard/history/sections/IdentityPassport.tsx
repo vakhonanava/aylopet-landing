@@ -37,6 +37,7 @@ import type {
   Sex,
   WeightLogEntry,
 } from "@/lib/pet-history/types";
+import { sanitizeDecimal } from "@/components/ui/DecimalInput";
 
 const TARGET_COPY: Record<string, { label: string; className: string }> = {
   below: {
@@ -491,6 +492,111 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
           }
         />
 
+        {/* Right under its button — below the chart it opened off-screen on phones. */}
+        <AnimatePresence initial={false}>
+          {weightFormOpen ? (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="overflow-hidden"
+            >
+              <div className="mb-5 space-y-4 rounded-2xl border border-[#e5e7eb] bg-[#FAFAF8] p-5">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className={fieldLabel} htmlFor="weight-date">
+                      თარიღი
+                    </label>
+                    <input
+                      id="weight-date"
+                      type="date"
+                      value={weightDate}
+                      max={today()}
+                      onChange={(event) => setWeightDate(event.target.value)}
+                      className={`${textInput} mt-2`}
+                    />
+                  </div>
+                  <div>
+                    <label className={fieldLabel} htmlFor="weight-value">
+                      წონა (კგ)
+                    </label>
+                    <input
+                      id="weight-value"
+                      type="text"
+                      inputMode="decimal"
+                      value={weightValue}
+                      onChange={(event) =>
+                        setWeightValue(sanitizeDecimal(event.target.value))
+                      }
+                      placeholder="28.4"
+                      className={`${textInput} mt-2`}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <span className={fieldLabel}>სხეულის კონდიცია (BCS 1–9)</span>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {BCS_SCALE.map((item) => (
+                      <button
+                        key={item.score}
+                        type="button"
+                        title={item.label}
+                        onClick={() => setWeightBcs(item.score as BcsScore)}
+                        className={`h-10 w-10 cursor-pointer rounded-xl border text-sm font-semibold transition-colors ${
+                          weightBcs === item.score
+                            ? "border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white"
+                            : "border-[#e5e7eb] bg-white text-slate-500 hover:border-[var(--brand-primary)]/30"
+                        }`}
+                      >
+                        {item.score}
+                      </button>
+                    ))}
+                  </div>
+                  {weightBcs ? (
+                    <p className="mt-2 text-xs text-slate-400">
+                      {BCS_SCALE.find((item) => item.score === weightBcs)?.label}
+                    </p>
+                  ) : null}
+                </div>
+
+                <div>
+                  <label className={fieldLabel} htmlFor="weight-note">
+                    შენიშვნა
+                  </label>
+                  <input
+                    id="weight-note"
+                    value={weightNote}
+                    onChange={(event) => setWeightNote(event.target.value)}
+                    placeholder="მაგ. აწონვა კლინიკაში"
+                    className={`${textInput} mt-2`}
+                  />
+                </div>
+
+                {weightError ? (
+                  <p className="text-sm text-red-600">{weightError}</p>
+                ) : null}
+
+                <button
+                  type="button"
+                  onClick={() => void submitWeight()}
+                  disabled={savingWeight || weightValue.trim().length === 0}
+                  className={`${addButton} cursor-pointer disabled:opacity-60`}
+                >
+                  {savingWeight ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <BadgeCheck className="h-4 w-4" />
+                  )}
+                  ჩანაწერის შენახვა
+                </button>
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+
+
         <dl className="grid gap-3 sm:grid-cols-3">
           <DataField
             label="მიმდინარე წონა"
@@ -558,108 +664,6 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
           )}
         </div>
 
-        <AnimatePresence initial={false}>
-          {weightFormOpen ? (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-              className="overflow-hidden"
-            >
-              <div className="mt-5 space-y-4 rounded-2xl border border-[#e5e7eb] bg-[#FAFAF8] p-5">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label className={fieldLabel} htmlFor="weight-date">
-                      თარიღი
-                    </label>
-                    <input
-                      id="weight-date"
-                      type="date"
-                      value={weightDate}
-                      max={today()}
-                      onChange={(event) => setWeightDate(event.target.value)}
-                      className={`${textInput} mt-2`}
-                    />
-                  </div>
-                  <div>
-                    <label className={fieldLabel} htmlFor="weight-value">
-                      წონა (კგ)
-                    </label>
-                    <input
-                      id="weight-value"
-                      type="number"
-                      min="0.1"
-                      step="0.1"
-                      inputMode="decimal"
-                      value={weightValue}
-                      onChange={(event) => setWeightValue(event.target.value)}
-                      placeholder="28.4"
-                      className={`${textInput} mt-2`}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <span className={fieldLabel}>სხეულის კონდიცია (BCS 1–9)</span>
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    {BCS_SCALE.map((item) => (
-                      <button
-                        key={item.score}
-                        type="button"
-                        title={item.label}
-                        onClick={() => setWeightBcs(item.score as BcsScore)}
-                        className={`h-10 w-10 cursor-pointer rounded-xl border text-sm font-semibold transition-colors ${
-                          weightBcs === item.score
-                            ? "border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white"
-                            : "border-[#e5e7eb] bg-white text-slate-500 hover:border-[var(--brand-primary)]/30"
-                        }`}
-                      >
-                        {item.score}
-                      </button>
-                    ))}
-                  </div>
-                  {weightBcs ? (
-                    <p className="mt-2 text-xs text-slate-400">
-                      {BCS_SCALE.find((item) => item.score === weightBcs)?.label}
-                    </p>
-                  ) : null}
-                </div>
-
-                <div>
-                  <label className={fieldLabel} htmlFor="weight-note">
-                    შენიშვნა
-                  </label>
-                  <input
-                    id="weight-note"
-                    value={weightNote}
-                    onChange={(event) => setWeightNote(event.target.value)}
-                    placeholder="მაგ. აწონვა კლინიკაში"
-                    className={`${textInput} mt-2`}
-                  />
-                </div>
-
-                {weightError ? (
-                  <p className="text-sm text-red-600">{weightError}</p>
-                ) : null}
-
-                <button
-                  type="button"
-                  onClick={() => void submitWeight()}
-                  disabled={savingWeight || weightValue.trim().length === 0}
-                  className={`${addButton} cursor-pointer disabled:opacity-60`}
-                >
-                  {savingWeight ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <BadgeCheck className="h-4 w-4" />
-                  )}
-                  ჩანაწერის შენახვა
-                </button>
-              </div>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
 
         {weightSummary.sorted.length > 0 ? (
           <ul className="mt-5 divide-y divide-[#f0eeea] rounded-2xl border border-[#e5e7eb]">

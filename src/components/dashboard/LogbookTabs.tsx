@@ -21,12 +21,13 @@ import {
   MOOD_SCALE,
   daysUntil,
   formatDate,
+  mealLabel,
   type CareType,
-  type MealType,
   type Pet,
 } from "@/lib/dashboard";
 import { APPETITE_LABELS } from "@/lib/pet-history/labels";
 import type { AppetiteLevel } from "@/lib/pet-history/types";
+import { sanitizeDecimal } from "@/components/ui/DecimalInput";
 
 const tabTrigger =
   "flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-slate-500 transition-colors data-[state=active]:bg-[var(--brand-primary)] data-[state=active]:text-white";
@@ -429,10 +430,12 @@ function SupplementsTab({ pet }: { pet: Pet }) {
 
 /* ------------------------------- Tab C: Food ------------------------------ */
 
+const MEAL_NUMBERS = [1, 2, 3, 4, 5, 6];
+
 function FoodTab({ pet }: { pet: Pet }) {
   const { addFood } = useDashboard();
   const [open, setOpen] = useState(false);
-  const [mealType, setMealType] = useState<MealType>("morning");
+  const [mealNumber, setMealNumber] = useState(1);
   const [brand, setBrand] = useState("Aylopet");
   const [isAylopet, setIsAylopet] = useState(true);
   const [portion, setPortion] = useState("");
@@ -447,7 +450,7 @@ function FoodTab({ pet }: { pet: Pet }) {
     setError(null);
     const result = await addFood(pet.id, {
       date: new Date().toISOString().slice(0, 10),
-      mealType,
+      mealNumber,
       brand: isAylopet ? "Aylopet" : brand || "სხვა",
       isAylopet,
       portionGrams: Number(portion),
@@ -465,11 +468,21 @@ function FoodTab({ pet }: { pet: Pet }) {
     setOpen(false);
   };
 
+  // Owners feed as often as they like — default to the next meal of today.
+  const openForm = () => {
+    if (!open) {
+      const today = new Date().toISOString().slice(0, 10);
+      const loggedToday = pet.food.filter((f) => f.date === today).length;
+      setMealNumber(Math.min(loggedToday + 1, MEAL_NUMBERS.length));
+    }
+    setOpen((o) => !o);
+  };
+
   return (
     <div>
-      <div className="mb-5 flex items-center justify-between">
-        <p className="text-sm text-slate-500">კვების ჩანაწერები</p>
-        <button className={addButton} onClick={() => setOpen((o) => !o)}>
+      <div className="mb-5 flex items-center justify-between gap-3">
+        <p className="min-w-0 text-sm text-slate-500">კვების ჩანაწერები</p>
+        <button className={addButton} onClick={openForm}>
           <Plus className="h-4 w-4" /> დამატება
         </button>
       </div>
@@ -484,20 +497,20 @@ function FoodTab({ pet }: { pet: Pet }) {
         <div className="mb-6 flex flex-col gap-4 rounded-2xl border border-[#e5e7eb] bg-[#FAFAF8] p-4">
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
-              <label className={fieldLabel}>კვების ტიპი</label>
-              <div className="flex gap-2">
-                {(["morning", "evening"] as MealType[]).map((m) => (
+              <label className={fieldLabel}>რომელი კვებაა დღეს</label>
+              <div className="flex flex-wrap gap-2">
+                {MEAL_NUMBERS.map((n) => (
                   <button
-                    key={m}
+                    key={n}
                     type="button"
-                    onClick={() => setMealType(m)}
-                    className={`flex-1 rounded-2xl border px-4 py-2.5 text-sm font-medium transition-colors ${
-                      mealType === m
+                    onClick={() => setMealNumber(n)}
+                    className={`min-w-11 rounded-2xl border px-3 py-2.5 text-sm font-medium transition-colors ${
+                      mealNumber === n
                         ? "border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white"
                         : "border-[#e5e7eb] bg-white text-slate-600"
                     }`}
                   >
-                    {m === "morning" ? "დილა" : "საღამო"}
+                    {n}
                   </button>
                 ))}
               </div>
@@ -505,10 +518,11 @@ function FoodTab({ pet }: { pet: Pet }) {
             <div className="flex flex-col gap-1.5">
               <label className={fieldLabel}>პორცია (გრამი)</label>
               <input
-                type="number"
+                type="text"
+                inputMode="decimal"
                 className={textInput}
                 value={portion}
-                onChange={(e) => setPortion(e.target.value)}
+                onChange={(e) => setPortion(sanitizeDecimal(e.target.value))}
                 placeholder="0"
               />
             </div>
@@ -552,13 +566,13 @@ function FoodTab({ pet }: { pet: Pet }) {
 
           <div className="flex flex-col gap-1.5">
             <label className={fieldLabel}>მადა</label>
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
               {(Object.keys(APPETITE_LABELS) as AppetiteLevel[]).map((level) => (
                 <button
                   key={level}
                   type="button"
                   onClick={() => setAppetite(level)}
-                  className={`flex-1 rounded-2xl border px-3 py-2.5 text-xs font-medium transition-colors ${
+                  className={`min-w-0 break-words rounded-2xl border px-3 py-2.5 text-xs font-medium transition-colors ${
                     appetite === level
                       ? "border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white"
                       : "border-[#e5e7eb] bg-white text-slate-600"
@@ -598,20 +612,20 @@ function FoodTab({ pet }: { pet: Pet }) {
             className="rounded-2xl border border-[#e5e7eb] bg-white p-4 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
           >
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--brand-primary)]/[0.06] text-[var(--brand-primary)]">
+              <div className="flex min-w-0 items-center gap-3">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-primary)]/[0.06] text-[var(--brand-primary)]">
                   <UtensilsCrossed className="h-5 w-5" />
                 </span>
-                <div>
+                <div className="min-w-0">
                   <h4 className="font-semibold text-[var(--brand-primary)]">
-                    {f.mealType === "morning" ? "დილის კვება" : "საღამოს კვება"}
+                    {mealLabel(f)}
                   </h4>
                   <p className="text-xs text-slate-400">{formatDate(f.date)}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex min-w-0 max-w-full flex-wrap items-center gap-2">
                 <span
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${
+                  className={`min-w-0 max-w-full truncate rounded-full px-3 py-1 text-xs font-medium ${
                     f.isAylopet
                       ? "bg-[var(--brand-accent)]/10 text-[var(--brand-accent)]"
                       : "bg-slate-100 text-slate-500"
@@ -625,7 +639,7 @@ function FoodTab({ pet }: { pet: Pet }) {
               </div>
             </div>
             {f.digestiveResponse && (
-              <p className="mt-3 rounded-xl bg-[#FAFAF8] px-3 py-2 text-sm text-slate-600">
+              <p className="mt-3 break-words rounded-xl bg-[#FAFAF8] px-3 py-2 text-sm text-slate-600">
                 <span className="font-medium text-[var(--brand-primary)]">მონელება:</span>{" "}
                 {f.digestiveResponse}
               </p>
@@ -676,27 +690,33 @@ function MoodTab({ pet }: { pet: Pet }) {
         {/* Mood scale */}
         <div className="mt-5">
           <label className={fieldLabel}>განწყობა</label>
-          <div className="mt-2 flex justify-between gap-2">
+          <div className="mt-2 grid grid-cols-5 gap-1.5 sm:gap-2">
             {MOOD_SCALE.map((m) => (
               <button
                 key={m.value}
                 type="button"
                 onClick={() => setMood(m.value)}
-                className={`flex flex-1 flex-col items-center gap-1 rounded-2xl border p-3 transition-all duration-200 ${
+                aria-label={m.label}
+                aria-pressed={mood === m.value}
+                className={`flex min-w-0 flex-col items-center gap-1 rounded-2xl border px-1 py-2.5 transition-all duration-200 sm:p-3 ${
                   mood === m.value
                     ? "border-[var(--brand-primary)] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
                     : "border-transparent bg-white/50 hover:border-[#e5e7eb]"
                 }`}
               >
-                <span className="text-2xl">{m.emoji}</span>
+                <span className="text-xl leading-none sm:text-2xl">{m.emoji}</span>
+                {/* Five Georgian labels can't share a phone-width row. */}
                 <span
-                  className={`text-[11px] font-medium ${mood === m.value ? "text-[var(--brand-primary)]" : "text-slate-400"}`}
+                  className={`hidden max-w-full truncate text-[11px] font-medium sm:block ${mood === m.value ? "text-[var(--brand-primary)]" : "text-slate-400"}`}
                 >
                   {m.label}
                 </span>
               </button>
             ))}
           </div>
+          <p className="mt-2 text-center text-xs font-medium text-[var(--brand-primary)] sm:hidden">
+            {MOOD_SCALE.find((m) => m.value === mood)?.label}
+          </p>
         </div>
 
         {/* Energy slider */}
@@ -767,7 +787,7 @@ function MoodTab({ pet }: { pet: Pet }) {
                 </div>
                 <div className="mt-2 flex items-center gap-2">
                   <span className="text-xs text-slate-400">ენერგია</span>
-                  <span className="h-2 w-28 overflow-hidden rounded-full bg-[#e5e7eb]">
+                  <span className="h-2 w-20 shrink-0 overflow-hidden rounded-full bg-[#e5e7eb] sm:w-28">
                     <span
                       className="block h-full rounded-full bg-[var(--brand-accent)]"
                       style={{ width: `${entry.energy}%` }}
@@ -778,7 +798,7 @@ function MoodTab({ pet }: { pet: Pet }) {
                   </span>
                 </div>
                 {entry.notes && (
-                  <p className="mt-2 text-sm text-slate-600">{entry.notes}</p>
+                  <p className="mt-2 break-words text-sm text-slate-600">{entry.notes}</p>
                 )}
               </div>
             </article>

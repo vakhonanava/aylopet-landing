@@ -17,6 +17,7 @@ import {
 import type { ActivityLevel } from "@/lib/dashboard";
 import { createPetProfileInSupabase } from "@/lib/platform/pet-persistence";
 import { createClient } from "@/utils/supabase/client";
+import { sanitizeDecimal } from "@/components/ui/DecimalInput";
 
 const petSchema = z.object({
   petName: z.string().min(1, "მიუთითე ძაღლის სახელი"),
@@ -188,11 +189,15 @@ export function OnboardingForm() {
         <div className="relative">
           <input
             id="weightKg"
-            type="number"
-            step="0.1"
+            type="text"
+            inputMode="decimal"
             className={`${textInput} pr-12`}
             placeholder="0"
-            {...register("weightKg", { valueAsNumber: true })}
+            {...register("weightKg", {
+              // Accepts „0,5“ from a Georgian keyboard as well as „0.5“.
+              setValueAs: (raw: string) =>
+                raw === "" ? Number.NaN : Number(sanitizeDecimal(raw)),
+            })}
           />
           <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-slate-400">
             kg

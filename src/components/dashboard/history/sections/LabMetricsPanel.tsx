@@ -24,6 +24,7 @@ import {
   type LabMetricCategory,
 } from "@/lib/pet-history/lab-metrics";
 import type { LabMetricEntry, LabMetricKey } from "@/lib/pet-history/types";
+import { sanitizeDecimal } from "@/components/ui/DecimalInput";
 
 function today(): string {
   return new Date().toISOString().slice(0, 10);
@@ -283,12 +284,11 @@ export function LabMetricsPanel({ pet }: { pet: Pet }) {
                         </label>
                         <input
                           id={`lab-${def.key}`}
-                          type="number"
+                          type="text"
                           inputMode="decimal"
-                          step={def.decimals === 0 ? 1 : Math.pow(10, -def.decimals)}
                           value={values[def.key] ?? ""}
                           onChange={(event) =>
-                            setValue(def.key, event.target.value)
+                            setValue(def.key, sanitizeDecimal(event.target.value))
                           }
                           placeholder={`${def.normalMin}–${def.normalMax}`}
                           className={`${textInput} mt-2`}

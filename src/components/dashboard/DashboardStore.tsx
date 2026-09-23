@@ -178,10 +178,18 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   });
   const [ready, setReady] = useState(false);
 
+  // Keyed on primitives, not the user object: Supabase hands out a fresh
+  // object on every token refresh (e.g. when a phone brings the tab back from
+  // the background), which would otherwise reload the dashboard and reset the
+  // page the owner was on.
+  const userId = user?.id ?? null;
+  const userFullName = user?.user_metadata?.full_name as string | undefined;
+  const userEmail = user?.email ?? "";
+
   useEffect(() => {
     if (!authReady) return;
 
-    if (!user) {
+    if (!userId) {
       queueMicrotask(() => {
         try {
           const raw = localStorage.getItem(STORAGE_KEY);
@@ -233,10 +241,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     if (!supabase) {
       setState({
         account: {
-          name:
-            (user.user_metadata?.full_name as string | undefined) ??
-            "მომხმარებელი",
-          email: user.email ?? "",
+          name: userFullName ?? "მომხმარებელი",
+          email: userEmail,
         },
         pets: [],
       });
@@ -244,16 +250,14 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    void fetchUserDashboardFromSupabase(supabase, user.id).then((data) => {
+    void fetchUserDashboardFromSupabase(supabase, userId).then((data) => {
       if (cancelled) return;
       setState({
         account: data?.account.name
           ? data.account
           : {
-              name:
-                (user.user_metadata?.full_name as string | undefined) ??
-                "მომხმარებელი",
-              email: user.email ?? "",
+              name: userFullName ?? "მომხმარებელი",
+              email: userEmail,
             },
         pets: data?.pets ?? [],
       });
@@ -263,7 +267,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [authReady, user]);
+  }, [authReady, userId, userFullName, userEmail]);
 
   useEffect(() => {
     if (!ready || user) return;
