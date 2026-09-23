@@ -2,17 +2,21 @@
 
 import Link from "next/link";
 import { Dog, Printer } from "lucide-react";
+import { useMemo } from "react";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
+import { QrCode } from "@/components/dashboard/history/QrCode";
 import { StatusPill } from "@/components/dashboard/history/ui";
 import { formatDate, type Pet } from "@/lib/dashboard";
 import { MICROCHIP_STATUS } from "@/lib/pet-history/labels";
 import { chipOwnerContact } from "@/lib/pet-history/owner-contact";
+import { buildSosPayload } from "@/lib/pet-history/sos";
 
 export function SosCardView({ pet }: { pet: Pet }) {
   const registration = pet.history?.microchip ?? null;
   const chip = registration?.code || pet.microchipId || null;
   const { account } = useDashboard();
   const owner = chipOwnerContact(pet, account);
+  const payload = useMemo(() => buildSosPayload(pet, account), [pet, account]);
 
   return (
     <div className="mx-auto max-w-xl px-6 py-10">
@@ -53,6 +57,12 @@ export function SosCardView({ pet }: { pet: Pet }) {
           <div>
             <h1 className="text-2xl font-bold text-[var(--brand-primary)]">{pet.name}</h1>
             <p className="text-sm text-slate-500">{pet.breed}</p>
+          </div>
+        </div>
+
+        <div className="mt-8 flex justify-center">
+          <div className="rounded-2xl border border-[#e5e7eb] bg-white p-4">
+            <QrCode value={payload} size={220} />
           </div>
         </div>
 
@@ -100,7 +110,7 @@ export function SosCardView({ pet }: { pet: Pet }) {
         </div>
 
         <p className="mt-8 rounded-2xl bg-[#FAFAF8] px-4 py-3 text-center text-xs leading-relaxed text-slate-500">
-          თუ იპოვეთ ეს ძაღლი, გთხოვთ დარეკოთ ზემოთ მითითებულ ნომერზე.
+          თუ იპოვეთ ეს ძაღლი, დაასკანერეთ QR კოდი ან დარეკეთ ზემოთ მითითებულ ნომერზე.
           მადლობა დახმარებისთვის.
         </p>
 
