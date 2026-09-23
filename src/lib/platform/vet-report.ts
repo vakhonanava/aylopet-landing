@@ -3,6 +3,7 @@ import type { CareType } from "@/lib/dashboard";
 import type { MedicalRecord, Medication, SeverityLevel, SymptomLog } from "@/lib/medical";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 import { parsePetHistory } from "@/lib/platform/history-persistence";
+import type { PetHistory } from "@/lib/pet-history/types";
 import {
   PET_DOCUMENTS_BUCKET,
   PET_MEDICAL_DOCS_BUCKET,
@@ -27,8 +28,9 @@ export interface VetReportOwner {
   phone: string | null;
 }
 
-export interface PreventativeCareEntry {
-  title: string;
+export interface CareHistoryEntry {
+  careType: CareType;
+  name: string;
   administered: string;
   nextDue: string | null;
 }
@@ -53,7 +55,10 @@ export interface VetReportData {
   medicalRecord: MedicalRecord | null;
   activeMedications: Medication[];
   recentSymptomLogs: SymptomLog[];
-  preventativeCare: Record<CareType, PreventativeCareEntry | null>;
+  /** Every vaccine / deworming / flea-tick record, newest first. */
+  careHistory: CareHistoryEntry[];
+  /** Everything else the owner logged on the profile (visits, weight, labs…). */
+  history: PetHistory;
   /** Uploaded lab analyses, so the printed report carries them too. */
   labFiles: VetReportLabFile[];
   symptomWindowDays: number;
@@ -61,26 +66,6 @@ export interface VetReportData {
 }
 
 export type VetReportShareFailureReason = "not_found" | "expired" | "revoked";
-
-function latestByCareType(
-  rows: { name: string; care_type: string; administered: string; next_due: string | null }[],
-): Record<CareType, PreventativeCareEntry | null> {
-  const result: Record<CareType, PreventativeCareEntry | null> = {
-    vaccine: null,
-    deworming: null,
-    flea_tick: null,
-  };
-  for (const row of rows) {
-    const type = row.care_type as CareType;
-    if (!(type in result) || result[type]) continue;
-    result[type] = {
-      title: row.name,
-      administered: row.administered,
-      nextDue: row.next_due,
-    };
-  }
-  return result;
-}
 
 export async function buildVetReportData(
   supabase: SupabaseClient,
@@ -180,8 +165,6 @@ export async function buildVetReportData(
     });
   }
 
-  const preventativeCare = latestByCareType(vaccinesData ?? []);
-
   const labFiles: VetReportLabFile[] = [];
   for (const file of filesData ?? []) {
     const mimeType = file.file_type as string;
@@ -199,10 +182,18 @@ export async function buildVetReportData(
     });
   }
 
+  const history = parsePetHistory(petRow.history);
+  const careHistory: CareHistoryEntry[] = (vaccinesData ?? []).map((row) => ({
+    careType: (row.care_type as CareType) ?? "vaccine",
+    name: row.name as string,
+    administered: row.administered as string,
+    nextDue: (row.next_due as string | null) ?? null,
+  }));
+
   // Sex/neuter status is only ever set at onboarding on the flat columns; any
   // later edit goes through `history.reproductive` instead, so that's the
   // source of truth whenever it's present.
-  const reproductive = parsePetHistory(petRow.history).reproductive;
+  const reproductive = history.reproductive;
 
   return {
     pet: {
@@ -216,7 +207,8 @@ export async function buildVetReportData(
         : Boolean(petRow.is_neutered),
       birthDate: (petRow.birth_date as string | null) ?? null,
       bcsScore: (petRow.bcs_score as number | null) ?? null,
-      microchipId: (petRow.microchip_id as string | null) ?? null,
+      microchipId:
+        history.microchip?.code || (petRow.microchip_id as string | null) || null,
       avatarUrl: (petRow.avatar_url as string | null) ?? null,
     },
     owner: {
@@ -227,7 +219,8 @@ export async function buildVetReportData(
     medicalRecord,
     activeMedications,
     recentSymptomLogs,
-    preventativeCare,
+    careHistory,
+    history,
     labFiles,
     symptomWindowDays,
     generatedAt: new Date().toISOString(),

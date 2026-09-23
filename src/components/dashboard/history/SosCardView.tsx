@@ -2,19 +2,17 @@
 
 import Link from "next/link";
 import { Dog, Printer } from "lucide-react";
-import { useMemo } from "react";
-import { QrCode } from "@/components/dashboard/history/QrCode";
+import { useDashboard } from "@/components/dashboard/DashboardStore";
 import { StatusPill } from "@/components/dashboard/history/ui";
 import { formatDate, type Pet } from "@/lib/dashboard";
 import { MICROCHIP_STATUS } from "@/lib/pet-history/labels";
-import { buildSosPayload, sosOwnerPhone } from "@/lib/pet-history/sos";
+import { chipOwnerContact } from "@/lib/pet-history/owner-contact";
 
 export function SosCardView({ pet }: { pet: Pet }) {
   const registration = pet.history?.microchip ?? null;
-  const chip = registration?.code ?? pet.microchipId ?? null;
-  const payload = useMemo(() => buildSosPayload(pet, chip), [pet, chip]);
-
-  const callbackNumber = sosOwnerPhone(pet);
+  const chip = registration?.code || pet.microchipId || null;
+  const { account } = useDashboard();
+  const owner = chipOwnerContact(pet, account);
 
   return (
     <div className="mx-auto max-w-xl px-6 py-10">
@@ -58,12 +56,6 @@ export function SosCardView({ pet }: { pet: Pet }) {
           </div>
         </div>
 
-        <div className="mt-8 flex justify-center">
-          <div className="rounded-2xl border border-[#e5e7eb] bg-white p-4">
-            <QrCode value={payload} size={220} />
-          </div>
-        </div>
-
         <div className="mt-8 space-y-3 border-t border-[#eceae5] pt-6">
           <div className="flex items-center justify-between gap-3">
             <span className="text-xs font-medium uppercase tracking-wide text-slate-400">
@@ -81,19 +73,35 @@ export function SosCardView({ pet }: { pet: Pet }) {
               <StatusPill tone={MICROCHIP_STATUS[registration.status]} />
             </div>
           ) : null}
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-xs font-medium uppercase tracking-wide text-slate-400">
-              მეპატრონის ნომერი
+          <div className="flex items-start justify-between gap-3">
+            <span className="shrink-0 text-xs font-medium uppercase tracking-wide text-slate-400">
+              მეპატრონე
             </span>
-            <span className="text-sm font-semibold text-[var(--brand-primary)]">
-              {callbackNumber ?? "დაამატეთ ჩიპის რეგისტრაციაში"}
+            <span className="text-right text-sm font-semibold text-[var(--brand-primary)]">
+              {owner.name || "დაამატეთ ჩიპის სექციაში"}
+            </span>
+          </div>
+          <div className="flex items-start justify-between gap-3">
+            <span className="shrink-0 text-xs font-medium uppercase tracking-wide text-slate-400">
+              ტელეფონი
+            </span>
+            <span className="text-right text-sm font-semibold text-[var(--brand-primary)]">
+              {owner.phone || "დაამატეთ ჩიპის სექციაში"}
+            </span>
+          </div>
+          <div className="flex items-start justify-between gap-3">
+            <span className="shrink-0 text-xs font-medium uppercase tracking-wide text-slate-400">
+              ლოკაცია
+            </span>
+            <span className="text-right text-sm font-semibold text-[var(--brand-primary)]">
+              {owner.address || "·"}
             </span>
           </div>
         </div>
 
         <p className="mt-8 rounded-2xl bg-[#FAFAF8] px-4 py-3 text-center text-xs leading-relaxed text-slate-500">
-          თუ იპოვეთ ეს ძაღლი, დაასკანერეთ QR კოდი ან დარეკეთ ზემოთ მითითებულ
-          ნომერზე. მადლობა დახმარებისთვის.
+          თუ იპოვეთ ეს ძაღლი, გთხოვთ დარეკოთ ზემოთ მითითებულ ნომერზე.
+          მადლობა დახმარებისთვის.
         </p>
 
         <p className="mt-4 text-center text-[10px] text-slate-300">

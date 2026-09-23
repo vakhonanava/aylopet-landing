@@ -392,10 +392,10 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
               className="overflow-hidden sm:col-span-2 lg:col-span-3"
             >
               <div className="space-y-4 rounded-2xl border border-[#e5e7eb] bg-[#FAFAF8] p-4">
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-4 sm:grid-cols-2 [&>*]:min-w-0">
                   <div>
                     <span className={fieldLabel}>სქესი</span>
-                    <div className="mt-2 flex gap-2">
+                    <div className="mt-2 flex flex-wrap gap-2">
                       {(["male", "female"] as Sex[]).map((option) => (
                         <button
                           key={option}
@@ -415,7 +415,7 @@ export function IdentityPassport({ pet }: { pet: Pet }) {
 
                   <div>
                     <span className={fieldLabel}>რეპროდუქციული სტატუსი</span>
-                    <div className="mt-2 flex gap-2">
+                    <div className="mt-2 flex flex-wrap gap-2">
                       {(["intact", "neutered"] as NeuterStatus[]).map(
                         (option) => (
                           <button
