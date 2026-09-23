@@ -28,6 +28,7 @@ import {
 } from "@/lib/pet-history/calculations";
 import { APPETITE_LABELS, DIET_LABELS } from "@/lib/pet-history/labels";
 import type { DietProfile, DietType } from "@/lib/pet-history/types";
+import { sanitizeDecimal } from "@/components/ui/DecimalInput";
 
 /** Groups feeding entries by day so intake can be compared with the target. */
 function dailyIntake(pet: Pet) {
@@ -327,11 +328,12 @@ export function NutritionPanel({ pet }: { pet: Pet }) {
                   </label>
                   <input
                     id="diet-kcal"
-                    type="number"
-                    min="0"
-                    inputMode="numeric"
+                    type="text"
+                    inputMode="decimal"
                     value={kcalPer100g}
-                    onChange={(event) => setKcalPer100g(event.target.value)}
+                    onChange={(event) =>
+                      setKcalPer100g(sanitizeDecimal(event.target.value))
+                    }
                     placeholder="145"
                     className={`${textInput} mt-2`}
                   />

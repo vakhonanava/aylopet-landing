@@ -29,6 +29,7 @@ import {
   getStepCopy,
   type OnboardingQuizState,
 } from "@/lib/onboarding/quiz-steps";
+import { DecimalInput } from "@/components/ui/DecimalInput";
 
 const inputClass =
   "w-full rounded-xl border border-[var(--ob-border)] bg-[var(--ob-surface-raised)] px-4 py-3 text-[15px] text-[var(--ob-text-primary)] outline-none transition-all duration-300 placeholder:text-[var(--ob-text-tertiary)] focus:border-[var(--ob-accent)]/60 focus:ring-2 focus:ring-[var(--ob-accent)]/15";
@@ -272,15 +273,10 @@ function StepBody({
     case 10:
       return (
         <div className="relative">
-          <input
-            type="number"
-            min={0.5}
-            step={0.1}
+          <DecimalInput
             className={`${inputClass} pr-14 ${showError ? errorInputClass : ""}`}
-            value={state.weightKg ?? ""}
-            onChange={(e) =>
-              patch({ weightKg: e.target.value === "" ? null : Number(e.target.value) })
-            }
+            value={state.weightKg}
+            onValueChange={(weightKg) => patch({ weightKg })}
             placeholder={copy.fields.weightPlaceholder}
             autoFocus
           />

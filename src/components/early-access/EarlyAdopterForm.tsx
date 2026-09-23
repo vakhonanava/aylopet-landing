@@ -19,6 +19,7 @@ import {
   type ProductInterest,
 } from "@/lib/leads/types";
 import { fadeUp, motionEase, staggerContainer } from "@/lib/motion";
+import { DecimalInput } from "@/components/ui/DecimalInput";
 
 const inputClass =
   "w-full rounded-xl border border-[var(--border-light)] bg-white px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition-all duration-300 placeholder:text-[var(--text-tertiary)] focus:border-[var(--brand-primary)]/40 focus:ring-2 focus:ring-[var(--brand-primary)]/10";
@@ -365,16 +366,13 @@ export function EarlyAdopterForm() {
                 </label>
                 <label className="flex flex-col gap-1.5">
                   <span className={labelClass}>წონა (კგ) *</span>
-                  <input
-                    type="number"
-                    min={0.5}
-                    step={0.1}
+                  <DecimalInput
                     className={inputClass}
-                    value={form.weightKg}
-                    onChange={(e) =>
+                    value={form.weightKg || null}
+                    onValueChange={(weightKg) =>
                       setForm((p) => ({
                         ...p,
-                        weightKg: Number(e.target.value),
+                        weightKg: weightKg ?? 0,
                       }))
                     }
                   />

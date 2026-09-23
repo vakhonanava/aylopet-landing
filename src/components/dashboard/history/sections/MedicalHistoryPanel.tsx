@@ -176,7 +176,7 @@ export function MedicalHistoryPanel({ pet }: { pet: Pet }) {
               </h3>
               <CareGroup
                 entries={[...byType.deworming, ...byType.flea_tick]}
-                emptyLabel="მატლების/რწყილის საწინააღმდეგო ჩანაწერი არ არის."
+                emptyLabel="ჭიაზე ან რწყილ-ტკიპაზე დამუშავების ჩანაწერი არ არის."
               />
             </div>
           </div>

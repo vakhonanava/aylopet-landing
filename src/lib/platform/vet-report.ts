@@ -3,7 +3,10 @@ import type { CareType } from "@/lib/dashboard";
 import type { MedicalRecord, Medication, SeverityLevel, SymptomLog } from "@/lib/medical";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 import { parsePetHistory } from "@/lib/platform/history-persistence";
-import { PET_MEDICAL_DOCS_BUCKET } from "@/lib/platform/types";
+import {
+  PET_DOCUMENTS_BUCKET,
+  PET_MEDICAL_DOCS_BUCKET,
+} from "@/lib/platform/types";
 
 export interface VetReportPet {
   id: string;
@@ -30,6 +33,20 @@ export interface PreventativeCareEntry {
   nextDue: string | null;
 }
 
+export interface VetReportLabFile {
+  id: string;
+  name: string;
+  mimeType: "application/pdf" | "image/jpeg" | "image/png";
+  url: string;
+  uploadedAt: string;
+}
+
+const LAB_MIME_TYPES = new Set<string>([
+  "application/pdf",
+  "image/jpeg",
+  "image/png",
+]);
+
 export interface VetReportData {
   pet: VetReportPet;
   owner: VetReportOwner;
@@ -37,6 +54,8 @@ export interface VetReportData {
   activeMedications: Medication[];
   recentSymptomLogs: SymptomLog[];
   preventativeCare: Record<CareType, PreventativeCareEntry | null>;
+  /** Uploaded lab analyses, so the printed report carries them too. */
+  labFiles: VetReportLabFile[];
   symptomWindowDays: number;
   generatedAt: string;
 }
@@ -93,6 +112,7 @@ export async function buildVetReportData(
     { data: medicationsData },
     { data: symptomLogsData },
     { data: vaccinesData },
+    { data: filesData },
   ] = await Promise.all([
     supabase.from("medical_records").select("*").eq("pet_id", petId).maybeSingle(),
     supabase
@@ -112,6 +132,11 @@ export async function buildVetReportData(
       .select("name, care_type, administered, next_due")
       .eq("pet_id", petId)
       .order("administered", { ascending: false }),
+    supabase
+      .from("pet_files")
+      .select("id, file_name, file_path, file_type, created_at")
+      .eq("pet_id", petId)
+      .order("created_at", { ascending: false }),
   ]);
 
   const medicalRecord: MedicalRecord | null = medicalRecordRow
@@ -157,6 +182,23 @@ export async function buildVetReportData(
 
   const preventativeCare = latestByCareType(vaccinesData ?? []);
 
+  const labFiles: VetReportLabFile[] = [];
+  for (const file of filesData ?? []) {
+    const mimeType = file.file_type as string;
+    if (!LAB_MIME_TYPES.has(mimeType)) continue;
+    const { data: signed } = await supabase.storage
+      .from(PET_DOCUMENTS_BUCKET)
+      .createSignedUrl(file.file_path as string, 3600);
+    if (!signed?.signedUrl) continue;
+    labFiles.push({
+      id: file.id as string,
+      name: file.file_name as string,
+      mimeType: mimeType as VetReportLabFile["mimeType"],
+      url: signed.signedUrl,
+      uploadedAt: file.created_at as string,
+    });
+  }
+
   // Sex/neuter status is only ever set at onboarding on the flat columns; any
   // later edit goes through `history.reproductive` instead, so that's the
   // source of truth whenever it's present.
@@ -186,6 +228,7 @@ export async function buildVetReportData(
     activeMedications,
     recentSymptomLogs,
     preventativeCare,
+    labFiles,
     symptomWindowDays,
     generatedAt: new Date().toISOString(),
   };

@@ -14,6 +14,7 @@ import {
 } from "@/components/dashboard/FormControls";
 import type { Pet } from "@/lib/dashboard";
 import { petToPayload, type PetProfilePayload } from "@/lib/platform/pet-persistence";
+import { DecimalInput } from "@/components/ui/DecimalInput";
 
 /**
  * Pet list entry with inline editing. The main dashboard is the pets list, so
@@ -97,17 +98,13 @@ export function DashboardPetCard({ pet }: { pet: Pet }) {
             <label className={fieldLabel} htmlFor={`pet-weight-${pet.id}`}>
               წონა (კგ)
             </label>
-            <input
+            <DecimalInput
               id={`pet-weight-${pet.id}`}
-              type="number"
-              min="0.5"
-              step="0.1"
-              inputMode="decimal"
-              value={draft.weightKg || ""}
-              onChange={(event) =>
+              value={draft.weightKg || null}
+              onValueChange={(weightKg) =>
                 setDraft((current) => ({
                   ...current,
-                  weightKg: Number(event.target.value),
+                  weightKg: weightKg ?? 0,
                 }))
               }
               className={`${textInput} mt-1.5`}
