@@ -17,6 +17,7 @@ import { useHistorySave } from "@/components/dashboard/history/useHistorySave";
 import { formatDate, uid, type Pet } from "@/lib/dashboard";
 import {
   STOOL_CONSISTENCY_LABELS,
+  URINATION_CHANGE_LABELS,
   WATER_CHANGE_LABELS,
   hydrationEntryFlags,
   latestHydrationFlags,
@@ -34,6 +35,14 @@ function today(): string {
 
 const WATER_CHANGE_OPTIONS: WaterChange[] = ["decreased", "normal", "increased"];
 const STOOL_OPTIONS: StoolConsistency[] = ["hard", "normal", "soft", "diarrhea"];
+const URINATION_CHANGE_OPTIONS: WaterChange[] = ["normal", "increased", "decreased"];
+
+const chipClass = (active: boolean) =>
+  `cursor-pointer rounded-full border px-4 py-2 text-xs font-medium transition-colors ${
+    active
+      ? "border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white"
+      : "border-[#e5e7eb] bg-white text-slate-500 hover:border-[var(--brand-primary)]/30"
+  }`;
 
 export function HydrationPanel({ pet }: { pet: Pet }) {
   const { save, saving, error } = useHistorySave(pet.id);
@@ -44,6 +53,9 @@ export function HydrationPanel({ pet }: { pet: Pet }) {
   const [waterChange, setWaterChange] = useState<WaterChange | undefined>();
   const [waterMl, setWaterMl] = useState("");
   const [urinationCount, setUrinationCount] = useState("");
+  const [urinationChange, setUrinationChange] = useState<
+    WaterChange | undefined
+  >();
   const [urinationBlood, setUrinationBlood] = useState(false);
   const [urinationStraining, setUrinationStraining] = useState(false);
   const [stoolCount, setStoolCount] = useState("");
@@ -65,6 +77,7 @@ export function HydrationPanel({ pet }: { pet: Pet }) {
     setWaterChange(undefined);
     setWaterMl("");
     setUrinationCount("");
+    setUrinationChange(undefined);
     setUrinationBlood(false);
     setUrinationStraining(false);
     setStoolCount("");
@@ -77,6 +90,7 @@ export function HydrationPanel({ pet }: { pet: Pet }) {
     waterChange !== undefined ||
     waterMl.trim() !== "" ||
     urinationCount.trim() !== "" ||
+    urinationChange !== undefined ||
     urinationBlood ||
     urinationStraining ||
     stoolCount.trim() !== "" ||
@@ -94,6 +108,7 @@ export function HydrationPanel({ pet }: { pet: Pet }) {
       ...(urinationCount.trim()
         ? { urinationCount: Number(urinationCount) }
         : {}),
+      ...(urinationChange ? { urinationChange } : {}),
       ...(urinationBlood ? { urinationBlood: true } : {}),
       ...(urinationStraining ? { urinationStraining: true } : {}),
       ...(stoolCount.trim() ? { stoolCount: Number(stoolCount) } : {}),
@@ -227,6 +242,14 @@ export function HydrationPanel({ pet }: { pet: Pet }) {
                             </span>
                           </div>
                         ) : null}
+                        {entry.urinationChange ? (
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-slate-500">შარდვა</span>
+                            <span className="font-semibold text-[var(--brand-primary)]">
+                              {URINATION_CHANGE_LABELS[entry.urinationChange]}
+                            </span>
+                          </div>
+                        ) : null}
                         {entry.stoolCount !== undefined ? (
                           <div className="flex items-center justify-between gap-2">
                             <span className="text-slate-500">განავალი, დღეში</span>
@@ -286,10 +309,10 @@ export function HydrationPanel({ pet }: { pet: Pet }) {
                 <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
                   წყლის მოხმარება
                 </h4>
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-4 sm:grid-cols-2 [&>*]:min-w-0">
                   <div>
                     <span className={fieldLabel}>ცვლილება, ჩვეულებრივთან შედარებით</span>
-                    <div className="mt-2 flex gap-2">
+                    <div className="mt-2 flex flex-wrap gap-2">
                       {WATER_CHANGE_OPTIONS.map((option) => (
                         <button
                           key={option}
@@ -299,11 +322,7 @@ export function HydrationPanel({ pet }: { pet: Pet }) {
                               waterChange === option ? undefined : option,
                             )
                           }
-                          className={`flex-1 cursor-pointer rounded-2xl border px-3 py-2.5 text-xs font-medium transition-colors ${
-                            waterChange === option
-                              ? "border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white"
-                              : "border-[#e5e7eb] bg-white text-slate-500 hover:border-[var(--brand-primary)]/30"
-                          }`}
+                          className={chipClass(waterChange === option)}
                         >
                           {WATER_CHANGE_LABELS[option]}
                         </button>
@@ -332,45 +351,54 @@ export function HydrationPanel({ pet }: { pet: Pet }) {
                 <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
                   შარდვა
                 </h4>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label className={fieldLabel} htmlFor="hyd-urination-count">
-                      სიხშირე, დღეში
-                    </label>
-                    <input
-                      id="hyd-urination-count"
-                      type="number"
-                      min="0"
-                      inputMode="numeric"
-                      value={urinationCount}
-                      onChange={(event) => setUrinationCount(event.target.value)}
-                      placeholder="მაგ. 4"
-                      className={`${textInput} mt-2`}
-                    />
-                  </div>
-                  <div className="flex flex-col justify-end gap-2">
-                    <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-600">
-                      <input
-                        type="checkbox"
-                        checked={urinationBlood}
-                        onChange={(event) =>
-                          setUrinationBlood(event.target.checked)
+                <div>
+                  <label className={fieldLabel} htmlFor="hyd-urination-count">
+                    სიხშირე, დღეში
+                  </label>
+                  <input
+                    id="hyd-urination-count"
+                    type="number"
+                    min="0"
+                    inputMode="numeric"
+                    value={urinationCount}
+                    onChange={(event) => setUrinationCount(event.target.value)}
+                    placeholder="მაგ. 4"
+                    className={`${textInput} mt-2`}
+                  />
+                </div>
+                <div className="mt-3">
+                  <span className={fieldLabel}>შარდვის ხასიათი</span>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {URINATION_CHANGE_OPTIONS.map((option) => (
+                      <button
+                        key={option}
+                        type="button"
+                        onClick={() =>
+                          setUrinationChange(
+                            urinationChange === option ? undefined : option,
+                          )
                         }
-                        className="h-4 w-4 rounded border-[#e5e7eb] text-[var(--brand-primary)]"
-                      />
-                      სისხლი შარდში
-                    </label>
-                    <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-600">
-                      <input
-                        type="checkbox"
-                        checked={urinationStraining}
-                        onChange={(event) =>
-                          setUrinationStraining(event.target.checked)
-                        }
-                        className="h-4 w-4 rounded border-[#e5e7eb] text-[var(--brand-primary)]"
-                      />
+                        className={chipClass(urinationChange === option)}
+                      >
+                        {URINATION_CHANGE_LABELS[option]}
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      aria-pressed={urinationStraining}
+                      onClick={() => setUrinationStraining((value) => !value)}
+                      className={chipClass(urinationStraining)}
+                    >
                       გაძნელებული შარდვა
-                    </label>
+                    </button>
+                    <button
+                      type="button"
+                      aria-pressed={urinationBlood}
+                      onClick={() => setUrinationBlood((value) => !value)}
+                      className={chipClass(urinationBlood)}
+                    >
+                      სისხლი შარდში
+                    </button>
                   </div>
                 </div>
               </div>
@@ -379,7 +407,7 @@ export function HydrationPanel({ pet }: { pet: Pet }) {
                 <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
                   განავალი
                 </h4>
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div>
                   <div>
                     <label className={fieldLabel} htmlFor="hyd-stool-count">
                       სიხშირე, დღეში
@@ -395,15 +423,6 @@ export function HydrationPanel({ pet }: { pet: Pet }) {
                       className={`${textInput} mt-2`}
                     />
                   </div>
-                  <label className="flex cursor-pointer items-center gap-2 self-end pb-2.5 text-sm text-slate-600">
-                    <input
-                      type="checkbox"
-                      checked={stoolBlood}
-                      onChange={(event) => setStoolBlood(event.target.checked)}
-                      className="h-4 w-4 rounded border-[#e5e7eb] text-[var(--brand-primary)]"
-                    />
-                    სისხლი განავალში
-                  </label>
                 </div>
                 <div className="mt-3">
                   <span className={fieldLabel}>კონსისტენცია</span>
@@ -417,15 +436,19 @@ export function HydrationPanel({ pet }: { pet: Pet }) {
                             stoolConsistency === option ? undefined : option,
                           )
                         }
-                        className={`cursor-pointer rounded-full border px-4 py-2 text-xs font-medium transition-colors ${
-                          stoolConsistency === option
-                            ? "border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white"
-                            : "border-[#e5e7eb] bg-white text-slate-500 hover:border-[var(--brand-primary)]/30"
-                        }`}
+                        className={chipClass(stoolConsistency === option)}
                       >
                         {STOOL_CONSISTENCY_LABELS[option]}
                       </button>
                     ))}
+                    <button
+                      type="button"
+                      aria-pressed={stoolBlood}
+                      onClick={() => setStoolBlood((value) => !value)}
+                      className={chipClass(stoolBlood)}
+                    >
+                      სისხლი განავალში
+                    </button>
                   </div>
                 </div>
               </div>

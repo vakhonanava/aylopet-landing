@@ -10,6 +10,12 @@ export const WATER_CHANGE_LABELS: Record<WaterChange, string> = {
   decreased: "შემცირებული",
 };
 
+export const URINATION_CHANGE_LABELS: Record<WaterChange, string> = {
+  increased: "ჩვეულებრივზე ხშირი",
+  normal: "ნორმალური",
+  decreased: "ჩვეულებრივზე იშვიათი",
+};
+
 export const STOOL_CONSISTENCY_LABELS: Record<StoolConsistency, string> = {
   normal: "ნორმალური",
   soft: "რბილი",
@@ -42,6 +48,9 @@ export function hydrationEntryFlags(entry: HydrationLogEntry): HydrationFlag[] {
   const flags: HydrationFlag[] = [];
   if (entry.waterChange === "increased") {
     flags.push({ label: "წყლის მოხმარება გაზრდილია", severity: "warning" });
+  }
+  if (entry.urinationChange === "increased") {
+    flags.push({ label: "შარდვა გახშირებულია", severity: "warning" });
   }
   if (entry.stoolConsistency === "diarrhea") {
     flags.push({ label: "დიარეა", severity: "warning" });

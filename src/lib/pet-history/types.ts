@@ -51,8 +51,10 @@ export interface MicrochipRegistration {
   /** ISO timestamp of the last successful registry lookup. */
   verifiedAt: string | null;
   implantedAt?: string;
-  /** Owner callback number printed on the SOS QR code. */
+  /** Owner contact for whoever finds the dog — prefilled from the profile. */
+  ownerName?: string;
   ownerPhone?: string;
+  ownerAddress?: string;
 }
 
 /** Purina/WSAVA 9-point body condition score. */
@@ -124,6 +126,8 @@ export interface HydrationLogEntry {
   /** Relative change is what owners can reliably judge day to day. */
   waterChange?: WaterChange;
   urinationCount?: number;
+  /** Frequency vs. the dog's usual — the neutral answer is „normal“. */
+  urinationChange?: WaterChange;
   urinationBlood?: boolean;
   urinationStraining?: boolean;
   stoolCount?: number;

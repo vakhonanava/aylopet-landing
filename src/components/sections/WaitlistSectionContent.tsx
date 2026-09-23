@@ -5,6 +5,7 @@ import Link from "next/link";
 import { PawDecor } from "@/components/decor/PawDecor";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { Button } from "@/components/ui/Button";
+import { freshFoodPriceLabel } from "@/lib/pricing/food";
 
 export function WaitlistSectionContent() {
   const { dict, locale } = useLocale();
@@ -31,6 +32,14 @@ export function WaitlistSectionContent() {
 
         <div className="relative z-[1] mx-auto mt-10 max-w-xl text-center">
           <div className="rounded-[2rem] border border-[var(--border-light)] bg-white p-8 shadow-soft">
+            <div className="mb-6 rounded-2xl bg-[var(--brand-primary)]/[0.05] px-5 py-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-body)]">
+                {ka ? "ცოცხალი საკვების ფასი" : "Fresh food price"}
+              </p>
+              <p className="mt-1 text-2xl font-bold tracking-tight text-[var(--forest-deep)]">
+                {freshFoodPriceLabel(locale)}
+              </p>
+            </div>
             <p className="flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--brand-primary)]">
               <ShieldCheck className="h-4 w-4" />
               Secure Supabase onboarding

@@ -80,7 +80,7 @@ export async function fetchUserDashboardFromSupabase(
 ): Promise<{ account: Account; pets: Pet[] } | null> {
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
-    .select("full_name, email")
+    .select("full_name, email, phone")
     .eq("id", userId)
     .maybeSingle();
 
@@ -250,6 +250,7 @@ export async function fetchUserDashboardFromSupabase(
     account: {
       name: (profile?.full_name as string | undefined) ?? "",
       email: (profile?.email as string | undefined) ?? "",
+      phone: (profile?.phone as string | null | undefined) ?? undefined,
     },
     pets,
   };

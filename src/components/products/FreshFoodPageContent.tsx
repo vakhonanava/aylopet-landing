@@ -12,12 +12,14 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SiteFooter } from "@/components/marketing/SiteFooter";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { getProducts } from "@/lib/content/products";
+import { freshFoodPriceLabel } from "@/lib/pricing/food";
 
 const INGREDIENTS = FOOD_LAYERS.filter((layer) => layer.id !== "base");
 
 const COPY = {
   ka: {
     badge: "Gently Cooked",
+    priceLabel: "ფასი",
     ingredientsTitle: "მთლიანი ინგრედიენტები",
     ingredientsDescription:
       "ჩვენი რაციონის საფუძველი მაღალი ხარისხის, მთლიანი ინგრედიენტებია და არა ჩამნაცვლებელი მცენარეული და ცხოველური ფხვნილები.",
@@ -26,6 +28,7 @@ const COPY = {
   },
   en: {
     badge: "Gently Cooked",
+    priceLabel: "Price",
     ingredientsTitle: "Real fruit and vegetables, not powders",
     ingredientsDescription:
       "Every drop and fiber in our ration starts with fresh, seasonal ingredients. No synthetic additive replaces natural nutritional value.",
@@ -54,6 +57,12 @@ export function FreshFoodPageContent() {
                 {f.title}
               </h1>
               <p className="mt-4 text-lg text-white/85">{f.subheading}</p>
+              <p className="mt-6 inline-flex items-baseline gap-2 rounded-2xl bg-white/10 px-5 py-3">
+                <span className="text-sm text-white/70">{c.priceLabel}</span>
+                <span className="text-2xl font-bold tracking-tight">
+                  {freshFoodPriceLabel(locale)}
+                </span>
+              </p>
             </RevealOnScroll>
             <RevealOnScroll y={20} delay={0.1}>
               <FreshFoodHeroVisual locale={locale} />
