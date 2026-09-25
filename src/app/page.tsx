@@ -1,4 +1,5 @@
 import { B2BSolutions } from "@/components/sections/B2BSolutions";
+import { FoodPricingSection } from "@/components/sections/FoodPricingSection";
 import { Hero3D } from "@/components/sections/Hero3D";
 import { HowItWorksStrip } from "@/components/sections/HowItWorksStrip";
 import { LandingChatbot } from "@/components/sections/LandingChatbot";
@@ -26,6 +27,7 @@ export default function Home() {
         <Hero3D />
         <ScarcityBar />
         <ValueComparisonSection />
+        <FoodPricingSection />
         <HowItWorksStrip />
         <PlatformHub variant="home" />
         <LandingChatbot />

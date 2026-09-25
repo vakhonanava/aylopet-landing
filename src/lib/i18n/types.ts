@@ -1,3 +1,5 @@
+import type { DogSize } from "@/lib/pricing/food";
+
 export type Locale = "ka" | "en";
 
 export interface PlatformFeatureCopy {
@@ -313,6 +315,21 @@ export interface ValueComparisonCopy {
   priceNote: string;
 }
 
+export interface FoodPricingCopy {
+  eyebrow: string;
+  title: string;
+  description: string;
+  sizes: Record<DogSize, string>;
+  perDay: string;
+  /** `{price}` is the formatted monthly total. */
+  perMonth: string;
+  /** `{min}` / `{max}` are kilograms. */
+  weight: string;
+  swipeHint: string;
+  note: string;
+  cta: string;
+}
+
 export interface ScarcityCopy {
   filled: string;
   priceLocked: string;
@@ -453,6 +470,7 @@ export interface Dictionary {
   b2bForm: B2bFormCopy;
   knowledgeHub: KnowledgeHubCopy;
   valueComparison: ValueComparisonCopy;
+  foodPricing: FoodPricingCopy;
   scarcity: ScarcityCopy;
   trustStrip: TrustStripCopy;
   socialProof: SocialProofCopy;

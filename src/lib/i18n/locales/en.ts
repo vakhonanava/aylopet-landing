@@ -337,6 +337,24 @@ export const en: Dictionary = {
     vetAnchorSecondary:
       "With AylopetAI you get guidance on your dog's food and care without leaving home.",
   },
+  foodPricing: {
+    eyebrow: "Fresh food pricing",
+    title: "Price by your dog's size",
+    description:
+      "The daily cost depends on your dog's size. Swipe to find yours.",
+    sizes: {
+      small: "Small",
+      medium: "Medium",
+      large: "Large",
+      giant: "Giant",
+    },
+    perDay: "per day",
+    perMonth: "≈ {price} per month",
+    weight: "{min}–{max} kg",
+    swipeHint: "Swipe →",
+    note: "Indicative prices. We calculate the exact daily portion and price from your dog's weight, age and activity.",
+    cta: "Get your dog's exact price",
+  },
   scarcity: {
     filled: "{count}/{cap} Ambassador spots filled",
     priceLocked: "Exclusive offers when you sign up",
