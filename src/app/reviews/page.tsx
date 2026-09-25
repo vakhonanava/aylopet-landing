@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ReviewsPageContent } from "@/components/reviews/ReviewsPageContent";
 
 export const metadata: Metadata = {
-  title: "Aylopet · შეფასებები",
+  title: "შეფასებები",
   description: "მომხმარებელთა შეფასებები და გამოცდილებები.",
 };
 

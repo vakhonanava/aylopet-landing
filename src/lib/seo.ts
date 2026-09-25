@@ -16,7 +16,10 @@ export const BRAND_LEGAL_NAME = "Aylopet LLC";
 /** Georgian phonetic spellings of the brand, used for alternateName + keywords. */
 export const BRAND_ALTERNATE_NAMES = ["ეილოფეთი", "ელიოფეთი"] as const;
 
-export const SITE_TITLE = "Aylopet | AI & DNA Pet Health Tech Platform";
+export const SITE_TITLE = "Aylopet Pet Wellness";
+
+/** Brand first, so a narrow browser tab still reads „Aylopet Pet Wellness“. */
+export const SITE_TITLE_TEMPLATE = `${SITE_TITLE} · %s`;
 
 export const SITE_DESCRIPTION =
   "Aylopet (ეილოფეთი) არის ინოვაციური Pet Health Tech პლატფორმა, რომელიც AI-ისა და დნმ ანალიზის მეშვეობით ზრუნავს თქვენი ოთხფეხა მეგობრის ჯანმრთელობასა და ხანგრძლივ სიცოცხლეზე.";

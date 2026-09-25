@@ -7,7 +7,7 @@ import { Journey } from "@/components/dna/Journey";
 import { SiteFooter } from "@/components/marketing/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "Aylopet DNA · გენეტიკა, AI და პერსონალური კვება",
+  title: "DNA · გენეტიკა, AI და პერსონალური კვება",
   description:
     "DNA ტესტირება, AI ანალიზი და პერსონალიზებული რაციონი · შექმნილი ზუსტად შენი ძაღლის გენეტიკური პროფილისთვის.",
 };

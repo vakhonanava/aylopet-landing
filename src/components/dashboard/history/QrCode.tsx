@@ -13,6 +13,19 @@ interface QrCodeProps {
   title?: string;
 }
 
+/** Saves the first QR `<svg>` inside `container` as an .svg file. */
+export function downloadQrSvg(container: HTMLElement | null, fileName: string) {
+  const svg = container?.querySelector("svg");
+  if (!svg) return;
+  const source = new XMLSerializer().serializeToString(svg);
+  const url = URL.createObjectURL(new Blob([source], { type: "image/svg+xml" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 export function QrCode({
   value,
   size = 160,

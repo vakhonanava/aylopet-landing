@@ -4,7 +4,7 @@ import { getExpectationStats } from "@/lib/expectations/storage";
 import { getLeadCount } from "@/lib/leads/repository";
 
 export const metadata: Metadata = {
-  title: "Aylopet · პროექტის სტატუსი",
+  title: "პროექტის სტატუსი",
   description:
     "პლატფორმის განვითარების მიმდინარე ეტაპები, მოლოდინების სიის რაოდენობა და საზოგადოების გამოკითხვა.",
 };

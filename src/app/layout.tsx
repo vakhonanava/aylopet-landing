@@ -13,6 +13,7 @@ import {
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
   SITE_TITLE,
+  SITE_TITLE_TEMPLATE,
   SITE_URL,
   BRAND_NAME,
   organizationSchema,
@@ -33,7 +34,7 @@ const lora = Lora({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: SITE_TITLE,
+  title: { default: SITE_TITLE, template: SITE_TITLE_TEMPLATE },
   description: SITE_DESCRIPTION,
   keywords: SITE_KEYWORDS,
   applicationName: BRAND_NAME,

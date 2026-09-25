@@ -3,7 +3,7 @@ import { WhatIsAylopetContent } from "@/components/about/WhatIsAylopetContent";
 import { ABOUT } from "@/lib/content/about";
 
 export const metadata: Metadata = {
-  title: "Aylopet · რა არის Aylopet",
+  title: "რა არის Aylopet",
   description: ABOUT.whatIs.body,
 };
 

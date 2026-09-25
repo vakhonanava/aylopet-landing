@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Hero3D } from "@/components/sections/Hero3D";
 
 export const metadata: Metadata = {
-  title: "Aylopet Hero Preview",
+  title: "Hero Preview",
   robots: { index: false, follow: false },
 };
 

@@ -53,7 +53,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Pet not found." }, { status: 403 });
   }
 
-  const { token, error } = await createVetReportShareInSupabase(
+  const { token, expiresAt, error } = await createVetReportShareInSupabase(
     supabase,
     user.id,
     petId,
@@ -68,5 +68,10 @@ export async function POST(request: Request) {
   }
 
   const origin = new URL(request.url).origin;
-  return Response.json({ ok: true, token, url: `${origin}/vet-report/${token}` });
+  return Response.json({
+    ok: true,
+    token,
+    url: `${origin}/vet-report/${token}`,
+    expiresAt,
+  });
 }

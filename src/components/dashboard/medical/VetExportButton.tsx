@@ -1,12 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
-import { Check, Copy, ExternalLink, Loader2 } from "lucide-react";
+import {
+  Check,
+  Copy,
+  Download,
+  ExternalLink,
+  Loader2,
+  QrCode as QrCodeIcon,
+} from "lucide-react";
 import { addButton } from "@/components/dashboard/FormControls";
-import type { Pet } from "@/lib/dashboard";
+import { downloadQrSvg, QrCode } from "@/components/dashboard/history/QrCode";
+import { formatDate, type Pet } from "@/lib/dashboard";
 
-async function createShareLink(petId: string): Promise<string> {
+interface ShareLink {
+  url: string;
+  expiresAt: string | null;
+}
+
+async function createShareLink(petId: string): Promise<ShareLink> {
   const res = await fetch("/api/vet-report/share", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -14,7 +27,7 @@ async function createShareLink(petId: string): Promise<string> {
   });
   const json = await res.json();
   if (!res.ok || !json.ok) throw new Error(json.error ?? "ბმული ვერ შეიქმნა.");
-  return json.url as string;
+  return { url: json.url as string, expiresAt: (json.expiresAt as string | null) ?? null };
 }
 
 /**
@@ -37,7 +50,9 @@ export function VetExportButton({ pet }: { pet: Pet }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [share, setShare] = useState<ShareLink | null>(null);
+  const qrRef = useRef<HTMLDivElement>(null);
+  const shareUrl = share?.url ?? null;
 
   const flashCopied = () => {
     setCopied(true);
@@ -57,8 +72,9 @@ export function VetExportButton({ pet }: { pet: Pet }) {
     }
 
     setBusy(true);
-    const url = createShareLink(pet.id);
-    url.then(setShareUrl, () => {});
+    const link = createShareLink(pet.id);
+    link.then(setShare, () => {});
+    const url = link.then((created) => created.url);
 
     void copyPendingText(url)
       .then(flashCopied)
@@ -78,7 +94,7 @@ export function VetExportButton({ pet }: { pet: Pet }) {
   return (
     <div className="flex flex-col gap-4">
       <p className="text-sm text-slate-500">
-        გადაეცი სრული ჯანმრთელობის რეპორტი ვეტერინარს ბეჭდვით ან ბმულის გაზიარებით.
+        გადაეცი სრული ჯანმრთელობის რეპორტი ვეტერინარს ბეჭდვით, ბმულით ან QR კოდით.
       </p>
 
       {error && (
@@ -101,21 +117,46 @@ export function VetExportButton({ pet }: { pet: Pet }) {
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : copied ? (
             <Check className="h-4 w-4" />
-          ) : (
+          ) : shareUrl ? (
             <Copy className="h-4 w-4" />
+          ) : (
+            <QrCodeIcon className="h-4 w-4" />
           )}
-          {copied ? "დაკოპირდა!" : "ბმულის კოპირება"}
+          {copied ? "დაკოპირდა!" : shareUrl ? "ბმულის კოპირება" : "ბმული და QR კოდი"}
         </button>
       </div>
 
-      {shareUrl && (
-        <input
-          readOnly
-          value={shareUrl}
-          onFocus={(event) => event.currentTarget.select()}
-          aria-label="რეპორტის ბმული"
-          className="w-full rounded-2xl border border-[#e5e7eb] bg-[#FAFAF8] px-4 py-2.5 font-mono text-xs text-slate-600"
-        />
+      {share && (
+        <div className="flex flex-col items-center gap-4 rounded-2xl border border-[#e5e7eb] bg-[#FAFAF8] p-4 sm:flex-row sm:items-start">
+          <div ref={qrRef} className="shrink-0 rounded-2xl border border-[#e5e7eb] bg-white p-3">
+            <QrCode value={share.url} size={176} title="ვეტ-რეპორტის QR კოდი" />
+          </div>
+          <div className="flex w-full min-w-0 flex-col gap-3">
+            <p className="text-sm text-slate-600">
+              QR კოდის დასკანერებით ვეტერინარი ან ნებისმიერი ადამიანი რეგისტრაციის გარეშე
+              ნახავს რეპორტს და ატვირთულ ანალიზებს.
+            </p>
+            {share.expiresAt && (
+              <p className="text-xs text-slate-400">
+                ბმული და QR კოდი მოქმედებს {formatDate(share.expiresAt)}-მდე.
+              </p>
+            )}
+            <input
+              readOnly
+              value={share.url}
+              onFocus={(event) => event.currentTarget.select()}
+              aria-label="რეპორტის ბმული"
+              className="w-full rounded-2xl border border-[#e5e7eb] bg-white px-4 py-2.5 font-mono text-xs text-slate-600"
+            />
+            <button
+              type="button"
+              onClick={() => downloadQrSvg(qrRef.current, `aylopet-vet-report-${pet.name}.svg`)}
+              className="inline-flex cursor-pointer items-center gap-1.5 self-start text-xs font-medium text-slate-500 transition-colors hover:text-[var(--brand-primary)]"
+            >
+              <Download className="h-3.5 w-3.5" /> QR-ის ჩამოტვირთვა
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

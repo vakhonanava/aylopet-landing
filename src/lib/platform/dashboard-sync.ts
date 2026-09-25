@@ -17,6 +17,7 @@ import type {
 } from "@/lib/medical";
 import { PET_DOCUMENTS_BUCKET, PET_MEDICAL_DOCS_BUCKET } from "@/lib/platform/types";
 import { parsePetHistory } from "@/lib/platform/history-persistence";
+import { createSignedUrlMap } from "@/lib/platform/signed-urls";
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -74,79 +75,123 @@ function parseSnapshot(row: {
   };
 }
 
+/** Rows of one owner-wide query, bucketed by pet with the query order kept. */
+function groupByPet<T extends { pet_id: unknown }>(rows: T[] | null): Map<string, T[]> {
+  const byPet = new Map<string, T[]>();
+  for (const row of rows ?? []) {
+    const petId = row.pet_id as string;
+    const list = byPet.get(petId);
+    if (list) list.push(row);
+    else byPet.set(petId, [row]);
+  }
+  return byPet;
+}
+
+const SYMPTOM_LOGS_PER_PET = 60;
+/** The symptom query spans the whole account, so its cap is only a backstop. */
+const SYMPTOM_LOGS_QUERY_CAP = 500;
+
 export async function fetchUserDashboardFromSupabase(
   supabase: SupabaseClient,
   userId: string,
 ): Promise<{ account: Account; pets: Pet[] } | null> {
-  const { data: profile, error: profileError } = await supabase
-    .from("profiles")
-    .select("full_name, email, phone")
-    .eq("id", userId)
-    .maybeSingle();
+  // Every child table carries owner_id (and RLS only returns the caller's
+  // rows), so the whole account loads in one parallel round. Going pet by pet
+  // and file by file chained 5+ round trips to a database ~0.3–1s away.
+  const [
+    { data: profile, error: profileError },
+    { data: petsData, error: petsError },
+    { data: files },
+    { data: vaccinesData },
+    { data: snapshotsData },
+    { data: medicalRecordsData },
+    { data: symptomLogsData },
+    { data: medicationsData },
+  ] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("full_name, email, phone")
+      .eq("id", userId)
+      .maybeSingle(),
+    supabase
+      .from("pets")
+      .select("*")
+      .eq("owner_id", userId)
+      .order("created_at", { ascending: true }),
+    supabase
+      .from("pet_files")
+      .select("*")
+      .eq("owner_id", userId)
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("pet_vaccines")
+      .select("*")
+      .eq("owner_id", userId)
+      .order("administered", { ascending: false }),
+    supabase
+      .from("pet_profile_snapshots")
+      .select("id, pet_id, created_at, snapshot")
+      .eq("owner_id", userId)
+      .order("created_at", { ascending: false }),
+    supabase.from("medical_records").select("*").eq("owner_id", userId),
+    supabase
+      .from("symptom_logs")
+      .select("*")
+      .eq("owner_id", userId)
+      .order("logged_at", { ascending: false })
+      .limit(SYMPTOM_LOGS_QUERY_CAP),
+    supabase
+      .from("medications")
+      .select("*")
+      .eq("owner_id", userId)
+      .order("created_at", { ascending: false }),
+  ]);
 
-  if (profileError) return null;
+  if (profileError || petsError) return null;
 
-  const { data: petsData, error: petsError } = await supabase
-    .from("pets")
-    .select("*")
-    .eq("owner_id", userId)
-    .order("created_at", { ascending: true });
+  const filesByPet = groupByPet(files);
+  const vaccinesByPet = groupByPet(vaccinesData);
+  const snapshotsByPet = groupByPet(snapshotsData);
+  const medicalRecordsByPet = groupByPet(medicalRecordsData);
+  const medicationsByPet = groupByPet(medicationsData);
+  const symptomLogsByPet = new Map(
+    [...groupByPet(symptomLogsData)].map(([petId, logs]) => [
+      petId,
+      logs.slice(0, SYMPTOM_LOGS_PER_PET),
+    ]),
+  );
 
-  if (petsError) return null;
+  const labFiles = (files ?? []).filter((file) =>
+    LAB_MIME_TYPES.has(file.file_type as LabReportEntry["mimeType"]),
+  );
+  const [labUrls, attachmentUrls] = await Promise.all([
+    createSignedUrlMap(
+      supabase,
+      PET_DOCUMENTS_BUCKET,
+      labFiles.map((file) => file.file_path as string),
+    ),
+    createSignedUrlMap(
+      supabase,
+      PET_MEDICAL_DOCS_BUCKET,
+      [...symptomLogsByPet.values()]
+        .flat()
+        .flatMap((log) => (log.attachments as string[] | null) ?? []),
+    ),
+  ]);
 
   const pets: Pet[] = [];
 
   for (const row of petsData ?? []) {
     const petId = row.id as string;
 
-    const [
-      { data: files },
-      { data: vaccinesData },
-      { data: snapshotsData },
-      { data: medicalRecordData },
-      { data: symptomLogsData },
-      { data: medicationsData },
-    ] = await Promise.all([
-      supabase
-        .from("pet_files")
-        .select("*")
-        .eq("pet_id", petId)
-        .order("created_at", { ascending: false }),
-      supabase
-        .from("pet_vaccines")
-        .select("*")
-        .eq("pet_id", petId)
-        .order("administered", { ascending: false }),
-      supabase
-        .from("pet_profile_snapshots")
-        .select("id, created_at, snapshot")
-        .eq("pet_id", petId)
-        .order("created_at", { ascending: false }),
-      supabase.from("medical_records").select("*").eq("pet_id", petId).maybeSingle(),
-      supabase
-        .from("symptom_logs")
-        .select("*")
-        .eq("pet_id", petId)
-        .order("logged_at", { ascending: false })
-        .limit(60),
-      supabase
-        .from("medications")
-        .select("*")
-        .eq("pet_id", petId)
-        .order("created_at", { ascending: false }),
-    ]);
-
     const labReports: LabReportEntry[] = [];
 
-    for (const file of files ?? []) {
+    for (const file of filesByPet.get(petId) ?? []) {
       const mimeType = file.file_type as LabReportEntry["mimeType"];
       if (!LAB_MIME_TYPES.has(mimeType)) continue;
 
-      const { data: signed } = await supabase.storage
-        .from(PET_DOCUMENTS_BUCKET)
-        .createSignedUrl(file.file_path, 3600);
-
-      if (!signed?.signedUrl) continue;
+      const url = labUrls.get(file.file_path as string);
+      if (!url) continue;
 
       labReports.push({
         id: file.id as string,
@@ -154,13 +199,13 @@ export async function fetchUserDashboardFromSupabase(
         size: file.file_size as number,
         mimeType,
         pathname: file.file_path as string,
-        url: signed.signedUrl,
+        url,
         uploadedAt: file.created_at as string,
         status: "uploaded",
       });
     }
 
-    const vaccines: VaccineEntry[] = (vaccinesData ?? []).map((v) => ({
+    const vaccines: VaccineEntry[] = (vaccinesByPet.get(petId) ?? []).map((v) => ({
       id: v.id as string,
       name: v.name as string,
       careType: parseCareType(v.care_type),
@@ -168,10 +213,11 @@ export async function fetchUserDashboardFromSupabase(
       nextDue: (v.next_due as string | null) ?? "",
     }));
 
-    const profileHistory: PetProfileSnapshot[] = (snapshotsData ?? [])
+    const profileHistory: PetProfileSnapshot[] = (snapshotsByPet.get(petId) ?? [])
       .map(parseSnapshot)
       .filter((item): item is PetProfileSnapshot => item !== null);
 
+    const medicalRecordData = medicalRecordsByPet.get(petId)?.[0];
     const medicalRecord: MedicalRecord | null = medicalRecordData
       ? {
           chronicConditions: (medicalRecordData.chronic_conditions as string[] | null) ?? [],
@@ -182,7 +228,7 @@ export async function fetchUserDashboardFromSupabase(
         }
       : null;
 
-    const medications: Medication[] = (medicationsData ?? []).map((m) => ({
+    const medications: Medication[] = (medicationsByPet.get(petId) ?? []).map((m) => ({
       id: m.id as string,
       petId,
       name: m.name as string,
@@ -192,15 +238,13 @@ export async function fetchUserDashboardFromSupabase(
     }));
 
     const symptomLogs: SymptomLog[] = [];
-    for (const log of symptomLogsData ?? []) {
+    for (const log of symptomLogsByPet.get(petId) ?? []) {
       const paths = (log.attachments as string[] | null) ?? [];
       const attachments: SymptomAttachment[] = [];
       for (const path of paths) {
-        const { data: signed } = await supabase.storage
-          .from(PET_MEDICAL_DOCS_BUCKET)
-          .createSignedUrl(path, 3600);
-        if (!signed?.signedUrl) continue;
-        attachments.push({ path, url: signed.signedUrl });
+        const url = attachmentUrls.get(path);
+        if (!url) continue;
+        attachments.push({ path, url });
       }
       symptomLogs.push({
         id: log.id as string,

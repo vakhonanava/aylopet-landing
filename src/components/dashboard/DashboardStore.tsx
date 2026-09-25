@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -156,6 +157,13 @@ const UUID_LIKE =
 
 const DashboardContext = createContext<DashboardContextValue | null>(null);
 
+/**
+ * Outlives the provider, which unmounts whenever the member leaves /dashboard.
+ * Coming back paints the last known state straight away and refreshes it
+ * underneath instead of showing the loader again.
+ */
+let cachedDashboard: { userId: string; state: DashboardState } | null = null;
+
 function emptyPetExtras() {
   return {
     vaccines: [] as VaccineEntry[],
@@ -172,11 +180,16 @@ function emptyPetExtras() {
 
 export function DashboardProvider({ children }: { children: ReactNode }) {
   const { user, ready: authReady } = useAuth();
-  const [state, setState] = useState<DashboardState>({
-    account: null,
-    pets: [],
-  });
-  const [ready, setReady] = useState(false);
+  const [restored] = useState(() =>
+    user && cachedDashboard?.userId === user.id ? cachedDashboard : null,
+  );
+  const [state, setState] = useState<DashboardState>(
+    restored?.state ?? { account: null, pets: [] },
+  );
+  const [ready, setReady] = useState(restored !== null);
+  // Whose data `state` holds, so an account switch never caches one member's
+  // pets under the other's id.
+  const loadedFor = useRef<string | null>(restored?.userId ?? null);
 
   // Keyed on primitives, not the user object: Supabase hands out a fresh
   // object on every token refresh (e.g. when a phone brings the tab back from
@@ -228,7 +241,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     }
 
     let cancelled = false;
-    setReady(false);
+    if (loadedFor.current !== userId) setReady(false);
 
     const supabase = (() => {
       try {
@@ -252,6 +265,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
     void fetchUserDashboardFromSupabase(supabase, userId).then((data) => {
       if (cancelled) return;
+      // A failed refresh keeps the restored state rather than blanking it.
+      if (!data && loadedFor.current === userId) return;
+      loadedFor.current = userId;
       setState({
         account: data?.account.name
           ? data.account
@@ -268,6 +284,12 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       cancelled = true;
     };
   }, [authReady, userId, userFullName, userEmail]);
+
+  useEffect(() => {
+    if (!authReady) return;
+    cachedDashboard =
+      userId && ready && loadedFor.current === userId ? { userId, state } : null;
+  }, [authReady, userId, ready, state]);
 
   useEffect(() => {
     if (!ready || user) return;
