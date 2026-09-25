@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { LegalPageContent } from "@/components/marketing/LegalPageContent";
 
 export const metadata: Metadata = {
-  title: "Aylopet · ხელმისაწვდომობის განცხადება",
+  title: "ხელმისაწვდომობის განცხადება",
   description: "Aylopet's commitment to making its website accessible to everyone.",
 };
 

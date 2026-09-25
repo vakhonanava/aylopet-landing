@@ -10,7 +10,7 @@ import {
 } from "@/lib/platform/admin";
 
 export const metadata: Metadata = {
-  title: "Aylopet · Leads Admin",
+  title: "Leads Admin",
   robots: "noindex, nofollow",
 };
 

@@ -3,7 +3,7 @@ import { AyliopetOnboarding } from "@/components/onboarding/AyliopetOnboarding";
 import { OnboardingRedirectGuard } from "@/components/onboarding/OnboardingRedirectGuard";
 
 export const metadata: Metadata = {
-  title: "Aylopet · Platform Onboarding",
+  title: "Platform Onboarding",
   description:
     "Join the waitlist, create your private profile, add your pet, and upload medical documents securely.",
 };

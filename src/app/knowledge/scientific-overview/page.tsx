@@ -3,7 +3,7 @@ import { ScientificOverviewContent } from "@/components/marketing/ScientificOver
 import { KNOWLEDGE } from "@/lib/content/knowledge";
 
 export const metadata: Metadata = {
-  title: "Aylopet · მეცნიერული მიმოხილვა",
+  title: "მეცნიერული მიმოხილვა",
   description: KNOWLEDGE.article.introduction.slice(0, 160),
 };
 

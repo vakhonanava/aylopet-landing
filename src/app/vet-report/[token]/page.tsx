@@ -3,7 +3,7 @@ import { VetReportView } from "@/components/dashboard/medical/VetReportView";
 import { getVetReportByToken, type VetReportShareFailureReason } from "@/lib/platform/vet-report";
 
 export const metadata: Metadata = {
-  title: "Aylopet · ჯანმრთელობის რეპორტი",
+  title: "ჯანმრთელობის რეპორტი",
   robots: { index: false, follow: false },
 };
 

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { LegalPageContent } from "@/components/marketing/LegalPageContent";
 
 export const metadata: Metadata = {
-  title: "Aylopet · კონფიდენციალურობის პოლიტიკა",
+  title: "კონფიდენციალურობის პოლიტიკა",
   description:
     "How Aylopet accesses, collects, stores, uses, and shares your personal information.",
 };

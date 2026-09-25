@@ -3,7 +3,7 @@ import { VisionContent } from "@/components/about/VisionContent";
 import { ABOUT } from "@/lib/content/about";
 
 export const metadata: Metadata = {
-  title: "Aylopet · კომპანიის ხედვა",
+  title: "კომპანიის ხედვა",
   description: ABOUT.vision.body.slice(0, 160),
 };
 

@@ -5,7 +5,7 @@ import { Sidebar } from "@/components/dashboard/Sidebar";
 import { MobileTopBar } from "@/components/dashboard/MobileTopBar";
 
 export const metadata: Metadata = {
-  title: "Aylopet · პანელი",
+  title: "პანელი",
   description: "მართე შენი ძაღლის პროფილი, ჯანმრთელობა და კვება.",
 };
 
