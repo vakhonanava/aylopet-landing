@@ -18,7 +18,7 @@ import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import { useDashboard } from "@/components/dashboard/DashboardStore";
 import { addButton, fieldLabel, textInput } from "@/components/dashboard/FormControls";
-import { QrCode } from "@/components/dashboard/history/QrCode";
+import { downloadQrSvg, QrCode } from "@/components/dashboard/history/QrCode";
 import { SectionCard, StatusPill } from "@/components/dashboard/history/ui";
 import { useHistorySave } from "@/components/dashboard/history/useHistorySave";
 import { formatDate, type Pet } from "@/lib/dashboard";
@@ -45,19 +45,8 @@ export function MicrochipSosCard({ pet }: { pet: Pet }) {
   const payload = useMemo(() => buildSosPayload(pet, account), [pet, account]);
   const svgRef = useRef<HTMLDivElement>(null);
 
-  const downloadQr = () => {
-    const svg = svgRef.current?.querySelector("svg");
-    if (!svg) return;
-    const source = new XMLSerializer().serializeToString(svg);
-    const url = URL.createObjectURL(
-      new Blob([source], { type: "image/svg+xml" }),
-    );
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `aylopet-sos-${pet.name}.svg`;
-    link.click();
-    URL.revokeObjectURL(url);
-  };
+  const downloadQr = () =>
+    downloadQrSvg(svgRef.current, `aylopet-sos-${pet.name}.svg`);
 
   const [code, setCode] = useState(chip ?? "");
   const [registryName, setRegistryName] = useState(

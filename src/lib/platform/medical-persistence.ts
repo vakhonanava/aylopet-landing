@@ -146,7 +146,7 @@ export async function createVetReportShareInSupabase(
   userId: string,
   petId: string,
   options?: { expiresInDays?: number },
-): Promise<{ token: string | null; error: string | null }> {
+): Promise<{ token: string | null; expiresAt: string | null; error: string | null }> {
   const expiresInDays = options?.expiresInDays ?? 14;
   const expiresAt = new Date(Date.now() + expiresInDays * 86_400_000).toISOString();
 
@@ -156,6 +156,6 @@ export async function createVetReportShareInSupabase(
     .select("token")
     .single();
 
-  if (error) return { token: null, error: error.message };
-  return { token: data.token as string, error: null };
+  if (error) return { token: null, expiresAt: null, error: error.message };
+  return { token: data.token as string, expiresAt, error: null };
 }
