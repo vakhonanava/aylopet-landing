@@ -126,7 +126,7 @@ export const DOG_BREEDS: DogBreed[] = [
   { en: "Finnish Lapphund", ka: "ფინნისჰ ლაპპჰუნდ" },
   { en: "Finnish Spitz", ka: "ფინნისჰ სპიტზ" },
   { en: "Flat Coated Retriever", ka: "ფლატ კოატედ რეტრიევერ" },
-  { en: "French Bulldog", ka: "ფრანღული ბულდოგი" },
+  { en: "French Bulldog", ka: "ფრანგული ბულდოგი" },
   { en: "French Spaniel", ka: "ფრენკჰ სპანიელ" },
   { en: "German Pinscher", ka: "გერმან პინსკჰერ" },
   { en: "German Rough-haired Pointer", ka: "გერმან როუგჰ-ჰაირედ პოინტერ" },
@@ -293,7 +293,7 @@ export const DOG_BREEDS: DogBreed[] = [
   { en: "Wire Fox Terrier", ka: "უირე ფოქს ტერრიერ" },
   { en: "Wirehaired Pointing Griffon", ka: "უირეჰაირედ პოინტინგ გრიფფონ" },
   { en: "Xoloitzcuintli", ka: "ქსოლოიტზკუინტლი" },
-  { en: "Yorkshire Terrier", ka: "იორქშირული ტერიერი" },
+  { en: "Yorkshire Terrier", ka: "იორკშირის ტერიერი" },
   { en: "Mixed Breed", ka: "მეტისი / შერეული" },
 ] as const;
 
@@ -306,6 +306,19 @@ export function searchDogBreeds(query: string): DogBreed[] {
   return DOG_BREEDS.filter(
     (b) => b.ka.toLowerCase().includes(q) || b.en.toLowerCase().includes(q),
   );
+}
+
+/**
+ * Labels the picker stored before their spelling was fixed. `pets.breed` keeps
+ * the Georgian label itself, so anything read back maps them to today's label.
+ */
+const LEGACY_BREED_LABELS: Record<string, string> = {
+  "ფრანღული ბულდოგი": "ფრანგული ბულდოგი",
+  "იორქშირული ტერიერი": "იორკშირის ტერიერი",
+};
+
+export function canonicalBreedLabel(label: string): string {
+  return LEGACY_BREED_LABELS[label] ?? label;
 }
 
 export function getBreedKa(en: string): string | undefined {

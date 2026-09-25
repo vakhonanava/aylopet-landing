@@ -15,6 +15,7 @@ import type {
   SymptomAttachment,
   SymptomLog,
 } from "@/lib/medical";
+import { canonicalBreedLabel } from "@/lib/content/dog-breeds";
 import { PET_DOCUMENTS_BUCKET, PET_MEDICAL_DOCS_BUCKET } from "@/lib/platform/types";
 import { parsePetHistory } from "@/lib/platform/history-persistence";
 import { createSignedUrlMap } from "@/lib/platform/signed-urls";
@@ -68,7 +69,7 @@ function parseSnapshot(row: {
     id: row.id,
     savedAt: (snap.savedAt as string | undefined) ?? row.created_at,
     name: String(snap.name ?? ""),
-    breed: String(snap.breed ?? ""),
+    breed: canonicalBreedLabel(String(snap.breed ?? "")),
     weightKg: Number(snap.weightKg ?? 0),
     activity: parseActivity(snap.activity),
     avatarUrl: typeof snap.avatarUrl === "string" ? snap.avatarUrl : undefined,
@@ -268,7 +269,7 @@ export async function fetchUserDashboardFromSupabase(
     pets.push({
       id: petId,
       name: row.pet_name as string,
-      breed: row.breed as string,
+      breed: canonicalBreedLabel(row.breed as string),
       weightKg,
       activity: parseActivity(row.activity),
       avatarUrl: (row.avatar_url as string | null) ?? undefined,

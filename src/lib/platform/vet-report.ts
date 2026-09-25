@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { CareType } from "@/lib/dashboard";
 import type { MedicalRecord, Medication, SeverityLevel, SymptomLog } from "@/lib/medical";
+import { canonicalBreedLabel } from "@/lib/content/dog-breeds";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 import { parsePetHistory } from "@/lib/platform/history-persistence";
 import { createSignedUrlMap } from "@/lib/platform/signed-urls";
@@ -211,7 +212,7 @@ export async function buildVetReportData(
     pet: {
       id: petId,
       name: petRow.pet_name as string,
-      breed: petRow.breed as string,
+      breed: canonicalBreedLabel(petRow.breed as string),
       weightKg: Number(petRow.weight ?? 0),
       gender: reproductive?.sex ?? (petRow.gender as string | null) ?? null,
       isNeutered: reproductive
