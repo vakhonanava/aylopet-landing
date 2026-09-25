@@ -24,7 +24,8 @@ export const SITE_TITLE_TEMPLATE = `${SITE_TITLE} · %s`;
 export const SITE_DESCRIPTION =
   "Aylopet (ეილოფეთი) არის ინოვაციური Pet Health Tech პლატფორმა, რომელიც AI-ისა და დნმ ანალიზის მეშვეობით ზრუნავს თქვენი ოთხფეხა მეგობრის ჯანმრთელობასა და ხანგრძლივ სიცოცხლეზე.";
 
-export const OG_TITLE = "Aylopet (ეილოფეთი), AI & DNA Pet Health Tech";
+/** Link previews (WhatsApp, Messenger, Telegram…) carry the same name as the tab. */
+export const OG_TITLE = SITE_TITLE;
 
 export const OG_DESCRIPTION =
   "AI-ზე და დნმ ანალიზზე დაფუძნებული პლატფორმა თქვენი ოთხფეხა მეგობრების ჯანმრთელობისთვის.";
@@ -40,10 +41,11 @@ export const SITE_KEYWORDS = [
 ];
 
 export const OG_IMAGE = {
-  url: "/og-image.png",
+  // Bump `v` whenever the card changes · chat apps cache previews by image URL.
+  url: "/og-image.png?v=2",
   width: 1200,
   height: 630,
-  alt: "Aylopet (ეილოფეთი), AI & DNA Pet Health Tech",
+  alt: SITE_TITLE,
 };
 
 export const LOGO_URL = `${SITE_URL}/logo.png`;
