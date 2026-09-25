@@ -3,6 +3,7 @@ import type { CareType } from "@/lib/dashboard";
 import type { MedicalRecord, Medication, SeverityLevel, SymptomLog } from "@/lib/medical";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 import { parsePetHistory } from "@/lib/platform/history-persistence";
+import { createSignedUrlMap } from "@/lib/platform/signed-urls";
 import type { PetHistory } from "@/lib/pet-history/types";
 import {
   PET_DOCUMENTS_BUCKET,
@@ -74,31 +75,22 @@ export async function buildVetReportData(
 ): Promise<VetReportData | null> {
   const symptomWindowDays = options?.symptomWindowDays ?? 45;
 
-  const { data: petRow, error: petError } = await supabase
-    .from("pets")
-    .select("*")
-    .eq("id", petId)
-    .maybeSingle();
-
-  if (petError || !petRow) return null;
-
-  const { data: profileRow } = await supabase
-    .from("profiles")
-    .select("full_name, email, phone")
-    .eq("id", petRow.owner_id)
-    .maybeSingle();
-
   const windowStart = new Date(
     Date.now() - symptomWindowDays * 86_400_000,
   ).toISOString();
 
+  // Everything keyed by pet id goes out together; only the owner's profile
+  // has to wait for the pet row. Serial queries from the server to the
+  // database cost ~0.3–1s each.
   const [
+    { data: petRow, error: petError },
     { data: medicalRecordRow },
     { data: medicationsData },
     { data: symptomLogsData },
     { data: vaccinesData },
     { data: filesData },
   ] = await Promise.all([
+    supabase.from("pets").select("*").eq("id", petId).maybeSingle(),
     supabase.from("medical_records").select("*").eq("pet_id", petId).maybeSingle(),
     supabase
       .from("medications")
@@ -122,6 +114,32 @@ export async function buildVetReportData(
       .select("id, file_name, file_path, file_type, created_at")
       .eq("pet_id", petId)
       .order("created_at", { ascending: false }),
+  ]);
+
+  if (petError || !petRow) return null;
+
+  const labRows = (filesData ?? []).filter((file) =>
+    LAB_MIME_TYPES.has(file.file_type as string),
+  );
+
+  const [{ data: profileRow }, labUrls, attachmentUrls] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("full_name, email, phone")
+      .eq("id", petRow.owner_id)
+      .maybeSingle(),
+    createSignedUrlMap(
+      supabase,
+      PET_DOCUMENTS_BUCKET,
+      labRows.map((file) => file.file_path as string),
+    ),
+    createSignedUrlMap(
+      supabase,
+      PET_MEDICAL_DOCS_BUCKET,
+      (symptomLogsData ?? []).flatMap(
+        (log) => (log.attachments as string[] | null) ?? [],
+      ),
+    ),
   ]);
 
   const medicalRecord: MedicalRecord | null = medicalRecordRow
@@ -148,11 +166,9 @@ export async function buildVetReportData(
     const paths = (log.attachments as string[] | null) ?? [];
     const attachments = [];
     for (const path of paths) {
-      const { data: signed } = await supabase.storage
-        .from(PET_MEDICAL_DOCS_BUCKET)
-        .createSignedUrl(path, 3600);
-      if (!signed?.signedUrl) continue;
-      attachments.push({ path, url: signed.signedUrl });
+      const url = attachmentUrls.get(path);
+      if (!url) continue;
+      attachments.push({ path, url });
     }
     recentSymptomLogs.push({
       id: log.id as string,
@@ -166,18 +182,14 @@ export async function buildVetReportData(
   }
 
   const labFiles: VetReportLabFile[] = [];
-  for (const file of filesData ?? []) {
-    const mimeType = file.file_type as string;
-    if (!LAB_MIME_TYPES.has(mimeType)) continue;
-    const { data: signed } = await supabase.storage
-      .from(PET_DOCUMENTS_BUCKET)
-      .createSignedUrl(file.file_path as string, 3600);
-    if (!signed?.signedUrl) continue;
+  for (const file of labRows) {
+    const url = labUrls.get(file.file_path as string);
+    if (!url) continue;
     labFiles.push({
       id: file.id as string,
       name: file.file_name as string,
-      mimeType: mimeType as VetReportLabFile["mimeType"],
-      url: signed.signedUrl,
+      mimeType: file.file_type as VetReportLabFile["mimeType"],
+      url,
       uploadedAt: file.created_at as string,
     });
   }

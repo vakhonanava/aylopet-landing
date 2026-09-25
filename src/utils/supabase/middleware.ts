@@ -58,9 +58,11 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // getClaims verifies the JWT locally against the cached signing keys, where
+  // getUser asked the Auth server on every request and prefetch · a round trip
+  // to the database region each time. It still refreshes an expired session.
+  const { data: claimsData } = await supabase.auth.getClaims();
+  const user = claimsData?.claims ?? null;
 
   if (!user && isProtectedPath(pathname)) {
     const loginUrl = request.nextUrl.clone();
