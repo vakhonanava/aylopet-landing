@@ -70,7 +70,7 @@ EXACT: dict[str, str] = {
     "English Foxhound": "ინგლისური ფოქსჰაუნდი",
     "English Pointer": "ინგლისური პოინტერი",
     "English Setter": "ინგლისური სეტერი",
-    "French Bulldog": "ფრანღული ბულდოგი",
+    "French Bulldog": "ფრანგული ბულდოგი",
     "German Shepherd Dog": "გერმანული ნაგაზი",
     "Golden Retriever": "გოლდენ რეტრივერი",
     "Labrador Retriever": "ლაბრადორი",
@@ -81,7 +81,7 @@ EXACT: dict[str, str] = {
     "Siberian Husky": "სიბირული ჰასკი",
     "Weimaraner": "ვაიმარანერი",
     "White Swiss Shepherd Dog": "თეთრი შვეიცარიული ნაგაზი",
-    "Yorkshire Terrier": "იორქშირული ტერიერი",
+    "Yorkshire Terrier": "იორკშირის ტერიერი",
 }
 
 

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Check, ChevronDown, Search, X } from "lucide-react";
+import { canonicalBreedLabel } from "@/lib/content/dog-breeds";
 import {
   ACTIVITY_OPTIONS,
   searchDogBreeds,
@@ -31,6 +32,7 @@ export function BreedCombobox({
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const selected = canonicalBreedLabel(value);
 
   const filtered = useMemo(() => searchDogBreeds(query), [query]);
 
@@ -75,7 +77,7 @@ export function BreedCombobox({
         }}
         className={`flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-left text-sm outline-none transition-all duration-200 focus:ring-4 ${triggerClass}`}
       >
-        {value || "აირჩიე ჯიში"}
+        {selected || "აირჩიე ჯიში"}
         <ChevronDown
           className={`h-4 w-4 ${chevronClass} transition-transform ${open ? "rotate-180" : ""}`}
         />
@@ -115,7 +117,7 @@ export function BreedCombobox({
                       <span className="block">{breed.ka}</span>
                       <span className={`block text-xs ${subtitleClass}`}>{breed.en}</span>
                     </span>
-                    {value === breed.ka && (
+                    {selected === breed.ka && (
                       <Check
                         className={`h-4 w-4 shrink-0 ${isDark ? "text-cyan-300" : "text-[var(--brand-accent)]"}`}
                       />
