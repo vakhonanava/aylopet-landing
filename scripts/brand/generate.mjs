@@ -54,9 +54,8 @@ const ogCard = h(
   },
   h(
     "div",
-    { style: { display: "flex", alignItems: "center", gap: 28 } },
+    { style: { display: "flex", alignItems: "center" } },
     h("img", { src: logoDataUri, width: 88, height: 88 }),
-    h("div", { style: { fontSize: 46, letterSpacing: 1 } }, "Aylopet"),
   ),
   h(
     "div",
@@ -64,7 +63,7 @@ const ogCard = h(
     h(
       "div",
       { style: { fontSize: 78, lineHeight: 1.1, letterSpacing: -1 } },
-      "AI & DNA Pet Health Tech",
+      "Aylopet Pet Wellness",
     ),
     h(
       "div",

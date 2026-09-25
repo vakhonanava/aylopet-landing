@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     description: OG_DESCRIPTION,
     type: "website",
     url: SITE_URL,
-    siteName: BRAND_NAME,
+    siteName: SITE_TITLE,
     locale: "ka_GE",
     alternateLocale: ["en_US"],
     images: [OG_IMAGE],
