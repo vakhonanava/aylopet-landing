@@ -355,7 +355,6 @@ export const en: Dictionary = {
     example: "e.g. {breed}",
     swipeHint: "Swipe →",
     note: "Indicative prices. We calculate the exact daily portion and price from your dog's weight, age and activity.",
-    cta: "Get your dog's exact price",
   },
   scarcity: {
     filled: "{count}/{cap} Ambassador spots filled",

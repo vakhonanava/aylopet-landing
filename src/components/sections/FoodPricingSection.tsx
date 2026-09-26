@@ -1,12 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
 import { BreedPortrait } from "@/components/decor/BreedPortrait";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { fadeUp, staggerContainer } from "@/lib/motion";
-import { scrollToWaitlist } from "@/lib/navigation";
 import { FRESH_FOOD_SIZE_CLASSES } from "@/lib/pricing/food";
 
 export function FoodPricingSection() {
@@ -84,14 +82,6 @@ export function FoodPricingSection() {
             {p.swipeHint}
           </p>
           <p className="mt-6 text-sm leading-relaxed text-[var(--text-secondary)]">{p.note}</p>
-          <button
-            type="button"
-            onClick={scrollToWaitlist}
-            className="mt-6 inline-flex min-h-[48px] cursor-pointer items-center gap-2 rounded-full bg-[var(--terracotta)] px-8 py-3 text-sm font-semibold text-white shadow-[0_12px_32px_rgba(198,123,92,0.3)] transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
-          >
-            {p.cta}
-            <ArrowRight className="h-4 w-4" aria-hidden />
-          </button>
         </motion.div>
       </motion.div>
     </section>
