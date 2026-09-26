@@ -331,7 +331,6 @@ export interface FoodPricingCopy {
   example: string;
   swipeHint: string;
   note: string;
-  cta: string;
 }
 
 export interface ScarcityCopy {

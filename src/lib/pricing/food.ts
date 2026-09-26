@@ -22,7 +22,8 @@ export interface FreshFoodSizeClass {
   weightKg: { min: number; max?: number };
   /** Starting daily fresh-food price, in GEL (for a dog at `weightKg.min`). */
   fromDailyGel: number;
-  example: { id: ExampleBreed; ka: string; en: string };
+  /** `photo` (under /public) replaces the illustrated `BreedPortrait` when set. */
+  example: { id: ExampleBreed; ka: string; en: string; photo?: string };
 }
 
 /**
@@ -35,24 +36,44 @@ export const FRESH_FOOD_SIZE_CLASSES: FreshFoodSizeClass[] = [
     size: "small",
     weightKg: { min: 1, max: 10 },
     fromDailyGel: 1.2,
-    example: { id: "yorkshire-terrier", ka: "იორკშირის ტერიერი", en: "Yorkshire Terrier" },
+    example: {
+      id: "yorkshire-terrier",
+      ka: "იორკშირის ტერიერი",
+      en: "Yorkshire Terrier",
+      photo: "/images/breeds/yorkshire-terrier.webp",
+    },
   },
   {
     size: "medium",
     weightKg: { min: 10, max: 25 },
     fromDailyGel: 12,
-    example: { id: "french-bulldog", ka: "ფრანგული ბულდოგი", en: "French Bulldog" },
+    example: {
+      id: "french-bulldog",
+      ka: "ფრანგული ბულდოგი",
+      en: "French Bulldog",
+      photo: "/images/breeds/french-bulldog.webp",
+    },
   },
   {
     size: "large",
     weightKg: { min: 25, max: 45 },
     fromDailyGel: 30,
-    example: { id: "labrador", ka: "ლაბრადორი", en: "Labrador Retriever" },
+    example: {
+      id: "labrador",
+      ka: "ლაბრადორი",
+      en: "Labrador Retriever",
+      photo: "/images/breeds/labrador.webp",
+    },
   },
   {
     size: "giant",
     weightKg: { min: 45 },
     fromDailyGel: 54,
-    example: { id: "caucasian-shepherd", ka: "კავკასიური ნაგაზი", en: "Caucasian Shepherd" },
+    example: {
+      id: "caucasian-shepherd",
+      ka: "კავკასიური ნაგაზი",
+      en: "Caucasian Shepherd",
+      photo: "/images/breeds/caucasian-shepherd.webp",
+    },
   },
 ];
