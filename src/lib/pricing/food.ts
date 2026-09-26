@@ -22,7 +22,8 @@ export interface FreshFoodSizeClass {
   weightKg: { min: number; max?: number };
   /** Starting daily fresh-food price, in GEL (for a dog at `weightKg.min`). */
   fromDailyGel: number;
-  example: { id: ExampleBreed; ka: string; en: string };
+  /** `photo` (under /public) replaces the illustrated `BreedPortrait` when set. */
+  example: { id: ExampleBreed; ka: string; en: string; photo?: string };
 }
 
 /**
@@ -41,7 +42,12 @@ export const FRESH_FOOD_SIZE_CLASSES: FreshFoodSizeClass[] = [
     size: "medium",
     weightKg: { min: 10, max: 25 },
     fromDailyGel: 12,
-    example: { id: "french-bulldog", ka: "ფრანგული ბულდოგი", en: "French Bulldog" },
+    example: {
+      id: "french-bulldog",
+      ka: "ფრანგული ბულდოგი",
+      en: "French Bulldog",
+      photo: "/images/breeds/french-bulldog.webp",
+    },
   },
   {
     size: "large",
@@ -53,6 +59,11 @@ export const FRESH_FOOD_SIZE_CLASSES: FreshFoodSizeClass[] = [
     size: "giant",
     weightKg: { min: 45 },
     fromDailyGel: 54,
-    example: { id: "caucasian-shepherd", ka: "კავკასიური ნაგაზი", en: "Caucasian Shepherd" },
+    example: {
+      id: "caucasian-shepherd",
+      ka: "კავკასიური ნაგაზი",
+      en: "Caucasian Shepherd",
+      photo: "/images/breeds/caucasian-shepherd.webp",
+    },
   },
 ];

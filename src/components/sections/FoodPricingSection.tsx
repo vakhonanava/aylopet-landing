@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { BreedPortrait } from "@/components/decor/BreedPortrait";
 import { useLocale } from "@/components/i18n/LocaleProvider";
@@ -45,7 +46,17 @@ export function FoodPricingSection() {
                 <span className="rounded-full bg-[var(--brand-primary)]/[0.08] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[var(--brand-primary)]">
                   {p.sizes[size]}
                 </span>
-                <BreedPortrait breed={example.id} size={72} className="shrink-0" />
+                {example.photo ? (
+                  <Image
+                    src={example.photo}
+                    alt=""
+                    width={72}
+                    height={72}
+                    className="h-[72px] w-[72px] shrink-0 rounded-full object-cover"
+                  />
+                ) : (
+                  <BreedPortrait breed={example.id} size={72} className="shrink-0" />
+                )}
               </div>
 
               <h3 className="mt-3 font-display text-2xl font-semibold text-[var(--forest-deep)]">
