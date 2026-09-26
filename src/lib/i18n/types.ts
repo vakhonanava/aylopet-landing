@@ -320,11 +320,15 @@ export interface FoodPricingCopy {
   title: string;
   description: string;
   sizes: Record<DogSize, string>;
+  /** Label above the price, e.g. „ფასი იწყება“. */
+  from: string;
   perDay: string;
-  /** `{price}` is the formatted monthly total. */
-  perMonth: string;
   /** `{min}` / `{max}` are kilograms. */
   weight: string;
+  /** Open-ended top class, `{min}` in kilograms. */
+  weightFrom: string;
+  /** `{breed}` is the example breed's name. */
+  example: string;
   swipeHint: string;
   note: string;
   cta: string;
