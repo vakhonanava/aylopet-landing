@@ -36,7 +36,12 @@ export const FRESH_FOOD_SIZE_CLASSES: FreshFoodSizeClass[] = [
     size: "small",
     weightKg: { min: 1, max: 10 },
     fromDailyGel: 1.2,
-    example: { id: "yorkshire-terrier", ka: "იორკშირის ტერიერი", en: "Yorkshire Terrier" },
+    example: {
+      id: "yorkshire-terrier",
+      ka: "იორკშირის ტერიერი",
+      en: "Yorkshire Terrier",
+      photo: "/images/breeds/yorkshire-terrier.webp",
+    },
   },
   {
     size: "medium",
@@ -53,7 +58,12 @@ export const FRESH_FOOD_SIZE_CLASSES: FreshFoodSizeClass[] = [
     size: "large",
     weightKg: { min: 25, max: 45 },
     fromDailyGel: 30,
-    example: { id: "labrador", ka: "ლაბრადორი", en: "Labrador Retriever" },
+    example: {
+      id: "labrador",
+      ka: "ლაბრადორი",
+      en: "Labrador Retriever",
+      photo: "/images/breeds/labrador.webp",
+    },
   },
   {
     size: "giant",
