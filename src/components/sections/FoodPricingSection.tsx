@@ -1,22 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Dog } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { BreedPortrait } from "@/components/decor/BreedPortrait";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { fadeUp, staggerContainer } from "@/lib/motion";
 import { scrollToWaitlist } from "@/lib/navigation";
-import { FRESH_FOOD_DAILY_BY_SIZE, type DogSize } from "@/lib/pricing/food";
-
-/** Icon size grows with the dog, so the row reads small → giant at a glance. */
-const ICON_PX: Record<DogSize, number> = {
-  small: 22,
-  medium: 30,
-  large: 38,
-  giant: 46,
-};
-
-const DAYS_PER_MONTH = 30;
+import { FRESH_FOOD_SIZE_CLASSES } from "@/lib/pricing/food";
 
 export function FoodPricingSection() {
   const { dict, locale } = useLocale();
@@ -47,47 +38,42 @@ export function FoodPricingSection() {
           variants={fadeUp}
           className="mx-auto mt-10 flex max-w-6xl snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] sm:scroll-px-6 sm:px-6 lg:gap-5 lg:px-8 [&::-webkit-scrollbar]:hidden"
         >
-          {FRESH_FOOD_DAILY_BY_SIZE.map((example) => (
+          {FRESH_FOOD_SIZE_CLASSES.map(({ size, weightKg, fromDailyGel, example }) => (
             <li
-              key={example.size}
+              key={size}
               className="flex w-[78%] shrink-0 snap-start flex-col rounded-[var(--radius-organic-lg)] border border-[var(--border-light)] bg-white p-6 shadow-soft sm:w-[46%] lg:w-auto lg:flex-1"
             >
               <div className="flex items-start justify-between gap-3">
                 <span className="rounded-full bg-[var(--brand-primary)]/[0.08] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[var(--brand-primary)]">
-                  {p.sizes[example.size]}
+                  {p.sizes[size]}
                 </span>
-                <span className="flex h-12 w-12 items-end justify-end text-[var(--brand-primary)]">
-                  <Dog
-                    aria-hidden
-                    width={ICON_PX[example.size]}
-                    height={ICON_PX[example.size]}
-                    strokeWidth={1.75}
-                  />
-                </span>
+                <BreedPortrait breed={example.id} size={72} className="shrink-0" />
               </div>
 
-              <h3 className="mt-4 font-display text-xl font-semibold text-[var(--forest-deep)]">
-                {example.breed[locale]}
+              <h3 className="mt-3 font-display text-2xl font-semibold text-[var(--forest-deep)]">
+                {(weightKg.max === undefined ? p.weightFrom : p.weight)
+                  .replace("{min}", String(weightKg.min))
+                  .replace("{max}", String(weightKg.max))}
               </h3>
               <p className="mt-1 text-sm text-[var(--text-secondary)]">
-                {p.weight
-                  .replace("{min}", String(example.weightKg.min))
-                  .replace("{max}", String(example.weightKg.max))}
+                {p.example.replace("{breed}", example[locale])}
               </p>
 
-              {/* Pinned to the bottom so prices line up when a breed name wraps. */}
+              {/* Pinned to the bottom so prices line up across cards. */}
               <div className="mt-auto pt-6">
-                <div className="flex items-baseline gap-2 border-t border-[var(--border-light)] pt-5">
-                  <span className="font-display text-4xl font-bold tracking-tight text-[var(--forest-deep)]">
-                    {gel(example.dailyGel)}
-                  </span>
-                  <span className="text-sm font-medium text-[var(--text-secondary)]">
-                    {p.perDay}
-                  </span>
+                <div className="border-t border-[var(--border-light)] pt-5">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)]">
+                    {p.from}
+                  </p>
+                  <p className="mt-1 flex items-baseline gap-2">
+                    <span className="font-display text-4xl font-bold tracking-tight text-[var(--forest-deep)]">
+                      {gel(fromDailyGel)}
+                    </span>
+                    <span className="text-sm font-medium text-[var(--text-secondary)]">
+                      {p.perDay}
+                    </span>
+                  </p>
                 </div>
-                <p className="mt-1 text-sm text-[var(--text-secondary)]">
-                  {p.perMonth.replace("{price}", gel(example.dailyGel * DAYS_PER_MONTH))}
-                </p>
               </div>
             </li>
           ))}

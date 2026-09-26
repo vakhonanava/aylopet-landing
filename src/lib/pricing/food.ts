@@ -9,42 +9,50 @@ export function freshFoodPriceLabel(locale: "ka" | "en"): string {
 
 export type DogSize = "small" | "medium" | "large" | "giant";
 
-export interface FreshFoodSizeExample {
+/** Breeds with an illustrated portrait (`BreedPortrait`). */
+export type ExampleBreed =
+  | "yorkshire-terrier"
+  | "french-bulldog"
+  | "labrador"
+  | "caucasian-shepherd";
+
+export interface FreshFoodSizeClass {
   size: DogSize;
-  breed: { ka: string; en: string };
-  weightKg: { min: number; max: number };
-  /** Indicative fresh-food cost per day, in GEL. */
-  dailyGel: number;
+  /** Upper bound omitted for the open-ended top class („45+ კგ“). */
+  weightKg: { min: number; max?: number };
+  /** Starting daily fresh-food price, in GEL (for a dog at `weightKg.min`). */
+  fromDailyGel: number;
+  example: { id: ExampleBreed; ka: string; en: string };
 }
 
 /**
- * Daily cost by dog size for the landing page. The French bulldog (3 ₾) is the
- * anchor; the other sizes scale with daily energy need, which grows with body
- * weight^0.75 (resting energy requirement), rounded to whole lari.
+ * Daily fresh-food price by size class for the landing page. Each class starts
+ * at 1.2 ₾ per kg of body weight per day, taken at the class's lower bound
+ * (≈ 2.2% of body weight in food at the per-kg price above).
  */
-export const FRESH_FOOD_DAILY_BY_SIZE: FreshFoodSizeExample[] = [
+export const FRESH_FOOD_SIZE_CLASSES: FreshFoodSizeClass[] = [
   {
     size: "small",
-    breed: { ka: "იორკშირის ტერიერი", en: "Yorkshire Terrier" },
-    weightKg: { min: 2, max: 4 },
-    dailyGel: 1,
+    weightKg: { min: 1, max: 10 },
+    fromDailyGel: 1.2,
+    example: { id: "yorkshire-terrier", ka: "იორკშირის ტერიერი", en: "Yorkshire Terrier" },
   },
   {
     size: "medium",
-    breed: { ka: "ფრანგული ბულდოგი", en: "French Bulldog" },
-    weightKg: { min: 9, max: 14 },
-    dailyGel: 3,
+    weightKg: { min: 10, max: 25 },
+    fromDailyGel: 12,
+    example: { id: "french-bulldog", ka: "ფრანგული ბულდოგი", en: "French Bulldog" },
   },
   {
     size: "large",
-    breed: { ka: "ლაბრადორი", en: "Labrador Retriever" },
-    weightKg: { min: 25, max: 36 },
-    dailyGel: 6,
+    weightKg: { min: 25, max: 45 },
+    fromDailyGel: 30,
+    example: { id: "labrador", ka: "ლაბრადორი", en: "Labrador Retriever" },
   },
   {
     size: "giant",
-    breed: { ka: "კავკასიური ნაგაზი", en: "Caucasian Shepherd" },
-    weightKg: { min: 45, max: 70 },
-    dailyGel: 10,
+    weightKg: { min: 45 },
+    fromDailyGel: 54,
+    example: { id: "caucasian-shepherd", ka: "კავკასიური ნაგაზი", en: "Caucasian Shepherd" },
   },
 ];
