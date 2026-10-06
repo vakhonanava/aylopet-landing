@@ -26,6 +26,7 @@ function loopingEmbedUrl(embedUrl: string): string {
   // iOS Safari refuses inline autoplay without it.
   url.searchParams.set("playsinline", "1");
   url.searchParams.set("rel", "0");
+  url.searchParams.set("controls", "0");
   return url.toString();
 }
 
@@ -56,11 +57,16 @@ export function ProductionVideo({
       className={`relative aspect-video overflow-hidden rounded-[var(--radius-bento)] border border-[var(--border-light)] shadow-[var(--shadow-diffuse)] ${className}`}
     >
       {VIDEO_EMBED_URL ? (
+        // YouTube dropped showinfo=0, so the title bar can't be turned off.
+        // The iframe is 80px taller on each side: the video letterboxes to
+        // exactly the visible 16:9 box, and the title and logo bars, which sit
+        // at the player's edges, land in the clipped strips. pointer-events-none
+        // keeps hover from bringing them back over the video.
         <iframe
           title={c.alt}
           src={loopingEmbedUrl(VIDEO_EMBED_URL)}
           loading="lazy"
-          className="absolute inset-0 h-full w-full"
+          className="pointer-events-none absolute inset-x-0 -top-20 h-[calc(100%+10rem)] w-full"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         />
