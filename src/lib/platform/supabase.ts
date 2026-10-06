@@ -19,6 +19,14 @@ export async function fetchWaitlistCount(
   return Number(data ?? 0);
 }
 
+export const PHONE_TAKEN_MESSAGE =
+  "ეს ტელეფონის ნომერი უკვე რეგისტრირებულია სხვა ანგარიშზე.";
+
+/** The unique index from migration 016, not the (tolerated) email duplicate. */
+function isPhoneTakenError(error: { message?: string } | null): boolean {
+  return Boolean(error?.message?.includes("waitlist_phone_normalized_key"));
+}
+
 export async function registerWaitlistUser(
   supabase: SupabaseClient,
   entry: WaitlistEntry,
@@ -81,6 +89,9 @@ export async function registerWaitlistUser(
     expectations: entry.expectations,
   });
 
+  if (isPhoneTakenError(waitlistError)) {
+    return { userId: null, error: PHONE_TAKEN_MESSAGE };
+  }
   if (waitlistError && !waitlistError.message.includes("duplicate")) {
     return { userId, error: waitlistError.message };
   }
