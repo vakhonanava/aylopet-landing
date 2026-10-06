@@ -20,6 +20,7 @@ import {
   createPetProfile,
   deletePetDocument,
   fetchWaitlistCount,
+  PHONE_TAKEN_MESSAGE,
   registerWaitlistUser,
   toggleExpectation,
   uploadPetDocument,
@@ -175,6 +176,17 @@ export function AyliopetOnboarding() {
     setError(null);
 
     if (user?.id) {
+      const ownCheck = await checkWaitlistDuplicate(
+        waitlist.email || email,
+        waitlist.phone,
+        user.id,
+      );
+      if (ownCheck.phoneTaken) {
+        setError(PHONE_TAKEN_MESSAGE);
+        setLoading(false);
+        return;
+      }
+
       const { error: insertError } = await supabase.from("waitlist").insert({
         user_id: user.id,
         full_name: waitlist.fullName.trim() || displayName,
@@ -182,6 +194,8 @@ export function AyliopetOnboarding() {
         phone: waitlist.phone.trim(),
         expectations: waitlist.expectations,
       });
+      // The check above skips this user's own row, so a duplicate (email or
+      // phone) here is their earlier registration, not someone else's.
       if (insertError && !insertError.message.includes("duplicate")) {
         setError(insertError.message);
         setLoading(false);
@@ -203,10 +217,15 @@ export function AyliopetOnboarding() {
       waitlist.email,
       waitlist.phone,
     );
-    if (duplicateCheck.emailTaken || duplicateCheck.phoneTaken) {
+    if (duplicateCheck.emailTaken) {
       setError(
         "თქვენ უკვე ხართ ჩვენს მოლოდინის სიაში! შეტყობინებას მოგივლენთ დაუყოვნებლივ გაშვებისთანავე.",
       );
+      setLoading(false);
+      return;
+    }
+    if (duplicateCheck.phoneTaken) {
+      setError(PHONE_TAKEN_MESSAGE);
       setLoading(false);
       return;
     }
