@@ -20,6 +20,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
+// ScarcityBar reads the live waitlist count; prerendering would freeze it at
+// build time and the client poll would later jump it to the real number.
+export const dynamic = "force-dynamic";
+
 export default function Home() {
   return (
     <>

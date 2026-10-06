@@ -21,7 +21,8 @@ export function ScarcityBarClient({ initialCount, cap }: ScarcityBarClientProps)
 
   useEffect(() => {
     const interval = setInterval(() => {
-      void fetchLiveWaitlistCount().then(setCount);
+      // A failed lookup returns 0; never let the counter go backwards.
+      void fetchLiveWaitlistCount().then((next) => setCount((prev) => Math.max(prev, next)));
     }, POLL_INTERVAL_MS);
     return () => clearInterval(interval);
   }, []);
