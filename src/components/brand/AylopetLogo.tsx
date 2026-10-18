@@ -2,10 +2,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { BRAND } from "@/lib/constants";
 
+// The mark is about twice as tall as it is wide, so the boxes run a little
+// larger than a square logo would need.
 const sizes = {
-  sm: { box: "h-8 w-8", text: "text-base" },
-  md: { box: "h-9 w-9", text: "text-lg" },
-  lg: { box: "h-11 w-11", text: "text-xl" },
+  sm: { box: "h-9 w-9", text: "text-base" },
+  md: { box: "h-10 w-10", text: "text-lg" },
+  lg: { box: "h-12 w-12", text: "text-xl" },
 } as const;
 
 interface AylopetLogoProps {
@@ -34,11 +36,11 @@ export function AylopetLogo({
         aria-hidden
       >
         <Image
-          src="/brand/logo.svg"
+          src="/brand/logo.png"
           alt={`${BRAND.name} logo`}
-          width={36}
-          height={36}
-          className="h-full w-full"
+          width={255}
+          height={512}
+          className="h-full w-full object-contain"
           priority
         />
       </span>

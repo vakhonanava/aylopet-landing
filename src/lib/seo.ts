@@ -42,7 +42,7 @@ export const SITE_KEYWORDS = [
 
 export const OG_IMAGE = {
   // Bump `v` whenever the card changes · chat apps cache previews by image URL.
-  url: "/og-image.png?v=2",
+  url: "/og-image.png?v=3",
   width: 1200,
   height: 630,
   alt: SITE_TITLE,

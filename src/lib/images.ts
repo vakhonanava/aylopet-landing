@@ -41,7 +41,7 @@ export const IMAGES = {
 } as const;
 
 /** @deprecated Use FoodLayersVisual · kept for resolveImage aliases */
-export const FOOD_VISUAL_PLACEHOLDER = "/brand/logo.svg";
+export const FOOD_VISUAL_PLACEHOLDER = "/brand/logo.png";
 
 export const IMAGE_ALIASES = {
   "/images/food-macro.png": FOOD_VISUAL_PLACEHOLDER,
